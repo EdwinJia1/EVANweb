@@ -1,5 +1,7 @@
 # 📚 UNSW Study Materials
 
+🌐 **Live Website:** [http://www.preuni.xyz/](http://www.preuni.xyz/)
+
 > **Interactive study notes and resources for UNSW Computer Science students**  
 > 为UNSW计算机科学学生提供的交互式学习笔记和资源
 
@@ -60,7 +62,7 @@ This website was created to help UNSW students excel in their studies by providi
 ## 🚀 Getting Started
 
 ### Online Access
-Visit the live website: `[Your GitHub Pages URL will go here]`
+Visit the live website: **[http://www.preuni.xyz/](http://www.preuni.xyz/)**
 
 ### Local Development
 ```bash
