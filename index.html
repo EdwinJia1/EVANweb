@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .course-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .course-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+            color: #2c2c2c;
+        }
+        .subcategory-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c2c2c;
+        }
+        .notion-badge {
+            display: inline-block;
+            background-color: #f4a261;
+            color: #2c2c2c;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .local-badge {
+            display: inline-block;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .external-link::after {
+            content: " ↗";
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+        .notes-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        @media (max-width: 768px) {
+            .notes-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* New Accordion and Navigation Styles */
+        .top-navigation {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .nav-button.active {
+            background-color: #e07a5f;
+            color: #ffffff;
+        }
+
+        .accordion-section {
+            margin-bottom: 2rem;
+        }
+        .accordion-trigger {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-bottom: 2px solid #e07a5f;
+            color: #2c2c2c;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+        .accordion-trigger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -2px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.1);
+        }
+        .accordion-icon {
+            font-size: 1.25rem;
+            transition: transform 0.2s ease-in-out;
+        }
+        .accordion-section.is-open .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .accordion-section.is-open .accordion-content {
+            max-height: 2000px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">UNSW Study Materials</h1>
+            <p class="text-lg text-gray-600 mt-4">Made by Evan</p>
+            <p class="text-sm text-gray-500 mt-1" id="last-updated"></p>
+        </header>
+
+        <!-- Top Navigation -->
+        <nav class="top-navigation">
+            <button class="nav-button" onclick="toggleAccordion('mathematics')">Mathematics</button>
+            <button class="nav-button" onclick="toggleAccordion('computer-science')">Computer Science</button>
+        </nav>
+
+        <main>
+            <!-- Mathematics Accordion Section -->
+            <div class="accordion-section is-open" id="mathematics">
+                <h2 class="accordion-trigger" onclick="toggleAccordion('mathematics')">
+                    <span>Mathematics</span>
+                    <span class="accordion-icon">▼</span>
+                </h2>
+                <div class="accordion-content">
+                    <!-- MATH1081 Section -->
+                    <div class="mb-8">
+                        <h3 class="subcategory-title">MATH1081 - Discrete Mathematics</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Interactive Full Course -->
+                            <a href="./1081chapter_1-4.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">Interactive Course</h4>
+                                    <p class="text-base mt-2">Chapters 1-4 Complete</p>
+                                    <p class="text-gray-500 mt-3 text-sm">Interactive notes, quizzes, and visualizations for Set Theory, Number Theory, and Relations.</p>
+                                    <div class="notion-badge">Interactive</div>
+                                </div>
+                            </a>
+                            
+                            <!-- Course Notes Module -->
+                            <a href="./math1081.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">Course Notes</h4>
+                                    <p class="text-base mt-2">All Chapter Notes</p>
+                                    <p class="text-gray-500 mt-3 text-sm">Access both Notion (live updates) and local versions of all chapter notes for Chapters 1-3.</p>
+                                    <div class="local-badge">Notes Hub</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- MATH1131 Section -->
+                    <div>
+                        <h3 class="subcategory-title">MATH1131 - Mathematics 1A</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Interactive Course -->
+                            <a href="./1131ppt.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">Interactive Course</h4>
+                                    <p class="text-base mt-2">Algebra & Vectors</p>
+                                    <p class="text-gray-500 mt-3 text-sm">Interactive tutorials for vectors, complex numbers, and algebraic concepts with real-time visualizations.</p>
+                                    <div class="notion-badge">Interactive</div>
+                                </div>
+                            </a>
+                            
+                            <!-- Course Notes Module -->
+                            <a href="./math1131.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">Course Notes</h4>
+                                    <p class="text-base mt-2">Algebra & Vectors</p>
+                                    <p class="text-gray-500 mt-3 text-sm">Comprehensive notes covering geometric vectors, dot/cross products, and complex numbers.</p>
+                                    <div class="local-badge">Notes Hub</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Computer Science Accordion Section -->
+            <div class="accordion-section" id="computer-science">
+                <h2 class="accordion-trigger" onclick="toggleAccordion('computer-science')">
+                    <span>Computer Science</span>
+                    <span class="accordion-icon">▼</span>
+                </h2>
+                <div class="accordion-content">
+                    <!-- COMP1511 Section -->
+                    <div class="mb-8">
+                        <h3 class="subcategory-title">COMP1511 - Programming Fundamentals</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Interactive Course -->
+                            <div class="course-card opacity-60 cursor-not-allowed">
+                                <h4 class="text-lg font-bold text-gray-400">Interactive Course</h4>
+                                <p class="text-base mt-2 text-gray-400">Coming Soon</p>
+                                <p class="text-gray-500 mt-3 text-sm">Interactive programming tutorials and coding exercises will be available here.</p>
+                                <div class="local-badge" style="background-color: #cccccc;">Upcoming</div>
+                            </div>
+                            
+                            <!-- Course Notes Module -->
+                            <a href="./comp1511.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">Course Notes</h4>
+                                    <p class="text-base mt-2">Programming Notes</p>
+                                    <p class="text-gray-500 mt-3 text-sm">Access Notion notes for programming fundamentals, data structures, and algorithms.</p>
+                                    <div class="local-badge">Notes Hub</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Future Courses Placeholder -->
+                    <div>
+                        <h3 class="subcategory-title">Additional Courses</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="course-card opacity-60 cursor-not-allowed">
+                                <h4 class="text-lg font-bold text-gray-400">More Courses</h4>
+                                <p class="text-base mt-2 text-gray-400">Coming Soon</p>
+                                <p class="text-gray-500 mt-3 text-sm">Additional computer science course materials will be added here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+    </div>
+
+    <script>
+        // Set last updated date to current date
+        const lastUpdated = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('last-updated').textContent = `Last Updated: ${lastUpdated.toLocaleDateString('en-US', options)}`;
+
+        // Accordion functionality
+        function toggleAccordion(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('is-open');
+            
+            // Update navigation buttons
+            updateNavButtons(sectionId);
+        }
+
+        function updateNavButtons(activeSectionId) {
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+                if ((activeSectionId === 'mathematics' && button.textContent === 'Mathematics') ||
+                    (activeSectionId === 'computer-science' && button.textContent === 'Computer Science')) {
+                    const section = document.getElementById(activeSectionId);
+                    if (section.classList.contains('is-open')) {
+                        button.classList.add('active');
+                    }
+                }
+            });
+        }
+
+        // Initialize page with Mathematics section open
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavButtons('mathematics');
+        });
+    </script>
+</body>
+</html>
