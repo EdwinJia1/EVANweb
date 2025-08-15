@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Discrete Mathematics Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .content-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+            color: #2c2c2c;
+        }
+        .content-section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #2c2c2c;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+        }
+        .nav-link.active {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            border-left-color: #2c2c2c;
+        }
+        .nav-link:hover {
+            background-color: #f4a261;
+            color: #2c2c2c;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .math {
+            font-family: "Cambria Math", "Times New Roman", serif;
+            font-size: 1.1em;
+            display: inline-block;
+        }
+        .frac {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .frac sup, .frac sub {
+            display: block;
+            line-height: 1.2;
+        }
+        .frac sub {
+            border-top: 1px solid #2c2c2c;
+        }
+        .interactive-module {
+            border: 2px solid #d3d3d3;
+            background-color: #fdfdfa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .hasse-diagram-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin: 2rem auto;
+        }
+        .hasse-node {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background-color: #f4a261;
+            border: 2px solid #e07a5f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+        }
+        .hasse-line {
+            position: absolute;
+            background-color: #8b8589;
+            height: 2px;
+            transform-origin: top left;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <aside id="sidebar" class="w-full md:w-64 lg:w-72 bg-[#8b8589] text-gray-100 p-4 space-y-2 flex-shrink-0">
+            <a href="./index.html" class="home-button">← Back to Home</a>
+            <h2 class="text-2xl font-bold text-center text-white pb-2 border-b-2 border-gray-400">Discrete Math Notes</h2>
+            <nav id="nav-menu" class="space-y-1">
+                </nav>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div id="content-area">
+                </div>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const contentData = {
+        'intro': {
+            title: 'Welcome',
+            content: `
+                <h3>Welcome to the Interactive Discrete Mathematics Notes</h3>
+                <div class="concept-card">
+                    <p>This note summarizes the core concepts of Discrete Mathematics, divided into two main modules: <b>Set Theory & Functions</b> and <b>Number Theory & Relations</b>.</p>
+                    <p class="mt-2">Please use the navigation bar on the left to browse different sections. Some sections include interactive modules to help you better understand the concepts. Happy studying!</p>
+                </div>
+            `
+        },
+        '1.1': {
+            title: '1.1 Set Notation',
+            content: `
+                <h3>1.1 Set Notation</h3>
+                <div class="concept-card"><h4>Set</h4><p>A well-defined, unordered collection of distinct objects. The objects in a set are called its <b>elements</b>.</p></div>
+                <div class="concept-card"><h4>Set Representation</h4><ul class="list-disc list-inside space-y-2">
+                    <li><b>Roster Method</b>: List all elements within curly braces <span class="math">{}</span>, e.g., <span class="math">S = {1, 2, 3}</span>.</li>
+                    <li><b>Set-Builder Notation</b>: <span class="math">{x ∈ S | P(x)}</span>, denoting all elements x in S that satisfy property P.</li>
+                    <li><b>Important Number Sets</b>:
+                        <ul class="list-inside list-disc ml-6 mt-2 space-y-1">
+                            <li>Natural Numbers: <span class="math">ℕ = {0, 1, 2, 3, ...}</span></li>
+                            <li>Integers: <span class="math">ℤ = {..., -2, -1, 0, 1, 2, ...}</span></li>
+                            <li>Positive Integers: <span class="math">ℤ⁺ = {1, 2, 3, ...}</span></li>
+                            <li>Rational Numbers: <span class="math">ℚ</span></li>
+                            <li>Real Numbers: <span class="math">ℝ</span></li>
+                            <li>Complex Numbers: <span class="math">ℂ</span></li>
+                        </ul>
+                    </li>
+                </ul></div>
+                <div class="concept-card"><h4>Other Concepts</h4><ul class="list-disc list-inside space-y-2">
+                    <li><b>Element Membership</b>: belongs to (<span class="math">∈</span>), does not belong to (<span class="math">∉</span>).</li>
+                    <li><b>Empty Set</b>: A set with no elements, denoted <span class="math">∅</span> or <span class="math">{}</span>.</li>
+                    <li><b>Cardinality</b>: The number of elements in a set, denoted <span class="math">|S|</span>. E.g., <span class="math">|{a, b, c}| = 3</span>.</li>
+                    <li><b>Sets of Sets</b>: The elements of a set can also be sets. For <span class="math">S = {1, 2, {3, 4}}</span>, then <span class="math">|S| = 3</span>, <span class="math">{3, 4} ∈ S</span>, but <span class="math">3 ∉ S</span>.</li>
+                </ul></div>
+            `
+        },
+        '1.2': {
+            title: '1.2 Subsets and Power Sets',
+            content: `
+                <h3>1.2 Subsets and Power Sets</h3>
+                <div class="concept-card"><ul class="list-disc list-inside space-y-2">
+                    <li><b>Subset</b>: If every element of set S is also an element of set T, then S is a subset of T, denoted <span class="math">S ⊆ T</span>.</li>
+                    <li><b>Set Equality</b>: <span class="math">S = T</span> if and only if <span class="math">S ⊆ T</span> and <span class="math">T ⊆ S</span>.</li>
+                    <li><b>Proper Subset</b>: If <span class="math">S ⊆ T</span> and <span class="math">S ≠ T</span>, S is a proper subset of T, denoted <span class="math">S ⊂ T</span>.</li>
+                    <li><b>Power Set</b>: The set of all subsets of a set S, denoted <span class="math">P(S)</span>.</li>
+                    <li><b>Cardinality of Power Set</b>: If <span class="math">|S| = n</span>, then <span class="math">|P(S)| = 2ⁿ</span>.</li>
+                </ul></div>
+            `
+        },
+        '1.3': {
+            title: '1.3 Venn Diagrams & Set Operations',
+            content: `
+                <h3>1.3 Venn Diagrams & Set Operations</h3>
+                <div class="concept-card"><h4>Basic Operations</h4><ul class="list-disc list-inside space-y-2">
+                    <li><b>Union</b>: <span class="math">A ∪ B = {x | x ∈ A or x ∈ B}</span>.</li>
+                    <li><b>Intersection</b>: <span class="math">A ∩ B = {x | x ∈ A and x ∈ B}</span>.</li>
+                    <li><b>Complement</b>: <span class="math">Aᶜ = {x ∈ U | x ∉ A}</span>.</li>
+                    <li><b>Set Difference</b>: <span class="math">A - B = {x | x ∈ A and x ∉ B} = A ∩ Bᶜ</span>.</li>
+                    <li><b>Symmetric Difference</b>: <span class="math">A ⊖ B = (A ∪ B) - (A ∩ B)</span>.</li>
+                </ul></div>
+                <div class="concept-card interactive-module p-6 rounded-lg mt-6"><h4 class="text-center">Interactive Venn Diagram</h4><div class="flex justify-center items-center my-4 h-48 relative"><div id="venn-set-a" class="absolute w-32 h-32 bg-blue-300 rounded-full opacity-50" style="left: 40%;"></div><div id="venn-set-b" class="absolute w-32 h-32 bg-red-300 rounded-full opacity-50" style="left: 60%; transform: translateX(-50%);"></div><div class="absolute w-48 h-32 text-center" style="left: 50%; top: 50%; transform: translate(-50%, -50%);"><span class="absolute top-0 -left-8 font-bold text-xl">A</span><span class="absolute top-0 -right-8 font-bold text-xl">B</span></div></div><div class="flex flex-wrap justify-center gap-2 mt-4">
+                    <button onclick="shadeVenn('union')" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Union (A ∪ B)</button>
+                    <button onclick="shadeVenn('intersection')" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Intersection (A ∩ B)</button>
+                    <button onclick="shadeVenn('diff_a_b')" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Difference (A - B)</button>
+                    <button onclick="shadeVenn('symm_diff')" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Symmetric Diff (A ⊖ B)</button>
+                    <button onclick="shadeVenn('clear')" class="px-4 py-2 bg-red-200 rounded hover:bg-red-300">Clear</button>
+                </div></div>
+            `
+        },
+        '1.4': {
+            title: '1.4 Laws of Set Algebra',
+            content: `
+                <h3>1.4 Laws of Set Algebra</h3>
+                <div class="concept-card grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><h4>Commutative Laws</h4> <p class="math">A ∪ B = B ∪ A</p> <p class="math">A ∩ B = B ∩ A</p></div>
+                    <div><h4>Associative Laws</h4> <p class="math">A ∪ (B ∪ C) = (A ∪ B) ∪ C</p> <p class="math">A ∩ (B ∩ C) = (A ∩ B) ∩ C</p></div>
+                    <div><h4>Distributive Laws</h4> <p class="math">A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)</p> <p class="math">A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)</p></div>
+                    <div><h4>Identity Laws</h4> <p class="math">A ∪ ∅ = A</p> <p class="math">A ∩ U = A</p></div>
+                    <div><h4>Domination Laws</h4> <p class="math">A ∪ U = U</p> <p class="math">A ∩ ∅ = ∅</p></div>
+                    <div><h4>Idempotent Laws</h4> <p class="math">A ∪ A = A</p> <p class="math">A ∩ A = A</p></div>
+                    <div><h4>Complement Laws</h4> <p class="math">A ∪ Aᶜ = U</p> <p class="math">A ∩ Aᶜ = ∅</p></div>
+                    <div><h4>Double Complement Law</h4> <p class="math">(Aᶜ)ᶜ = A</p></div>
+                    <div class="md:col-span-2"><h4>De Morgan's Laws</h4> <p class="math">(A ∪ B)ᶜ = Aᶜ ∩ Bᶜ</p> <p class="math">(A ∩ B)ᶜ = Aᶜ ∪ Bᶜ</p></div>
+                </div>
+            `
+        },
+        '1.5': {
+            title: '1.5 Cartesian Product & Functions',
+            content: `
+                <h3>1.5 Cartesian Product & Functions</h3>
+                <div class="concept-card"><h4>Cartesian Product</h4><p><span class="math">A × B = {(a, b) | a ∈ A and b ∈ B}</span>.</p></div>
+                <div class="concept-card"><h4>Function</h4><p>A function <span class="math">f: X → Y</span> from a set X to a set Y is a subset of <span class="math">X × Y</span> such that for every <span class="math">x ∈ X</span>, there is exactly one <span class="math">y ∈ Y</span>.</p>
+                <ul class="list-disc list-inside mt-2 space-y-1">
+                    <li><b>Domain</b>: The input set X.</li>
+                    <li><b>Codomain</b>: The set of possible outputs Y.</li>
+                    <li><b>Range (Image)</b>: The set of actual outputs <span class="math">f(X) = {f(x) | x ∈ X}</span>.</li>
+                </ul></div>
+            `
+        },
+        '1.6': {
+            title: '1.6 Properties of Functions & Inverses',
+            content: `
+                <h3>1.6 Properties of Functions & Inverses</h3>
+                <div class="concept-card"><ul class="list-disc list-inside space-y-2">
+                    <li><b>Injective (One-to-one)</b>: If <span class="math">f(x₁) = f(x₂)</span> implies <span class="math">x₁ = x₂</span>.</li>
+                    <li><b>Surjective (Onto)</b>: If for every <span class="math">y ∈ Y</span>, there exists an <span class="math">x ∈ X</span> such that <span class="math">f(x) = y</span>.</li>
+                    <li><b>Bijective</b>: A function that is both injective and surjective.</li>
+                </ul></div>
+                <div class="concept-card interactive-module p-6 rounded-lg mt-6"><h4 class="text-center">Function Property Graph Test</h4><div class="chart-container"><canvas id="functionChart"></canvas></div><div class="flex flex-wrap justify-center gap-2 mt-4">
+                    <select id="functionSelect" class="p-2 border rounded"><option value="x3">f(x) = x³</option><option value="x2">f(x) = x²</option><option value="sinx">f(x) = sin(x)</option></select>
+                    <button onclick="runHorizontalLineTest()" class="px-4 py-2 bg-blue-200 rounded hover:bg-blue-300">Run Horizontal Line Test</button>
+                </div><div id="functionTestResult" class="text-center mt-4 font-semibold"></div></div>
+            `
+        },
+        '2.1': {
+            title: '2.1 Divisibility and GCD',
+            content: `
+                <h3>2.1 Divisibility and GCDs</h3>
+                <div class="concept-card"><h4>Divides</h4><p>For integers a and b, we say a divides b, written <span class="math">a | b</span>, if there exists an integer k such that <span class="math">b = ak</span>.</p></div>
+                <div class="concept-card"><h4>Core Concepts</h4><ul class="list-disc list-inside space-y-2">
+                    <li><b>Prime Number</b>: A positive integer greater than 1 that has no positive divisors other than 1 and itself.</li>
+                    <li><b>Fundamental Theorem of Arithmetic</b>: Every integer greater than 1 is either a prime number itself or can be represented as the product of prime numbers.</li>
+                    <li><b>Greatest Common Divisor (GCD)</b>: Written as <span class="math">gcd(a, b)</span>.</li>
+                    <li><b>Least Common Multiple (LCM)</b>: Written as <span class="math">lcm(a, b)</span>.</li>
+                </ul></div>
+            `
+        },
+        '2.2': {
+            title: '2.2 The Euclidean Algorithm',
+            content: `
+                <h3>2.2 The Euclidean Algorithm</h3>
+                <div class="concept-card">
+                     <h4>Division Theorem</h4>
+                     <p>For any integers a and b, with b ≠ 0, there exist unique integers q (quotient) and r (remainder) such that <span class="math">a = qb + r</span>, where <span class="math">0 ≤ r < |b|</span>.</p>
+                     <h4 class="mt-4">Bézout's Identity</h4>
+                     <p>For any non-zero integers a and b, there exist integers x and y such that <span class="math">ax + by = gcd(a, b)</span>.</p>
+                </div>
+                <div class="concept-card interactive-module p-6 rounded-lg mt-6">
+                    <h4 class="text-center">Euclidean Algorithm Calculator</h4>
+                    <div class="flex flex-wrap justify-center items-center gap-4 my-4">
+                        <input type="number" id="gcdA" placeholder="Integer a" class="p-2 border rounded w-32">
+                        <input type="number" id="gcdB" placeholder="Integer b" class="p-2 border rounded w-32">
+                        <button onclick="calculateGCD()" class="px-4 py-2 bg-green-200 rounded hover:bg-green-300">Calculate GCD</button>
+                    </div>
+                    <div id="gcdResult" class="mt-4 p-4 bg-gray-100 rounded min-h-[50px]"></div>
+                </div>
+            `
+        },
+        '2.3': {
+            title: '2.3 Modular Arithmetic',
+            content: `
+                <h3>2.3 Modular Arithmetic</h3>
+                <div class="concept-card"><h4>Congruence</h4><p><span class="math">a ≡ b (mod m)</span> if and only if <span class="math">m | (a-b)</span>. This means a and b have the same remainder when divided by m.</p></div>
+                <div class="concept-card"><h4>Properties</h4><ul class="list-disc list-inside space-y-2">
+                    <li>If <span class="math">a ≡ b (mod m)</span> and <span class="math">c ≡ d (mod m)</span>, then <span class="math">a+c ≡ b+d (mod m)</span> and <span class="math">ac ≡ bd (mod m)</span>.</li>
+                    <li>If <span class="math">ak ≡ bk (mod m)</span> and <span class="math">gcd(k, m) = 1</span>, then <span class="math">a ≡ b (mod m)</span> (Cancellation law).</li>
+                </ul></div>
+                <div class="concept-card"><h4>Fermat's Little Theorem</h4><p>If p is a prime number, then for any integer a not divisible by p, <span class="math">aᵖ⁻¹ ≡ 1 (mod p)</span>.</p></div>
+            `
+        },
+        '2.4': {
+            title: '2.4 Solving Linear Congruences',
+            content: `
+                <h3>2.4 Solving Linear Congruences</h3>
+                <div class="concept-card"><h4>Definition & Existence of Solutions</h4><p>An equation of the form <span class="math">ax ≡ c (mod m)</span>. Let <span class="math">d = gcd(a, m)</span>. A solution exists if and only if <span class="math">d | c</span>, in which case there are exactly d solutions modulo m.</p></div>
+                <div class="concept-card"><h4>Solving Method</h4><ol class="list-decimal list-inside space-y-2">
+                    <li>Find <span class="math">d = gcd(a, m)</span>.</li>
+                    <li>If a solution exists, simplify to <span class="math">(<span class="frac"><sup>a</sup><sub>d</sub></span>)x ≡ (<span class="frac"><sup>c</sup><sub>d</sub></span>) (mod <span class="frac"><sup>m</sup><sub>d</sub></span>)</span>.</li>
+                    <li>Solve for the multiplicative inverse using the Extended Euclidean Algorithm.</li>
+                    <li>Find a particular solution <span class="math">x₀</span>, then all solutions are <span class="math">x ≡ x₀ + k(<span class="frac"><sup>m</sup><sub>d</sub></span>) (mod m)</span>, for <span class="math">k = 0, ..., d-1</span>.</li>
+                </ol></div>
+            `
+        },
+        '2.5': {
+            title: '2.5 Relations and Equivalences',
+            content: `
+                <h3>2.5 Relations and Equivalences</h3>
+                <div class="concept-card"><h4>Relation</h4><p>A relation from a set X to a set Y is a subset of <span class="math">X × Y</span>.</p></div>
+                <div class="concept-card"><h4>Properties of Relations</h4><ul class="list-disc list-inside space-y-2">
+                    <li><b>Reflexive</b>: For all <span class="math">x ∈ X</span>, it holds that <span class="math">x R x</span>.</li>
+                    <li><b>Symmetric</b>: If <span class="math">x R y</span>, then <span class="math">y R x</span>.</li>
+                    <li><b>Transitive</b>: If <span class="math">x R y</span> and <span class="math">y R z</span>, then <span class="math">x R z</span>.</li>
+                </ul></div>
+                <div class="concept-card"><h4>Equivalence Relation</h4><p>A relation that is <b>reflexive, symmetric, and transitive</b>, denoted <span class="math">~</span>.</p>
+                <p class="mt-2"><b>Equivalence Class</b>: <span class="math">[a] = {x ∈ X | x ~ a}</span>. The set of equivalence classes forms a <b>partition</b> of the original set.</p></div>
+            `
+        },
+        '2.6': {
+            title: '2.6 Partial Orders',
+            content: `
+                <h3>2.6 Partial Orders</h3>
+                <div class="concept-card"><h4>Antisymmetric Property</h4><p>If <span class="math">x R y</span> and <span class="math">y R x</span>, then <span class="math">x = y</span>.</p></div>
+                <div class="concept-card"><h4>Partial Order</h4><p>A relation that is <b>reflexive, antisymmetric, and transitive</b>. A set with a partial order is called a <b>poset</b>.</p></div>
+                <div class="concept-card"><h4>Hasse Diagram</h4><p>A simplified graph for representing finite posets, which omits reflexive loops and transitive edges.</p></div>
+                <div class="concept-card interactive-module p-6 rounded-lg mt-6">
+                    <h4 class="text-center">Hasse Diagram Example: ( {1, 2, 3, 4, 6, 8, 9, 12, 18}, | )</h4>
+                    <div class="hasse-diagram-container">
+                        <div class="hasse-node" style="bottom: 5%; left: 50%;">1</div>
+                        <div class="hasse-node" style="bottom: 25%; left: 35%;">2</div>
+                        <div class="hasse-node" style="bottom: 25%; left: 65%;">3</div>
+                        <div class="hasse-node" style="bottom: 45%; left: 20%;">4</div>
+                        <div class="hasse-node" style="bottom: 45%; left: 50%;">6</div>
+                        <div class="hasse-node" style="bottom: 45%; left: 80%;">9</div>
+                        <div class="hasse-node" style="bottom: 65%; left: 5%;">8</div>
+                        <div class="hasse-node" style="bottom: 65%; left: 35%;">12</div>
+                        <div class="hasse-node" style="bottom: 65%; left: 65%;">18</div>
+                        <div class="hasse-line" style="left: 36%; bottom: 27%; width: 14%; height: 2px; transform: rotate(-45deg);"></div><div class="hasse-line" style="left: 51%; bottom: 27%; width: 14%; height: 2px; transform: rotate(45deg);"></div><div class="hasse-line" style="left: 66%; bottom: 27%; width: 14%; height: 2px; transform: rotate(-45deg);"></div><div class="hasse-line" style="left: 21%; bottom: 47%; width: 14%; height: 2px; transform: rotate(-45deg);"></div><div class="hasse-line" style="left: 36%; bottom: 47%; width: 14%; height: 2px; transform: rotate(45deg);"></div><div class="hasse-line" style="left: 51%; bottom: 47%; width: 14%; height: 2px; transform: rotate(-45deg);"></div><div class="hasse-line" style="left: 66%; bottom: 47%; width: 14%; height: 2px; transform: rotate(45deg);"></div><div class="hasse-line" style="left: 81%; bottom: 47%; width: 14%; height: 2px; transform: rotate(-45deg);"></div><div class="hasse-line" style="left: 6%; bottom: 67%; width: 14%; height: 2px; transform: rotate(45deg);"></div><div class="hasse-line" style="left: 36%; bottom: 67%; width: 14%; height: 2px; transform: rotate(-45deg);"></div><div class="hasse-line" style="left: 66%; bottom: 67%; width: 14%; height: 2px; transform: rotate(-45deg);"></div>
+                    </div>
+                </div>
+                <div class="concept-card"><h4>Bounds</h4><ul class="list-disc list-inside space-y-2">
+                    <li><b>Greatest Lower Bound (glb)</b>: The greatest among all lower bounds. For <span class="math">(ℤ⁺, |)</span>, <span class="math">glb(a, b) = gcd(a, b)</span>.</li>
+                    <li><b>Least Upper Bound (lub)</b>: The least among all upper bounds. For <span class="math">(ℤ⁺, |)</span>, <span class="math">lub(a, b) = lcm(a, b)</span>.</li>
+                </ul></div>
+            `
+        }
+    };
+
+    const navMenu = document.getElementById('nav-menu');
+    const contentArea = document.getElementById('content-area');
+
+    const navStructure = [
+        { id: 'intro', title: 'Welcome' },
+        { title: 'Part 1: Set Theory & Functions', children: [
+            { id: '1.1', title: '1.1 Set Notation' },
+            { id: '1.2', title: '1.2 Subsets & Power Sets' },
+            { id: '1.3', title: '1.3 Venn Diagrams & Operations' },
+            { id: '1.4', title: '1.4 Laws of Set Algebra' },
+            { id: '1.5', title: '1.5 Cartesian Product & Functions' },
+            { id: '1.6', title: '1.6 Function Properties' },
+        ]},
+        { title: 'Part 2: Number Theory & Relations', children: [
+            { id: '2.1', title: '2.1 Divisibility & GCD' },
+            { id: '2.2', title: '2.2 Euclidean Algorithm' },
+            { id: '2.3', title: '2.3 Modular Arithmetic' },
+            { id: '2.4', title: '2.4 Linear Congruences' },
+            { id: '2.5', title: '2.5 Relations & Equivalences' },
+            { id: '2.6', title: '2.6 Partial Orders' },
+        ]}
+    ];
+
+    function buildNav(items, parentElement, isSubmenu = false) {
+        const container = isSubmenu ? document.createElement('div') : parentElement;
+        if (isSubmenu) container.className = "ml-4 space-y-1";
+
+        items.forEach(item => {
+            if (item.children) {
+                const title = document.createElement('h4');
+                title.className = `font-semibold text-lg mt-4 ${isSubmenu ? '' : 'text-gray-200'}`;
+                title.textContent = item.title;
+                container.appendChild(title);
+                buildNav(item.children, container, true);
+            } else {
+                const link = document.createElement('a');
+                link.href = `#${item.id}`;
+                link.id = `nav-${item.id}`;
+                link.className = 'nav-link block p-2 rounded';
+                link.textContent = item.title;
+                link.onclick = (e) => { e.preventDefault(); navigateTo(item.id); };
+                container.appendChild(link);
+            }
+        });
+
+        if (isSubmenu) {
+            parentElement.appendChild(container);
+        }
+    }
+
+    function navigateTo(id) {
+        if (!contentData[id]) {
+            contentArea.innerHTML = '<h3>Content coming soon...</h3>';
+            return;
+        }
+        contentArea.innerHTML = contentData[id].content;
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        const activeLink = document.getElementById(`nav-${id}`);
+        if(activeLink) activeLink.classList.add('active');
+        if (id === '1.6') initFunctionChart();
+    }
+
+    buildNav(navStructure, navMenu);
+    navigateTo('intro');
+
+});
+
+function shadeVenn(operation) {
+    const a = document.getElementById('venn-set-a');
+    const b = document.getElementById('venn-set-b');
+    const highlightColor = 'rgba(224, 122, 95, 0.7)';
+    a.style.backgroundColor = 'rgba(59, 130, 246, 0.3)';
+    b.style.backgroundColor = 'rgba(239, 68, 68, 0.3)';
+    a.style.mixBlendMode = 'multiply';
+    b.style.mixBlendMode = 'multiply';
+    a.style.opacity = '0';
+    b.style.opacity = '0';
+    if (operation === 'clear') return;
+    a.style.opacity = '1';
+    b.style.opacity = '1';
+    if (operation === 'union') {
+        a.style.backgroundColor = highlightColor;
+        b.style.backgroundColor = highlightColor;
+    } else if (operation === 'intersection') {
+         a.style.backgroundColor = 'rgba(59, 130, 246, 0.3)';
+         b.style.backgroundColor = 'rgba(239, 68, 68, 0.3)';
+    } else if (operation === 'diff_a_b') {
+        b.style.opacity = '0';
+        a.style.backgroundColor = highlightColor;
+    } else if (operation === 'symm_diff') {
+        a.style.backgroundColor = highlightColor;
+        b.style.backgroundColor = highlightColor;
+        a.style.mixBlendMode = 'screen';
+        b.style.mixBlendMode = 'screen';
+    }
+}
+
+function calculateGCD() {
+    const a = parseInt(document.getElementById('gcdA').value);
+    const b = parseInt(document.getElementById('gcdB').value);
+    const resultDiv = document.getElementById('gcdResult');
+    if (isNaN(a) || isNaN(b)) {
+        resultDiv.innerHTML = '<p class="text-red-500">Please enter two valid integers.</p>';
+        return;
+    }
+    let n1 = Math.abs(a);
+    let n2 = Math.abs(b);
+    if (n2 > n1) [n1, n2] = [n2, n1];
+    let steps = '';
+    let tempN1 = n1, tempN2 = n2;
+    if (n2 === 0) {
+        resultDiv.innerHTML = `<p>gcd(${a}, ${b}) = <span class="font-bold text-lg">${n1}</span></p>`;
+        return;
+    }
+    while (tempN2 !== 0) {
+        let remainder = tempN1 % tempN2;
+        let quotient = Math.floor(tempN1 / tempN2);
+        steps += `<p class="math">${tempN1} = ${quotient} × ${tempN2} + ${remainder}</p>`;
+        tempN1 = tempN2;
+        tempN2 = remainder;
+    }
+    resultDiv.innerHTML = `<h5 class="font-semibold mb-2">Calculation Steps:</h5>${steps}<p class="mt-4 font-bold text-lg">Result: gcd(${a}, ${b}) = ${tempN1}</p>`;
+}
+
+let functionChart = null;
+function initFunctionChart() {
+    const ctx = document.getElementById('functionChart').getContext('2d');
+    const select = document.getElementById('functionSelect');
+    const functions = {
+        'x3': { label: 'f(x) = x³', func: x => Math.pow(x, 3), injective: true, surjective: true },
+        'x2': { label: 'f(x) = x²', func: x => Math.pow(x, 2), injective: false, surjective: false },
+        'sinx': { label: 'f(x) = sin(x)', func: x => Math.sin(x), injective: false, surjective: false }
+    };
+    function plotFunction(type) {
+        if (functionChart) functionChart.destroy();
+        const dataPoints = [];
+        for (let i = -5; i <= 5; i += 0.1) dataPoints.push({ x: i, y: functions[type].func(i) });
+        functionChart = new Chart(ctx, {
+            type: 'line',
+            data: { datasets: [{ label: functions[type].label, data: dataPoints, borderColor: '#e07a5f', borderWidth: 2, pointRadius: 0, tension: 0.1 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'linear', position: 'bottom' }, y: { beginAtZero: false } } }
+        });
+        const props = functions[type];
+        document.getElementById('functionTestResult').innerHTML = `<p>Injective: ${props.injective ? 'Yes' : 'No'}</p><p>Surjective: ${props.surjective ? 'Yes' : 'No'}</p><p>Bijective: ${props.injective && props.surjective ? 'Yes' : 'No'}</p>`;
+    }
+    select.addEventListener('change', (e) => plotFunction(e.target.value));
+    plotFunction(select.value);
+}
+
+function runHorizontalLineTest() {
+    if (!functionChart) return;
+    const chartArea = functionChart.chartArea;
+    const canvas = functionChart.canvas;
+    const line = document.createElement('div');
+    line.style.position = 'absolute';
+    line.style.left = chartArea.left + 'px';
+    line.style.width = chartArea.width + 'px';
+    line.style.height = '2px';
+    line.style.backgroundColor = '#3b82f6';
+    line.style.top = chartArea.top + 'px';
+    line.style.transition = 'top 2s ease-in-out';
+    canvas.parentNode.style.position = 'relative';
+    canvas.parentNode.appendChild(line);
+    setTimeout(() => { line.style.top = chartArea.bottom + 'px'; }, 100);
+    setTimeout(() => { line.remove(); }, 2100);
+}
+</script>
+
+</body>
+</html>

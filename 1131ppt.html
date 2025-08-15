@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Chosen Palette: Terracotta & Sand -->
+    <!-- Application Structure Plan: The application is redesigned with a two-column layout: a fixed navigation sidebar on the left and a main content area on the right, mirroring the provided Discrete Math notes' UI. This structure offers persistent, clear navigation, allowing users to easily jump between weekly topics. The content for each week is loaded dynamically into the main area, preserving the SPA experience. This design is chosen for its academic and organized feel, which is more suitable for study notes than the previous top-bar navigation. -->
+    <!-- Visualization & Content Choices: 
+        - All previous visualizations (Chart.js for 2D vectors/complex numbers, Plotly for 3D cross product) are retained.
+        - Core concepts are now presented in `.concept-card` elements, adopting the white-card-with-shadow style from the example for a cleaner, more segmented look.
+        - All interactive modules (calculators, explorers) are embedded within these concept cards and styled as `.interactive-module` with a distinct border, visually separating them from static content.
+        - The color scheme is changed from teal/blue to terracotta/orange/gray to match the provided UI style.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>MATH1131 代数交互式笔记</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <style>
+        @import url('https://rsms.me/inter/inter.css');
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .main-content h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #e07a5f;
+            color: #2c2c2c;
+        }
+        .main-content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #2c2c2c;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 4px solid transparent;
+        }
+        .nav-link.active {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            border-left-color: #2c2c2c;
+        }
+        .nav-link:hover {
+            background-color: #f4a261;
+            color: #2c2c2c;
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .interactive-module {
+            border: 2px solid #d3d3d3;
+            background-color: #fdfdfa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 40vh;
+        }
+        .btn-primary {
+             background-color: #e07a5f; color: #f8f7f2;
+        }
+        .btn-primary:hover {
+            background-color: #d06850;
+        }
+        .btn-secondary {
+            background-color: #f4a261; color: #2c2c2c;
+        }
+         .btn-secondary:hover {
+            background-color: #e9914e;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-full md:w-64 lg:w-72 bg-[#8b8589] text-gray-100 p-4 space-y-2 flex-shrink-0">
+            <h2 class="text-2xl font-bold text-center text-white pb-2 border-b-2 border-gray-400">代数笔记</h2>
+            <nav id="nav-menu" class="space-y-1"></nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content flex-1 p-6 md:p-10 overflow-y-auto">
+            <!-- Back to Course Button -->
+            <a href="./math1131.html" class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-[#f8f7f2] border-2 border-[#e07a5f] rounded-lg text-[#2c2c2c] font-medium hover:bg-[#e07a5f] hover:text-white transition-all duration-200 transform hover:-translate-y-1">
+                <span>←</span>
+                <span>Back to Course</span>
+            </a>
+            
+            <div id="content-area">
+                <!-- Content will be loaded here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const contentData = {
+        'intro': {
+            title: '欢迎',
+            content: `
+                <h3>欢迎来到代数世界</h3>
+                <div class="concept-card">
+                    <p>这个交互式指南旨在帮助您可视化 MATH1131 代数的核心概念。这个新版本的设计风格参考了离散数学笔记，为您提供一个熟悉且高效的学习环境。</p>
+                    <p class="mt-2">请使用左侧的导航栏来浏览不同周的学习内容。每个部分都包含了核心定义和交互式模块，让您能通过动手实践来加深理解。祝您学习愉快！</p>
+                </div>
+            `
+        },
+        '1.1': {
+            title: '1.1 向量基础',
+            content: `
+                <h3>1.1 向量基础 (Vector Basics)</h3>
+                <div class="concept-card">
+                    <h4>几何向量 (Geometric Vector)</h4>
+                    <p>一个同时具有<strong>大小 (magnitude)</strong> 和<strong>方向 (direction)</strong> 的数学对象。它的具体位置 (location) 并不重要。</p>
+                </div>
+                <div class="concept-card">
+                    <h4>核心概念</h4>
+                     <ul class="space-y-2 list-disc list-inside mt-2">
+                        <li><strong>向量相等 (Equal Vectors):</strong> 大小和方向完全相同。</li>
+                        <li><strong>标量 (Scalar):</strong> 一个实数，用于缩放向量。</li>
+                        <li><strong>零向量 (Zero Vector):</strong> 记作 $\\vec{0}$，长度为零，没有确定方向。</li>
+                        <li><strong>负向量 (Negative Vector):</strong> 记作 $-\\vec{a}$，与 $\\vec{a}$ 大小相同，方向相反。</li>
+                     </ul>
+                </div>
+            `
+        },
+        '1.2': {
+            title: '1.2 向量运算',
+            content: `
+                <h3>1.2 向量运算 (Vector Operations)</h3>
+                <p class="mb-6">向量的基本运算包括加法、减法和标量乘法。这些运算都有明确的几何解释，您可以在下方的可视化工具中进行探索。</p>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <div class="concept-card interactive-module">
+                            <h4>2D 向量运算可视化</h4>
+                            <p class="text-sm text-gray-600 mb-4">在下方输入二维向量的分量，观察它们的几何运算结果。</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium">向量 A (x, y)</label>
+                                    <div class="flex gap-2"><input type="number" id="v1x" value="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><input type="number" id="v1y" value="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium">向量 B (x, y)</label>
+                                    <div class="flex gap-2"><input type="number" id="v2x" value="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><input type="number" id="v2y" value="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <button id="addBtn" class="btn-primary px-4 py-2 rounded-md text-sm">A + B</button>
+                                <button id="subBtn" class="btn-secondary px-4 py-2 rounded-md text-sm">A - B</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="chart-container"><canvas id="vectorChart"></canvas></div>
+                    </div>
+                </div>
+            `
+        },
+        '1.3': {
+             title: '1.3 线性组合',
+             content: `
+                 <h3>1.3 线性组合与生成空间 (Linear Combinations & Span)</h3>
+                 <div class="concept-card">
+                     <h4>线性组合 (Linear Combination)</h4>
+                     <p>一个向量如果可以被表示为一组向量的倍数之和，那么它就是这组向量的一个线性组合。</p>
+                     <p class="text-center font-mono bg-gray-100 p-2 rounded mt-2">向量v = 系数1×向量1 + 系数2×向量2 + ... + 系数k×向量k</p>
+                     <p class="text-sm text-gray-600 mt-2">比如：如果有向量A和向量B，那么 2×A + 3×B 就是A和B的一个线性组合</p>
+                 </div>
+                 <div class="concept-card">
+                     <h4>生成空间 (Span)</h4>
+                     <p>一组向量的所有可能的线性组合构成的集合，称为这组向量的生成空间。</p>
+                      <ul class="space-y-2 list-disc list-inside mt-2">
+                         <li><strong>单个非零向量的生成空间</strong> 构成一条穿过原点的<strong>直线</strong>。</li>
+                         <li><strong>两个不平行向量的生成空间</strong> 构成一张穿过原点的<strong>平面</strong>。</li>
+                      </ul>
+                 </div>
+             `
+        },
+        '2.1': {
+            title: '2.1 直线与平面方程',
+            content: `
+                <h3>2.1 直线与平面方程 (Equations of Lines & Planes)</h3>
+                 <div class="concept-card">
+                    <h4>直线的向量方程 (Vector Equation of a Line)</h4>
+                    <p>由一个起始点的位置向量和一个方向向量确定：</p>
+                    <p class="text-center font-mono bg-gray-100 p-2 rounded mt-2">直线上的点 = 起始点 + 参数t × 方向向量</p>
+                    <p class="text-sm text-gray-600 mt-2">其中参数t可以是任意实数</p>
+                </div>
+                 <div class="concept-card">
+                    <h4>平面的向量方程 (Vector Equation of a Plane)</h4>
+                    <p>由一个起始点的位置向量和两个不平行的方向向量确定：</p>
+                    <p class="text-center font-mono bg-gray-100 p-2 rounded mt-2">平面上的点 = 起始点 + 参数s × 方向向量1 + 参数t × 方向向量2</p>
+                    <p class="text-sm text-gray-600 mt-2">其中参数s和t都可以是任意实数</p>
+                </div>
+            `
+        },
+         '2.2': {
+            title: '2.2 点积',
+            content: `
+                 <h3>2.2 点积 (Dot Product)</h3>
+                 <p class="mb-6">点积 (Dot Product)，也称标量积 (Scalar Product)，是计算两个向量乘积的方式之一，其结果是一个数字。</p>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                     <div>
+                        <div class="concept-card">
+                             <h4>定义与性质</h4>
+                             <ul class="space-y-2 list-disc list-inside mt-2">
+                                <li><strong>计算方法:</strong> 向量A·向量B = A的x分量×B的x分量 + A的y分量×B的y分量 + ...</li>
+                                <li><strong>几何意义:</strong> 向量A·向量B = |向量A| × |向量B| × cos(夹角)</li>
+                                <li><strong>重要应用:</strong> 计算向量夹角 cos(角度) = (向量A·向量B)/(|向量A| × |向量B|)</li>
+                             </ul>
+                        </div>
+                        <div class="concept-card interactive-module mt-6">
+                            <h4>点积计算器</h4>
+                            <p class="text-sm text-gray-600 mb-4">输入两个二维向量，应用将计算它们的点积和夹角，并在图表中可视化。</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium">向量 U (x, y)</label>
+                                    <div class="flex gap-2"><input type="number" id="dp_v1x" value="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><input type="number" id="dp_v1y" value="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium">向量 V (x, y)</label>
+                                    <div class="flex gap-2"><input type="number" id="dp_v2x" value="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><input type="number" id="dp_v2y" value="-3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                                </div>
+                            </div>
+                            <div id="dotProductResult" class="mt-6 p-4 bg-gray-100 rounded font-mono">等待输入...</div>
+                        </div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="chart-container"><canvas id="dotProductChart"></canvas></div>
+                    </div>
+                </div>
+            `
+        },
+        '3.1': {
+            title: '3.1 投影与正交性',
+            content: `
+                 <h3>3.1 投影与正交性 (Projection & Orthogonality)</h3>
+                 <div class="concept-card">
+                    <h4>正交 (Orthogonal)</h4>
+                    <p>如果两个非零向量的点积为零，则称它们是正交的 (即互相垂直)。</p>
+                    <p class="text-center font-mono bg-gray-100 p-2 rounded mt-2">向量U · 向量V = 0  ⟺  向量U ⊥ 向量V</p>
+                 </div>
+                 <div class="concept-card">
+                    <h4>投影 (Projection)</h4>
+                    <p>向量a在非零向量b上的投影公式为：</p>
+                    <p class="text-center font-mono bg-gray-100 p-2 rounded mt-2">向量a在b上的投影 = [(向量a · 向量b) / |向量b|²] × 向量b</p>
+                    <p class="mt-2">投影可用于计算点到直线的距离等问题。</p>
+                 </div>
+            `
+        },
+        '3.2': {
+            title: '3.2 叉积',
+            content: `
+                <h3>3.2 叉积 (Cross Product)</h3>
+                <p class="mb-6">叉积 (Cross Product)，也称向量积 (Vector Product)，仅在三维空间中定义，其结果是一个新的向量。</p>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <div class="concept-card">
+                             <h4>定义与性质</h4>
+                             <ul class="space-y-2 list-disc list-inside mt-2">
+                                <li><strong>结果:</strong> 向量A × 向量B 同时垂直于向量A和向量B。</li>
+                                <li><strong>方向:</strong> 由右手定则 (Right-Hand Rule) 确定。</li>
+                                <li><strong>大小:</strong> |向量A × 向量B| = |向量A| × |向量B| × sin(夹角)，等于由向量A和向量B构成的平行四边形的面积。</li>
+                             </ul>
+                        </div>
+                       <div class="concept-card interactive-module mt-6">
+                            <h4>3D 叉积计算器</h4>
+                            <p class="text-sm text-gray-600 mb-4">输入两个三维向量，我们将为您计算并可视化叉积结果。</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium">向量 A (x, y, z)</label>
+                                    <div class="flex gap-1 mt-1"><input type="number" id="cp_v1x" value="1" class="w-1/3 rounded-md border-gray-300 shadow-sm"><input type="number" id="cp_v1y" value="0" class="w-1/3 rounded-md border-gray-300 shadow-sm"><input type="number" id="cp_v1z" value="0" class="w-1/3 rounded-md border-gray-300 shadow-sm"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium">向量 B (x, y, z)</label>
+                                    <div class="flex gap-1 mt-1"><input type="number" id="cp_v2x" value="0" class="w-1/3 rounded-md border-gray-300 shadow-sm"><input type="number" id="cp_v2y" value="1" class="w-1/3 rounded-md border-gray-300 shadow-sm"><input type="number" id="cp_v2z" value="0" class="w-1/3 rounded-md border-gray-300 shadow-sm"></div>
+                                </div>
+                            </div>
+                            <div id="crossProductResult" class="mt-6 p-4 bg-gray-100 rounded font-mono">等待输入...</div>
+                        </div>
+                    </div>
+                    <div class="concept-card p-2">
+                        <div id="crossProductChart" class="w-full h-96"></div>
+                    </div>
+                </div>
+            `
+        },
+        '3.3': {
+            title: '3.3 标量三重积',
+            content: `
+                <h3>3.3 标量三重积 (Scalar Triple Product)</h3>
+                <div class="concept-card">
+                    <h4>定义</h4>
+                    <p>三个三维向量a、b、c的标量三重积是 向量a · (向量b × 向量c)。</p>
+                </div>
+                <div class="concept-card">
+                    <h4>几何意义</h4>
+                    <p>其<strong>绝对值</strong> |向量a · (向量b × 向量c)| 是由这三个向量作为邻边构成的<strong>平行六面体 (parallelepiped) 的体积</strong>。</p>
+                    <p class="mt-2">如果标量三重积为零，则这三个向量共面 (coplanar)。</p>
+                </div>
+            `
+        },
+        '4.1': {
+            title: '4.1 复数入门',
+            content: `
+                <h3>4.1 复数入门 (Intro to Complex Numbers)</h3>
+                <div class="concept-card">
+                    <h4>为什么需要复数？</h4>
+                    <p>为了解如 x² = -1 这样的方程，我们引入了虚数单位 i，定义为 i² = -1。</p>
+                </div>
+                <div class="concept-card">
+                    <h4>复数</h4>
+                    <p>一个复数的形式为 z = a + bi，其中 a, b 是实数。</p>
+                     <ul class="space-y-2 list-disc list-inside mt-2">
+                         <li>a 称为<strong>实部 (real part)</strong>，记作 Re(z)。</li>
+                         <li>b 称为<strong>虚部 (imaginary part)</strong>，记作 Im(z)。</li>
+                     </ul>
+                </div>
+            `
+        },
+        '4.2': {
+            title: '4.2 复数运算与几何',
+            content: `
+                <h3>4.2 复数运算与几何 (Operations & Geometry)</h3>
+                <p class="mb-6">复数可以在一个称为"复平面"或"阿甘图"的二维平面上表示。这为复数运算提供了直观的几何解释。</p>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <div class="concept-card">
+                             <h4>核心概念</h4>
+                             <ul class="space-y-2 list-disc list-inside mt-2">
+                                <li><strong>共轭 (Conjugate):</strong> z = a+bi ⟹ 共轭z = a-bi</li>
+                                <li><strong>模 (Modulus):</strong> |z| = √(a² + b²)</li>
+                                <li><strong>除法:</strong> 将分子分母同乘以分母的共轭。</li>
+                             </ul>
+                        </div>
+                        <div class="concept-card interactive-module mt-6">
+                            <h4>复数浏览器</h4>
+                            <p class="text-sm text-gray-600 mb-4">输入复数的实部和虚部，观察其在复平面上的位置及不同形式。</p>
+                            <div>
+                                <label class="block text-sm font-medium">复数 z = a + bi</label>
+                                <div class="flex gap-2 mt-1">
+                                    <input type="number" id="complex_a" value="1" placeholder="a (实部)" class="w-1/2 rounded-md border-gray-300 shadow-sm">
+                                    <input type="number" id="complex_b" value="1" placeholder="b (虚部)" class="w-1/2 rounded-md border-gray-300 shadow-sm">
+                                </div>
+                            </div>
+                            <div id="complexResult" class="mt-6 p-4 bg-gray-100 rounded font-mono space-y-2">等待输入...</div>
+                        </div>
+                    </div>
+                     <div class="concept-card">
+                        <div class="chart-container"><canvas id="complexChart"></canvas></div>
+                    </div>
+                </div>
+            `
+        },
+         '4.3': {
+            title: '4.3 极坐标与指数形式',
+            content: `
+                <h3>4.3 极坐标与指数形式 (Polar & Exponential Forms)</h3>
+                <div class="concept-card">
+                    <h4>欧拉公式 (Euler's Formula)</h4>
+                    <p>连接复指数和三角函数的桥梁：</p>
+                    <p class="text-center font-mono bg-gray-100 p-2 rounded mt-2">e^(i×角度) = cos(角度) + i×sin(角度)</p>
+                    <p class="text-sm text-gray-600 mt-2">这个神奇的公式将指数函数和三角函数联系起来了！</p>
+                </div>
+                <div class="concept-card">
+                    <h4>不同形式</h4>
+                     <ul class="space-y-2 list-disc list-inside mt-2">
+                         <li><strong>极坐标形式 (Polar Form):</strong> z = r × (cos(角度) + i×sin(角度))</li>
+                         <li><strong>指数形式 (Exponential Form):</strong> z = r × e^(i×角度)</li>
+                     </ul>
+                    <p class="mt-4">在指数形式下，复数的乘除法变得非常直观：模相乘/除，辐角相加/减。</p>
+                </div>
+            `
+        }
+    };
+
+    const navMenu = document.getElementById('nav-menu');
+    const contentArea = document.getElementById('content-area');
+
+    const navStructure = [
+        { id: 'intro', title: '欢迎' },
+        { title: '第一部分：向量代数', children: [
+            { id: '1.1', title: '1.1 向量基础' },
+            { id: '1.2', title: '1.2 向量运算' },
+            { id: '1.3', title: '1.3 线性组合' },
+        ]},
+        { title: '第二部分：向量几何', children: [
+            { id: '2.1', title: '2.1 直线与平面' },
+            { id: '2.2', title: '2.2 点积' },
+        ]},
+        { title: '第三部分：向量乘积', children: [
+            { id: '3.1', title: '3.1 投影与正交性' },
+            { id: '3.2', title: '3.2 叉积' },
+            { id: '3.3', title: '3.3 标量三重积' },
+        ]},
+        { title: '第四部分：复数', children: [
+            { id: '4.1', title: '4.1 复数入门' },
+            { id: '4.2', title: '4.2 运算与几何' },
+            { id: '4.3', title: '4.3 极坐标形式' },
+        ]}
+    ];
+    
+    function initApp(id) {
+        if (id === '1.2') initVectorChart();
+        else if (id === '2.2') initDotProductChart();
+        else if (id === '3.2') initCrossProductChart();
+        else if (id === '4.2') initComplexChart();
+    }
+
+    function navigateTo(id) {
+        if (!contentData[id]) {
+            contentArea.innerHTML = '<h3>内容即将上线...</h3>';
+            return;
+        }
+        contentArea.innerHTML = contentData[id].content;
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        const activeLink = document.getElementById(`nav-${id}`);
+        if(activeLink) activeLink.classList.add('active');
+        setTimeout(() => initApp(id), 0);
+    }
+    
+    function buildNav(items, parentElement, isSubmenu = false) {
+        const container = isSubmenu ? document.createElement('div') : parentElement;
+        if (isSubmenu) container.className = "ml-4 space-y-1";
+
+        items.forEach(item => {
+            if (item.children) {
+                const title = document.createElement('h4');
+                title.className = `font-semibold text-lg mt-4 text-gray-200`;
+                title.textContent = item.title;
+                container.appendChild(title);
+                buildNav(item.children, container, true);
+            } else {
+                const link = document.createElement('a');
+                link.href = `#${item.id}`;
+                link.id = `nav-${item.id}`;
+                link.className = 'nav-link block p-2 rounded-md font-medium';
+                link.textContent = item.title;
+                link.onclick = (e) => { e.preventDefault(); navigateTo(item.id); };
+                container.appendChild(link);
+            }
+        });
+
+        if (isSubmenu) {
+            parentElement.appendChild(container);
+        }
+    }
+    
+    buildNav(navStructure, navMenu);
+    navigateTo('intro');
+
+    function drawArrow(ctx, fromx, fromy, tox, toy, color) {
+        const headlen = 10;
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+        
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        
+        ctx.beginPath();
+        ctx.moveTo(fromx, fromy);
+        ctx.lineTo(tox, toy);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(tox, toy);
+        ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.lineTo(tox, toy);
+        ctx.closePath();
+
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function initVectorChart() {
+        const vectorCtx = document.getElementById('vectorChart').getContext('2d');
+        let vectorChart = new Chart(vectorCtx, {
+            type: 'scatter', data: { datasets: [] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { x: { beginAtZero: false, grid: { color: '#e2e8f0' } }, y: { beginAtZero: false, grid: { color: '#e2e8f0' } } },
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                animation: { onComplete: ({ chart }) => {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach(dataset => {
+                        const meta = chart.getDatasetMeta(dataset.index);
+                        if (meta.data.length > 1) drawArrow(ctx, meta.data[0].x, meta.data[0].y, meta.data[1].x, meta.data[1].y, dataset.borderColor);
+                    });
+                }}
+            }
+        });
+
+        function update(operation) {
+            const v1x = parseFloat(document.getElementById('v1x').value) || 0;
+            const v1y = parseFloat(document.getElementById('v1y').value) || 0;
+            const v2x = parseFloat(document.getElementById('v2x').value) || 0;
+            const v2y = parseFloat(document.getElementById('v2y').value) || 0;
+
+            const datasets = [
+                { data: [{x: 0, y: 0}, {x: v1x, y: v1y}], borderColor: 'rgba(244, 162, 97, 1)', borderWidth: 0 },
+                { data: [{x: 0, y: 0}, {x: v2x, y: v2y}], borderColor: 'rgba(46, 134, 193, 1)', borderWidth: 0 }
+            ];
+
+            if (operation === 'add') {
+                const resX = v1x + v2x, resY = v1y + v2y;
+                datasets.push({ data: [{x: v1x, y: v1y}, {x: resX, y: resY}], borderColor: 'rgba(46, 134, 193, 0.4)', borderWidth: 0, borderDash: [5, 5] });
+                datasets.push({ data: [{x: v2x, y: v2y}, {x: resX, y: resY}], borderColor: 'rgba(244, 162, 97, 0.4)', borderWidth: 0, borderDash: [5, 5] });
+                datasets.push({ data: [{x: 0, y: 0}, {x: resX, y: resY}], borderColor: 'rgba(224, 122, 95, 1)', borderWidth: 0 });
+            } else { // subtract
+                datasets.push({ data: [{x: v2x, y: v2y}, {x: v1x, y: v1y}], borderColor: 'rgba(42, 157, 143, 1)', borderWidth: 0 });
+            }
+            vectorChart.data.datasets = datasets;
+            vectorChart.update('none');
+        }
+        document.getElementById('addBtn').onclick = () => update('add');
+        document.getElementById('subBtn').onclick = () => update('sub');
+        update('add');
+    }
+
+    function initDotProductChart() {
+        const dotProductCtx = document.getElementById('dotProductChart').getContext('2d');
+        let dotProductChart = new Chart(dotProductCtx, {
+            type: 'scatter', data: { datasets: [] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { x: { beginAtZero: false }, y: { beginAtZero: false } },
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                animation: { onComplete: ({ chart }) => {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach(dataset => {
+                        const meta = chart.getDatasetMeta(dataset.index);
+                        if(meta.data.length > 1) drawArrow(ctx, meta.data[0].x, meta.data[0].y, meta.data[1].x, meta.data[1].y, dataset.borderColor);
+                    });
+                }}
+            }
+        });
+
+        function update() {
+            const v1x = parseFloat(document.getElementById('dp_v1x').value) || 0, v1y = parseFloat(document.getElementById('dp_v1y').value) || 0;
+            const v2x = parseFloat(document.getElementById('dp_v2x').value) || 0, v2y = parseFloat(document.getElementById('dp_v2y').value) || 0;
+            
+            const dotProduct = v1x * v2x + v1y * v2y;
+            const mag1 = Math.sqrt(v1x**2 + v1y**2), mag2 = Math.sqrt(v2x**2 + v2y**2);
+            let angleDeg = 0;
+            if (mag1 > 0 && mag2 > 0) angleDeg = Math.acos(Math.max(-1, Math.min(1, dotProduct / (mag1 * mag2)))) * (180 / Math.PI);
+
+            document.getElementById('dotProductResult').innerHTML = `<div>U · V = ${dotProduct.toFixed(2)}</div><div>夹角 ≈ ${angleDeg.toFixed(2)}°</div>`;
+            dotProductChart.data.datasets = [
+                { data: [{x: 0, y: 0}, {x: v1x, y: v1y}], borderColor: '#e07a5f' },
+                { data: [{x: 0, y: 0}, {x: v2x, y: v2y}], borderColor: '#3d405b' }
+            ];
+            dotProductChart.update('none');
+        }
+        ['dp_v1x', 'dp_v1y', 'dp_v2x', 'dp_v2y'].forEach(id => document.getElementById(id).oninput = update);
+        update();
+    }
+    
+    function initCrossProductChart() {
+        function update() {
+            const v1x = parseFloat(document.getElementById('cp_v1x').value)||0, v1y = parseFloat(document.getElementById('cp_v1y').value)||0, v1z = parseFloat(document.getElementById('cp_v1z').value)||0;
+            const v2x = parseFloat(document.getElementById('cp_v2x').value)||0, v2y = parseFloat(document.getElementById('cp_v2y').value)||0, v2z = parseFloat(document.getElementById('cp_v2z').value)||0;
+
+            const cpX = v1y * v2z - v1z * v2y, cpY = v1z * v2x - v1x * v2z, cpZ = v1x * v2y - v1y * v2x;
+            const area = Math.sqrt(cpX**2 + cpY**2 + cpZ**2);
+            
+            document.getElementById('crossProductResult').innerHTML = `<div>A × B = (${cpX.toFixed(2)}, ${cpY.toFixed(2)}, ${cpZ.toFixed(2)})</div><div>面积 ≈ ${area.toFixed(2)}</div>`;
+            const traces = [
+                { x: [0, v1x], y: [0, v1y], z: [0, v1z], type: 'scatter3d', mode: 'lines', line: { color: '#e07a5f', width: 6 }, name: 'A' },
+                { x: [0, v2x], y: [0, v2y], z: [0, v2z], type: 'scatter3d', mode: 'lines', line: { color: '#81b29a', width: 6 }, name: 'B' },
+                { x: [0, cpX], y: [0, cpY], z: [0, cpZ], type: 'scatter3d', mode: 'lines', line: { color: '#3d405b', width: 8 }, name: 'A × B' }
+            ];
+            const layout = { title: {text:'3D 向量叉积', font: {family:'Inter'}}, showlegend: true, margin: { l: 0, r: 0, b: 0, t: 40 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)'};
+            Plotly.newPlot('crossProductChart', traces, layout, {responsive: true});
+        }
+        ['cp_v1x', 'cp_v1y', 'cp_v1z', 'cp_v2x', 'cp_v2y', 'cp_v2z'].forEach(id => document.getElementById(id).oninput = update);
+        update();
+    }
+    
+    function initComplexChart() {
+        const complexCtx = document.getElementById('complexChart').getContext('2d');
+        let complexChart = new Chart(complexCtx, {
+            type: 'scatter', data: { datasets: [{ data: [], pointBackgroundColor: '#e07a5f', pointRadius: 6 }] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { x: { type: 'linear', position: 'center', title: {display: true, text: '实轴 (Re)'} }, y: { type: 'linear', position: 'center', title: {display: true, text: '虚轴 (Im)'} } },
+                plugins: { legend: { display: false } },
+                animation: { onComplete: ({ chart }) => {
+                    const ctx = chart.ctx; const meta = chart.getDatasetMeta(0);
+                    if (meta.data.length > 0) {
+                        const origin = {x: chart.scales.x.getPixelForValue(0), y: chart.scales.y.getPixelForValue(0)};
+                        drawArrow(ctx, origin.x, origin.y, meta.data[0].x, meta.data[0].y, 'rgba(224, 122, 95, 0.7)');
+                    }
+                }}
+            }
+        });
+
+        function update() {
+            const a = parseFloat(document.getElementById('complex_a').value)||0, b = parseFloat(document.getElementById('complex_b').value)||0;
+            const r = Math.sqrt(a**2 + b**2), theta = Math.atan2(b, a), thetaDeg = theta * (180 / Math.PI);
+            document.getElementById('complexResult').innerHTML = `
+                <div>笛卡尔: ${a.toFixed(2)} + ${b.toFixed(2)}i</div>
+                <div>模 |z|: ${r.toFixed(2)}</div>
+                <div>辐角 Arg(z): ${thetaDeg.toFixed(2)}°</div>
+                <div>指数: ${r.toFixed(2)}e<sup>i*${theta.toFixed(2)}</sup></div>
+            `;
+            complexChart.data.datasets[0].data = [{x: a, y: b}];
+            complexChart.update('none');
+        }
+        document.getElementById('complex_a').oninput = update;
+        document.getElementById('complex_b').oninput = update;
+        update();
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2 - Discrete Mathematics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .math {
+            font-family: "Cambria Math", "Times New Roman", serif;
+            font-size: 1.1em;
+            display: inline-block;
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #8b8589 0%, #a8a3a7 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <a href="./index.html" class="home-button">← Back to Home</a>
+            <h1 class="chapter-title">Chapter 2</h1>
+            <div class="w-24"></div> <!-- Spacer for centering -->
+        </header>
+
+        <!-- Chapter Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">Chapter Summary</h2>
+            <p class="text-lg leading-relaxed">
+                This chapter delves into <strong>Relations and Functions</strong>, exploring how sets can be related 
+                to each other and how functions establish mappings between sets. We cover equivalence relations, 
+                partial orders, and function properties essential for advanced mathematical reasoning.
+            </p>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <strong>Key Concepts:</strong>
+                    <ul class="mt-1">
+                        <li>• Binary Relations</li>
+                        <li>• Function Types</li>
+                        <li>• Equivalence Classes</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Learning Goals:</strong>
+                    <ul class="mt-1">
+                        <li>• Analyze relations</li>
+                        <li>• Classify functions</li>
+                        <li>• Apply theorems</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Prerequisites:</strong>
+                    <ul class="mt-1">
+                        <li>• Chapter 1 content</li>
+                        <li>• Set operations</li>
+                        <li>• Basic proofs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Content -->
+        <main>
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">2.1 Binary Relations</h3>
+                <p class="mb-4">A <strong>binary relation</strong> R from set A to set B is a subset of the Cartesian product A × B.</p>
+                
+                <h4 class="font-semibold text-lg mb-2">Notation and Properties:</h4>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><span class="math">R ⊆ A × B</span> - R is a relation from A to B</li>
+                    <li><span class="math">aRb</span> or <span class="math">(a,b) ∈ R</span> - a is related to b</li>
+                    <li><strong>Reflexive:</strong> <span class="math">∀a ∈ A, aRa</span></li>
+                    <li><strong>Symmetric:</strong> <span class="math">aRb ⟹ bRa</span></li>
+                    <li><strong>Transitive:</strong> <span class="math">aRb ∧ bRc ⟹ aRc</span></li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">2.2 Equivalence Relations</h3>
+                <div class="space-y-4">
+                    <p>An <strong>equivalence relation</strong> is a relation that is reflexive, symmetric, and transitive.</p>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">Key Properties:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Partitions the set into disjoint equivalence classes</li>
+                            <li>Each element belongs to exactly one equivalence class</li>
+                            <li>Equivalence class of a: <span class="math">[a] = {x ∈ A | xRa}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">2.3 Functions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">Function Types</h4>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-gray-50 rounded">
+                                <strong>Injective (One-to-one)</strong>
+                                <p class="text-sm mt-1">Different inputs produce different outputs</p>
+                                <p class="math">f(a) = f(b) ⟹ a = b</p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded">
+                                <strong>Surjective (Onto)</strong>
+                                <p class="text-sm mt-1">Every element in codomain is mapped to</p>
+                                <p class="math">∀y ∈ B, ∃x ∈ A: f(x) = y</p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded">
+                                <strong>Bijective</strong>
+                                <p class="text-sm mt-1">Both injective and surjective</p>
+                                <p class="text-sm">Has an inverse function</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">Function Composition</h4>
+                        <p class="mb-3">For functions <span class="math">f: A → B</span> and <span class="math">g: B → C</span>:</p>
+                        <div class="p-3 bg-yellow-50 rounded">
+                            <p><span class="math">(g ∘ f)(x) = g(f(x))</span></p>
+                            <p class="text-sm mt-2">The composition g∘f maps from A to C</p>
+                        </div>
+                        
+                        <h4 class="font-semibold mt-4 mb-2">Inverse Functions</h4>
+                        <p class="text-sm">If f is bijective, then <span class="math">f⁻¹</span> exists such that:</p>
+                        <ul class="list-disc list-inside text-sm mt-2">
+                            <li><span class="math">f⁻¹(f(x)) = x</span></li>
+                            <li><span class="math">f(f⁻¹(y)) = y</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">2.4 Practice Problems</h3>
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-3">Problem 1: Relation Properties</h4>
+                        <p class="mb-2">Consider the relation R on ℤ defined by: <span class="math">aRb ⟺ a ≡ b (mod 3)</span></p>
+                        <p class="mb-2">Determine if R is reflexive, symmetric, and transitive.</p>
+                        
+                        <div class="mt-4 p-3 bg-white rounded border-l-4 border-[#8b8589]">
+                            <strong>Solution:</strong>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>Reflexive:</strong> ✓ (a ≡ a (mod 3) for all a)</li>
+                                <li><strong>Symmetric:</strong> ✓ (if a ≡ b (mod 3), then b ≡ a (mod 3))</li>
+                                <li><strong>Transitive:</strong> ✓ (if a ≡ b and b ≡ c (mod 3), then a ≡ c (mod 3))</li>
+                                <li><strong>Conclusion:</strong> R is an equivalence relation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-3">Problem 2: Function Analysis</h4>
+                        <p class="mb-2">Let <span class="math">f: ℝ → ℝ</span> be defined by <span class="math">f(x) = x²</span></p>
+                        <p class="mb-2">Determine if f is injective, surjective, or bijective.</p>
+                        
+                        <div class="mt-4 p-3 bg-white rounded border-l-4 border-[#8b8589]">
+                            <strong>Analysis:</strong>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>Injective:</strong> ✗ (f(-2) = f(2) = 4, but -2 ≠ 2)</li>
+                                <li><strong>Surjective:</strong> ✗ (no x ∈ ℝ such that f(x) = -1)</li>
+                                <li><strong>Bijective:</strong> ✗ (neither injective nor surjective)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
