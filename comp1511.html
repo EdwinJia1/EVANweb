@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMP1511 - Programming Fundamentals | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .course-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .course-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            width: 100%;
+        }
+        .notion-badge {
+            display: inline-block;
+            background-color: #f4a261;
+            color: #2c2c2c;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .course-link:hover .notion-badge {
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .local-badge {
+            display: inline-block;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .course-link:hover .local-badge {
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .external-link::after {
+            content: " ↗";
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Back to Home Button */
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Tab Navigation Styles */
+        .tab-nav {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+        .tab-button:hover {
+            border-color: #e07a5f;
+            transform: translateY(-2px);
+        }
+        .tab-button.active {
+            background-color: #e07a5f;
+            color: #ffffff;
+            border-color: #e07a5f;
+        }
+
+        /* Tab Content Styles */
+        .tab-content-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-content-panel {
+            display: none;
+        }
+        .tab-content-panel.active {
+            display: block;
+        }
+
+        /* Notes Options Styles */
+        .notes-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .notes-option-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            border: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            color: inherit;
+        }
+        .notes-option-card:hover {
+            border-color: #e07a5f;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px -2px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        
+        <!-- Back to Home Button -->
+        <a href="./index.html" class="back-button">
+            <span>←</span>
+            <span>Back to Home</span>
+        </a>
+
+        <!-- Course Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">COMP1511</h1>
+            <p class="text-xl text-gray-600 mt-2">Programming Fundamentals</p>
+            <p class="text-sm text-gray-500 mt-1">Comprehensive study materials for programming fundamentals</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-button active" onclick="switchTab('notes')">Notes</button>
+            <button class="tab-button" onclick="switchTab('interactive')">Interactive Course</button>
+            <button class="tab-button" onclick="switchTab('practice')">Practice & Review</button>
+        </nav>
+
+        <!-- Tab Content Container -->
+        <div class="tab-content-container">
+            
+            <!-- Notes Tab -->
+            <div class="tab-content-panel active" id="notes-panel">
+                <h2 class="text-2xl font-bold text-[#e07a5f] mb-4">Course Notes</h2>
+                <p class="text-gray-600 mb-6">Access comprehensive programming notes with real-time updates on Notion.</p>
+                
+                <div class="notes-options">
+                    <!-- Notion Version Option -->
+                    <div class="notes-option-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-3">Notion Notes</h3>
+                        <p class="text-gray-600 mb-4">Real-time updated programming notes with the latest content, examples, and coding exercises.</p>
+                        
+                        <!-- Course Notes Link -->
+                        <div class="space-y-3">
+                            <a href="https://fishy-cloche-56b.notion.site/COMP1511-21b98e94886480d5a4dec7dab6410b19?pvs=73" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-lg font-bold text-[#8b8589]">COMP1511 - Programming Fundamentals</h4>
+                                    <p class="text-sm mt-1 text-gray-500">Complete course notes covering:</p>
+                                    <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                        <li>C Programming Basics</li>
+                                        <li>Data Structures & Algorithms</li>
+                                        <li>Memory Management</li>
+                                        <li>File I/O and System Programming</li>
+                                        <li>Debugging and Testing</li>
+                                    </ul>
+                                    <div class="notion-badge mt-3">Live Updates</div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <div class="mt-4 p-4 bg-green-50 border-l-4 border-green-400 rounded">
+                            <p class="text-sm text-green-700">
+                                <strong>New:</strong> Local notes are now available for specific topics! Check below for detailed offline content.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Local Notes Option -->
+                    <div class="notes-option-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-3">链表基础 (Linked Lists)</h3>
+                        <p class="text-gray-600 mb-4">深入学习链表数据结构，包含详细的C语言实现和可视化演示。</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Local Notes Card -->
+                            <a href="./comp1511/1511_list_notes.html" class="course-link">
+                                <div class="course-card" style="margin-top: 0;">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">链表 - 核心笔记</h4>
+                                    <p class="text-sm mt-2 text-gray-600">深入理解链表的概念、结构和C语言实现，包含详细代码示例。</p>
+                                    <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                        <li>节点结构定义</li>
+                                        <li>内存管理和指针操作</li>
+                                        <li>插入、删除、遍历算法</li>
+                                        <li>常见错误和调试技巧</li>
+                                    </ul>
+                                    <div class="local-badge mt-3">Offline Access</div>
+                                </div>
+                            </a>
+
+                            <!-- Interactive Course Card -->
+                            <a href="./comp1511/1511_list_interactive.html" class="course-link">
+                                <div class="course-card" style="margin-top: 0;">
+                                    <h4 class="text-lg font-bold text-[#e07a5f]">互动式链表课程</h4>
+                                    <p class="text-sm mt-2 text-gray-600">通过可视化动画和分步演示，亲手操作节点的创建、遍历和插入。</p>
+                                    <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                        <li>节点可视化创建</li>
+                                        <li>逐步遍历演示</li>
+                                        <li>动画插入过程</li>
+                                        <li>互动练习和挑战</li>
+                                    </ul>
+                                    <div class="notion-badge mt-3" style="background-color: #22c55e;">Interactive</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Pointers and Command Line Arguments -->
+                    <div class="notes-option-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-3">指针与命令行 (Pointers & Command Line)</h3>
+                        <p class="text-gray-600 mb-4">掌握C语言的核心概念：指针操作和命令行参数处理，为高级编程打下坚实基础。</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Pointers Section -->
+                            <div>
+                                <h4 class="text-lg font-bold text-[#8b8589] mb-3">📍 指针基础</h4>
+                                <div class="space-y-3">
+                                    <a href="./comp1511/1511_pointers_notes.html" class="course-link">
+                                        <div class="course-card" style="margin-top: 0;">
+                                            <h5 class="text-md font-bold text-[#e07a5f]">指针 - 核心笔记</h5>
+                                            <p class="text-sm mt-2 text-gray-600">深入理解指针概念、地址操作、解引用和指针算术。</p>
+                                            <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                                <li>指针定义与初始化</li>
+                                                <li>取地址 & 和解引用 *</li>
+                                                <li>指针与数组关系</li>
+                                                <li>函数参数传递</li>
+                                            </ul>
+                                            <div class="local-badge mt-3">Offline Access</div>
+                                        </div>
+                                    </a>
+
+                                    <a href="./comp1511/1511_pointers_interactive.html" class="course-link">
+                                        <div class="course-card" style="margin-top: 0;">
+                                            <h5 class="text-md font-bold text-[#e07a5f]">指针互动课程</h5>
+                                            <p class="text-sm mt-2 text-gray-600">可视化内存布局，动态演示指针操作和算术运算。</p>
+                                            <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                                <li>内存地址可视化</li>
+                                                <li>指针指向演示</li>
+                                                <li>数组指针移动</li>
+                                                <li>实时值修改</li>
+                                            </ul>
+                                            <div class="notion-badge mt-3" style="background-color: #22c55e;">Interactive</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Command Line Arguments Section -->
+                            <div>
+                                <h4 class="text-lg font-bold text-[#8b8589] mb-3">💻 命令行参数</h4>
+                                <div class="space-y-3">
+                                    <a href="./comp1511/1511_cmd_args_notes.html" class="course-link">
+                                        <div class="course-card" style="margin-top: 0;">
+                                            <h5 class="text-md font-bold text-[#e07a5f]">命令行参数 - 核心笔记</h5>
+                                            <p class="text-sm mt-2 text-gray-600">学习 argc 和 argv 的使用，构建灵活的命令行程序。</p>
+                                            <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                                <li>argc 和 argv 详解</li>
+                                                <li>参数解析和验证</li>
+                                                <li>选项标志处理</li>
+                                                <li>实际应用示例</li>
+                                            </ul>
+                                            <div class="local-badge mt-3">Offline Access</div>
+                                        </div>
+                                    </a>
+
+                                    <a href="./comp1511/1511_cmd_args_interactive.html" class="course-link">
+                                        <div class="course-card" style="margin-top: 0;">
+                                            <h5 class="text-md font-bold text-[#e07a5f]">命令行参数互动课程</h5>
+                                            <p class="text-sm mt-2 text-gray-600">模拟终端环境，实时解析命令，理解参数处理流程。</p>
+                                            <ul class="text-xs mt-2 ml-4 list-disc text-gray-500">
+                                                <li>命令解析演示</li>
+                                                <li>argv 数组可视化</li>
+                                                <li>代码执行模拟</li>
+                                                <li>实践练习</li>
+                                            </ul>
+                                            <div class="notion-badge mt-3" style="background-color: #22c55e;">Interactive</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Course Tab -->
+            <div class="tab-content-panel" id="interactive-panel">
+                <h2 class="text-2xl font-bold text-[#e07a5f] mb-4">Interactive Course</h2>
+                <p class="text-gray-600 mb-6">Interactive programming tutorials and coding exercises for hands-on learning.</p>
+                
+                <!-- Available Interactive Modules -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-[#e07a5f] mb-4">Available Interactive Modules</h3>
+                    
+                    <a href="./comp1511/1511_list_interactive.html" class="course-link">
+                        <div class="course-card" style="margin-top: 0;">
+                            <h4 class="text-xl font-bold text-[#e07a5f]">Interactive Linked Lists Course</h4>
+                            <p class="text-lg mt-2">可视化链表学习</p>
+                            <p class="text-gray-500 mt-3">通过动画和交互演示深入理解链表：</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
+                                <div class="bg-green-50 p-3 rounded border border-green-200">
+                                    <h5 class="font-semibold text-green-800 text-sm">模块一</h5>
+                                    <p class="text-green-700 text-xs">节点可视化创建</p>
+                                </div>
+                                <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                                    <h5 class="font-semibold text-blue-800 text-sm">模块二</h5>
+                                    <p class="text-blue-700 text-xs">逐步遍历演示</p>
+                                </div>
+                                <div class="bg-purple-50 p-3 rounded border border-purple-200">
+                                    <h5 class="font-semibold text-purple-800 text-sm">模块三</h5>
+                                    <p class="text-purple-700 text-xs">动画插入过程</p>
+                                </div>
+                            </div>
+                            <div class="notion-badge mt-4" style="background-color: #22c55e;">Available Now</div>
+                        </div>
+                    </a>
+
+                    <!-- Pointers and Command Line Interactive Modules -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <!-- Pointers Interactive -->
+                        <a href="./comp1511/1511_pointers_interactive.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-xl font-bold text-[#e07a5f]">Interactive Pointers Course</h4>
+                                <p class="text-lg mt-2">可视化指针学习</p>
+                                <p class="text-gray-500 mt-3">通过内存模型和动画深入理解指针：</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+                                    <div class="bg-orange-50 p-2 rounded border border-orange-200">
+                                        <h5 class="font-semibold text-orange-800 text-sm">模块一</h5>
+                                        <p class="text-orange-700 text-xs">地址与解引用</p>
+                                    </div>
+                                    <div class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                                        <h5 class="font-semibold text-yellow-800 text-sm">模块二</h5>
+                                        <p class="text-yellow-700 text-xs">指针算术演示</p>
+                                    </div>
+                                </div>
+                                <div class="notion-badge mt-4" style="background-color: #22c55e;">Available Now</div>
+                            </div>
+                        </a>
+
+                        <!-- Command Line Arguments Interactive -->
+                        <a href="./comp1511/1511_cmd_args_interactive.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-xl font-bold text-[#e07a5f]">Interactive Command Line Arguments</h4>
+                                <p class="text-lg mt-2">命令行参数解析学习</p>
+                                <p class="text-gray-500 mt-3">模拟终端环境，理解参数处理：</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+                                    <div class="bg-cyan-50 p-2 rounded border border-cyan-200">
+                                        <h5 class="font-semibold text-cyan-800 text-sm">模块一</h5>
+                                        <p class="text-cyan-700 text-xs">参数解析器</p>
+                                    </div>
+                                    <div class="bg-indigo-50 p-2 rounded border border-indigo-200">
+                                        <h5 class="font-semibold text-indigo-800 text-sm">模块二</h5>
+                                        <p class="text-indigo-700 text-xs">代码模拟器</p>
+                                    </div>
+                                </div>
+                                <div class="notion-badge mt-4" style="background-color: #22c55e;">Available Now</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coming Soon -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#e07a5f] mb-4">Coming Soon</h3>
+                    <div class="course-card opacity-60 cursor-not-allowed" style="margin-top: 0;">
+                        <h4 class="text-xl font-bold text-gray-400">Advanced Programming Modules</h4>
+                        <p class="text-lg mt-2 text-gray-400">More Interactive Content</p>
+                        <p class="text-gray-500 mt-3">Future interactive learning modules will include:</p>
+                        <ul class="text-gray-500 mt-2 ml-4 list-disc">
+                            <li>Arrays and Memory Management</li>
+                            <li>Recursion Visualization</li>
+                            <li>Tree and Graph Algorithms</li>
+                            <li>Sorting Algorithm Animations</li>
+                            <li>Debugging and Testing Tools</li>
+                        </ul>
+                        <div class="local-badge mt-4" style="background-color: #cccccc;">In Development</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice & Review Tab -->
+            <div class="tab-content-panel" id="practice-panel">
+                <h2 class="text-2xl font-bold text-[#e07a5f] mb-4">Practice & Review</h2>
+                <p class="text-gray-600 mb-6">Programming exercises, coding challenges, and review materials.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Linked Lists Quiz -->
+                    <a href="./comp1511/1511_linked_lists_quiz.html" class="course-link">
+                        <div class="course-card" style="margin-top: 0;">
+                            <h4 class="text-lg font-bold text-[#e07a5f]">🔗 链表测验</h4>
+                            <p class="text-base mt-2 text-gray-700">链表专项练习</p>
+                            <p class="text-gray-600 mt-3 text-sm">包含概念理解、代码阅读、交互模拟和编程实践，全面检验链表知识掌握程度。</p>
+                            <span class="local-badge">50道题目</span>
+                        </div>
+                    </a>
+
+                    <!-- Pointers Quiz -->
+                    <a href="./comp1511/1511_pointers_quiz.html" class="course-link">
+                        <div class="course-card" style="margin-top: 0;">
+                            <h4 class="text-lg font-bold text-[#e07a5f]">📍 指针测验</h4>
+                            <p class="text-base mt-2 text-gray-700">指针专项练习</p>
+                            <p class="text-gray-600 mt-3 text-sm">深入测试指针概念、内存操作、解引用和指针算术等核心知识点。</p>
+                            <span class="local-badge">50道题目</span>
+                        </div>
+                    </a>
+
+                    <!-- General Quiz -->
+                    <a href="./comp1511/1511_general_quiz.html" class="course-link">
+                        <div class="course-card" style="margin-top: 0;">
+                            <h4 class="text-lg font-bold text-[#e07a5f]">🎯 综合测验</h4>
+                            <p class="text-base mt-2 text-gray-700">综合知识练习</p>
+                            <p class="text-gray-600 mt-3 text-sm">涵盖命令行参数、文件IO、内存管理等COMP1511重要知识点。</p>
+                            <span class="local-badge">50道题目</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div class="course-card opacity-60 cursor-not-allowed" style="margin-top: 0;">
+                        <h4 class="text-lg font-bold text-gray-400">更多练习题</h4>
+                        <p class="text-base mt-2 text-gray-400">Coming Soon</p>
+                        <p class="text-gray-500 mt-3 text-sm">更多编程练习、算法挑战和项目作业即将上线。</p>
+                    </div>
+                    
+                    <div class="course-card opacity-60 cursor-not-allowed" style="margin-top: 0;">
+                        <h4 class="text-lg font-bold text-gray-400">复习资料</h4>
+                        <p class="text-base mt-2 text-gray-400">Coming Soon</p>
+                        <p class="text-gray-500 mt-3 text-sm">快速参考指南、备忘录和考试准备材料。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab content panels
+            const panels = document.querySelectorAll('.tab-content-panel');
+            panels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show the selected tab content panel
+            const targetPanel = document.getElementById(tabName + '-panel');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+            
+            // Add active class to the clicked tab button
+            const clickedButton = event.target;
+            clickedButton.classList.add('active');
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5 Algebra Quiz - Matrix Algebra Quiz | MATH1131</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .question-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-card.answered-correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .question-card.answered-incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-button:hover:not(.disabled) {
+            border-color: #e07a5f;
+            transform: translateX(5px);
+        }
+        .option-button.correct {
+            border-color: #22c55e;
+            background-color: #dcfce7;
+        }
+        .option-button.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+        .option-button.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            border-radius: 0 0.375rem 0.375rem 0;
+            display: none;
+        }
+        .explanation.show {
+            display: block;
+        }
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .difficulty-easy {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .difficulty-medium {
+            background-color: #fed7aa;
+            color: #9a3412;
+        }
+        .difficulty-hard {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #e07a5f 0%, #f4a261 100%);
+            transition: width 0.3s ease;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Navigation -->
+        <a href="../math1131.html" class="back-button">
+            <span>←</span>
+            <span>Back to Course</span>
+        </a>
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Week 5 Matrix Algebra Quiz</h1>
+            <p class="text-xl text-gray-600 mt-2">Test your matrix knowledge and skills</p>
+            <p class="text-sm text-gray-500 mt-1">50 questions: 20 easy, 25 medium, 5 hard</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <!-- Refresh Button -->
+        <div class="text-center mb-6">
+            <button onclick="window.location.reload()" class="back-button" style="margin: 0 auto; border-color: #22c55e;">
+                🔄 Refresh Quiz
+            </button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="text-2xl font-bold text-[#e07a5f]" id="scoreDisplay">0/0</div>
+                <div class="text-sm text-gray-600">Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-2xl font-bold text-green-600" id="correctDisplay">0</div>
+                <div class="text-sm text-gray-600">Correct</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-2xl font-bold text-red-600" id="incorrectDisplay">0</div>
+                <div class="text-sm text-gray-600">Incorrect</div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+
+        <!-- Results Section -->
+        <div class="quiz-container" id="resultsSection" style="display: none;">
+            <h2 class="text-2xl font-bold text-center mb-4">Quiz Complete!</h2>
+            <div class="text-center">
+                <p class="text-lg mb-2">Final Score: <span id="finalScore" class="font-bold text-[#e07a5f]"></span></p>
+                <p class="text-lg mb-4">Accuracy: <span id="accuracy" class="font-bold text-[#e07a5f]"></span></p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="restartQuiz()" class="back-button" style="margin: 0;">
+                        Restart Quiz
+                    </button>
+                    <button onclick="window.location.reload()" class="back-button" style="margin: 0; border-color: #22c55e;">
+                        🔄 Fresh Start
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Questions Data
+        const questions = [
+            // ========== Easy Questions (20 questions) - Basic definitions and concepts ==========
+            {
+                id: 1,
+                difficulty: "easy",
+                question: "What is a matrix?",
+                options: [
+                    "A rectangular array of numbers",
+                    "A linear equation",
+                    "A vector",
+                    "A scalar"
+                ],
+                correct: 0,
+                explanation: "A matrix is a rectangular array of numbers, denoted by capital letters (A, B, C). It is a fundamental mathematical object in linear algebra."
+            },
+            {
+                id: 2,
+                difficulty: "easy",
+                question: "A 3×4 matrix has how many rows and columns?",
+                options: [
+                    "3 rows, 4 columns",
+                    "4 rows, 3 columns",
+                    "3 rows, 3 columns",
+                    "4 rows, 4 columns"
+                ],
+                correct: 0,
+                explanation: "Matrix dimensions are expressed as m×n, where m is the number of rows and n is the number of columns. So a 3×4 matrix has 3 rows and 4 columns."
+            },
+            {
+                id: 3,
+                difficulty: "easy",
+                question: "In matrix A, what does $a_{23}$ represent?",
+                options: [
+                    "Element in row 2, column 3",
+                    "Element in row 3, column 2",
+                    "Sum of 2nd and 3rd elements",
+                    "The 23rd element of the matrix"
+                ],
+                correct: 0,
+                explanation: "$a_{ij}$ represents the element in row i and column j. So $a_{23}$ is the element in row 2, column 3."
+            },
+            {
+                id: 4,
+                difficulty: "easy",
+                question: "What is a zero matrix?",
+                options: [
+                    "A matrix with all elements equal to 0",
+                    "A matrix with only diagonal elements equal to 0",
+                    "A matrix with determinant equal to 0",
+                    "A matrix with no elements"
+                ],
+                correct: 0,
+                explanation: "A zero matrix is a matrix where all elements are equal to 0, usually denoted as O or 0."
+            },
+            {
+                id: 5,
+                difficulty: "easy",
+                question: "What is the condition for two matrices to be added?",
+                options: [
+                    "They must have the same dimensions",
+                    "They must be square matrices",
+                    "They must have equal determinants",
+                    "They must be invertible"
+                ],
+                correct: 0,
+                explanation: "Matrix addition requires two matrices to have the same dimensions (same number of rows and columns), then corresponding elements are added."
+            },
+            {
+                id: 6,
+                difficulty: "easy",
+                question: "What is scalar multiplication?",
+                options: [
+                    "A scalar multiplied by each element of a matrix",
+                    "A scalar multiplied only by diagonal elements",
+                    "A scalar multiplied by the determinant",
+                    "A scalar multiplied by the first element only"
+                ],
+                correct: 0,
+                explanation: "In scalar multiplication, a scalar k is multiplied by each element of matrix A, i.e., $(kA)_{ij} = k \\cdot a_{ij}$."
+            },
+            {
+                id: 7,
+                difficulty: "easy",
+                question: "What is the condition for matrix A to be multiplied by matrix B?",
+                options: [
+                    "Number of columns in A equals number of rows in B",
+                    "Number of rows in A equals number of columns in B",
+                    "A and B must have the same dimensions",
+                    "A and B must both be square matrices"
+                ],
+                correct: 0,
+                explanation: "Matrix multiplication AB requires that the number of columns in A equals the number of rows in B. If A is m×n, then B must be n×p."
+            },
+            {
+                id: 8,
+                difficulty: "easy",
+                question: "If A is a 2×3 matrix and B is a 3×4 matrix, what is the dimension of AB?",
+                options: [
+                    "2×4",
+                    "3×3",
+                    "4×2",
+                    "Cannot be multiplied"
+                ],
+                correct: 0,
+                explanation: "When A is m×n and B is n×p, the product AB is m×p. Here it's 2×4."
+            },
+            {
+                id: 9,
+                difficulty: "easy",
+                question: "Does matrix multiplication satisfy the commutative property?",
+                options: [
+                    "Generally no",
+                    "Always yes",
+                    "Only for square matrices",
+                    "Only for diagonal matrices"
+                ],
+                correct: 0,
+                explanation: "Matrix multiplication generally does not satisfy the commutative property, meaning AB ≠ BA in most cases."
+            },
+            {
+                id: 10,
+                difficulty: "easy",
+                question: "What is a square matrix?",
+                options: [
+                    "A matrix with equal number of rows and columns",
+                    "A matrix with all elements equal",
+                    "A matrix with diagonal elements equal to 1",
+                    "An invertible matrix"
+                ],
+                correct: 0,
+                explanation: "A square matrix is a matrix with equal number of rows and columns, such as 2×2, 3×3, or n×n matrices."
+            },
+            {
+                id: 11,
+                difficulty: "easy",
+                question: "For which type of matrix can we calculate the determinant?",
+                options: [
+                    "Square matrices",
+                    "Any matrix",
+                    "Invertible matrices",
+                    "Diagonal matrices"
+                ],
+                correct: 0,
+                explanation: "The determinant can only be calculated for square matrices (matrices with equal number of rows and columns)."
+            },
+            {
+                id: 12,
+                difficulty: "easy",
+                question: "What is the determinant formula for a 2×2 matrix $\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$?",
+                options: [
+                    "$ad - bc$",
+                    "$ac - bd$",
+                    "$ab - cd$",
+                    "$a + d - b - c$"
+                ],
+                correct: 0,
+                explanation: "The determinant formula for a 2×2 matrix is $ad - bc$. This is the most basic determinant calculation."
+            },
+            {
+                id: 13,
+                difficulty: "easy",
+                question: "If the determinant of matrix A is 0, what does this mean?",
+                options: [
+                    "A is singular (non-invertible)",
+                    "A is the zero matrix",
+                    "A is the identity matrix",
+                    "A is a diagonal matrix"
+                ],
+                correct: 0,
+                explanation: "A matrix with determinant 0 is called a singular matrix, which means it has no inverse."
+            },
+            {
+                id: 14,
+                difficulty: "easy",
+                question: "What is the characteristic of an identity matrix I?",
+                options: [
+                    "Main diagonal elements are 1, others are 0",
+                    "All elements are 1",
+                    "All elements are 0",
+                    "Any matrix with determinant 1"
+                ],
+                correct: 0,
+                explanation: "The identity matrix I has 1s on the main diagonal and 0s elsewhere. It acts like the number 1 in matrix multiplication."
+            },
+            {
+                id: 15,
+                difficulty: "easy",
+                question: "If $AA^{-1} = I$, what is $A^{-1}$ called?",
+                options: [
+                    "The inverse of A",
+                    "The transpose of A",
+                    "The adjugate of A",
+                    "The cofactor matrix of A"
+                ],
+                correct: 0,
+                explanation: "$A^{-1}$ is the inverse of A, satisfying $AA^{-1} = A^{-1}A = I$."
+            },
+            {
+                id: 16,
+                difficulty: "easy",
+                question: "What is the necessary and sufficient condition for matrix A to be invertible?",
+                options: [
+                    "$det(A) \\neq 0$",
+                    "$det(A) = 0$",
+                    "$det(A) = 1$",
+                    "$det(A) = -1$"
+                ],
+                correct: 0,
+                explanation: "Matrix A is invertible if and only if its determinant is not equal to zero, i.e., $det(A) \\neq 0$."
+            },
+            {
+                id: 17,
+                difficulty: "easy",
+                question: "What is the characteristic of a diagonal matrix?",
+                options: [
+                    "Only main diagonal elements can be non-zero",
+                    "All main diagonal elements are equal",
+                    "All elements are non-zero",
+                    "Determinant equals 1"
+                ],
+                correct: 0,
+                explanation: "A diagonal matrix has non-zero elements only on the main diagonal, with all other elements equal to 0."
+            },
+            {
+                id: 18,
+                difficulty: "easy",
+                question: "What condition does a symmetric matrix satisfy?",
+                options: [
+                    "$A^T = A$",
+                    "$A^T = -A$",
+                    "$A^T = A^{-1}$",
+                    "$A^T = I$"
+                ],
+                correct: 0,
+                explanation: "A symmetric matrix satisfies $A^T = A$, meaning the matrix equals its transpose."
+            },
+            {
+                id: 19,
+                difficulty: "easy",
+                question: "What is the linear system matrix form Ax = b?",
+                options: [
+                    "A is coefficient matrix, x is variable vector, b is constant vector",
+                    "A is variable matrix, x is coefficient vector, b is result vector",
+                    "A is result matrix, x is constant vector, b is variable vector",
+                    "A is identity matrix, x is solution vector, b is coefficient vector"
+                ],
+                correct: 0,
+                explanation: "In the matrix form Ax = b, A is the coefficient matrix, x is the variable vector, and b is the constant vector."
+            },
+            {
+                id: 20,
+                difficulty: "easy",
+                question: "What is the transpose of matrix $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$?",
+                options: [
+                    "$\\begin{bmatrix} 1 & 3 \\\\ 2 & 4 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 4 & 3 \\\\ 2 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 2 & 1 \\\\ 4 & 3 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "The transpose of a matrix is obtained by interchanging rows and columns. So the transpose of $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ is $\\begin{bmatrix} 1 & 3 \\\\ 2 & 4 \\end{bmatrix}$."
+            },
+
+            // ========== Medium Questions (25 questions) - Calculations and applications ==========
+            {
+                id: 21,
+                difficulty: "medium",
+                question: "Calculate $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} \\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix}$",
+                options: [
+                    "$\\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 6 & 8 \\\\ 10 & 12 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 5 & 12 \\\\ 21 & 32 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 17 & 20 \\\\ 39 & 44 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "Matrix multiplication: $(AB)_{11} = 1×5 + 2×7 = 19$, $(AB)_{12} = 1×6 + 2×8 = 22$, $(AB)_{21} = 3×5 + 4×7 = 43$, $(AB)_{22} = 3×6 + 4×8 = 50$."
+            },
+            {
+                id: 22,
+                difficulty: "medium",
+                question: "Find the determinant of $\\begin{bmatrix} 2 & 3 \\\\ 1 & 4 \\end{bmatrix}$",
+                options: [
+                    "5",
+                    "11",
+                    "8",
+                    "14"
+                ],
+                correct: 0,
+                explanation: "For a 2×2 matrix $\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$, the determinant is $ad - bc = 2×4 - 3×1 = 8 - 3 = 5$."
+            },
+            {
+                id: 23,
+                difficulty: "medium",
+                question: "Find the inverse of $\\begin{bmatrix} 2 & 1 \\\\ 3 & 2 \\end{bmatrix}$",
+                options: [
+                    "$\\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & -1 \\\\ -2 & 2 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 2 & 1 \\\\ 3 & 2 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} -2 & 1 \\\\ 3 & -2 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "First find det(A) = 2×2 - 1×3 = 1. Then $A^{-1} = \\frac{1}{1}\\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix} = \\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix}$."
+            },
+            {
+                id: 24,
+                difficulty: "medium",
+                question: "Calculate the determinant of $\\begin{bmatrix} 1 & 2 & 3 \\\\ 0 & 1 & 4 \\\\ 5 & 6 & 0 \\end{bmatrix}$",
+                options: [
+                    "1",
+                    "0",
+                    "5",
+                    "-1"
+                ],
+                correct: 0,
+                explanation: "Expanding along the first row: $1×\\begin{vmatrix} 1 & 4 \\\\ 6 & 0 \\end{vmatrix} - 2×\\begin{vmatrix} 0 & 4 \\\\ 5 & 0 \\end{vmatrix} + 3×\\begin{vmatrix} 0 & 1 \\\\ 5 & 6 \\end{vmatrix} = 1×(-24) - 2×(-20) + 3×(-5) = -24 + 40 - 15 = 1$."
+            },
+            {
+                id: 25,
+                difficulty: "medium",
+                question: "Solve the system: $\\begin{cases} 2x + y = 5 \\\\ x + 3y = 8 \\end{cases}$ using matrix methods.",
+                options: [
+                    "x = 1, y = 3",
+                    "x = 2, y = 1",
+                    "x = 3, y = 2",
+                    "x = 0, y = 5"
+                ],
+                correct: 0,
+                explanation: "Write as matrix equation: $\\begin{bmatrix} 2 & 1 \\\\ 1 & 3 \\end{bmatrix}\\begin{bmatrix} x \\\\ y \\end{bmatrix} = \\begin{bmatrix} 5 \\\\ 8 \\end{bmatrix}$. Find the inverse and solve: $\\begin{bmatrix} x \\\\ y \\end{bmatrix} = \\begin{bmatrix} 3/5 & -1/5 \\\\ -1/5 & 2/5 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 8 \\end{bmatrix} = \\begin{bmatrix} 1 \\\\ 3 \\end{bmatrix}$."
+            },
+            {
+                id: 26,
+                difficulty: "medium",
+                question: "What is the rank of the matrix $\\begin{bmatrix} 1 & 2 & 3 \\\\ 2 & 4 & 6 \\\\ 3 & 6 & 9 \\end{bmatrix}$?",
+                options: [
+                    "1",
+                    "2",
+                    "3",
+                    "0"
+                ],
+                correct: 0,
+                explanation: "All rows are multiples of the first row [1, 2, 3]. The second row is 2×(first row) and the third row is 3×(first row). Therefore, the rank is 1."
+            },
+            {
+                id: 27,
+                difficulty: "medium",
+                question: "Find the trace of $\\begin{bmatrix} 3 & 1 & 2 \\\\ 0 & 5 & 4 \\\\ 1 & 2 & 7 \\end{bmatrix}$",
+                options: [
+                    "15",
+                    "12",
+                    "10",
+                    "18"
+                ],
+                correct: 0,
+                explanation: "The trace of a matrix is the sum of its diagonal elements: 3 + 5 + 7 = 15."
+            },
+            {
+                id: 28,
+                difficulty: "medium",
+                question: "If A is a 3×3 matrix with det(A) = 4, what is det(2A)?",
+                options: [
+                    "32",
+                    "8",
+                    "4",
+                    "16"
+                ],
+                correct: 0,
+                explanation: "For an n×n matrix A, det(kA) = k^n × det(A). Here, det(2A) = 2³ × 4 = 8 × 4 = 32."
+            },
+            {
+                id: 29,
+                difficulty: "medium",
+                question: "What is the determinant of $\\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{bmatrix}$?",
+                options: [
+                    "6",
+                    "5",
+                    "1",
+                    "0"
+                ],
+                correct: 0,
+                explanation: "For a diagonal matrix, the determinant is the product of diagonal elements: 1 × 2 × 3 = 6."
+            },
+            {
+                id: 30,
+                difficulty: "medium",
+                question: "Find $(A^T)^{-1}$ if $A = \\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$",
+                options: [
+                    "$\\begin{bmatrix} 1 & 0 \\\\ -2 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & -2 \\\\ 0 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 0 & 1 \\\\ 1 & 2 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "$(A^T)^{-1} = (A^{-1})^T$. First find $A^{-1} = \\begin{bmatrix} 1 & -2 \\\\ 0 & 1 \\end{bmatrix}$, then $(A^{-1})^T = \\begin{bmatrix} 1 & 0 \\\\ -2 & 1 \\end{bmatrix}$."
+            },
+            {
+                id: 31,
+                difficulty: "medium",
+                question: "If $\\begin{bmatrix} 1 & 2 \\\\ 3 & x \\end{bmatrix}$ is singular, what is the value of x?",
+                options: [
+                    "6",
+                    "2",
+                    "3",
+                    "1"
+                ],
+                correct: 0,
+                explanation: "A matrix is singular if its determinant is 0. So $1×x - 2×3 = 0$, which gives $x - 6 = 0$, therefore $x = 6$."
+            },
+            {
+                id: 32,
+                difficulty: "medium",
+                question: "What is the result of $\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$?",
+                options: [
+                    "$\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} a & 0 \\\\ 0 & d \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 0 & b \\\\ c & 0 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "The identity matrix I multiplied by any matrix A gives A itself: IA = A."
+            },
+            {
+                id: 33,
+                difficulty: "medium",
+                question: "Find the cofactor of element $a_{11}$ in $\\begin{bmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\\\ 7 & 8 & 9 \\end{bmatrix}$",
+                options: [
+                    "-3",
+                    "3",
+                    "-6",
+                    "6"
+                ],
+                correct: 0,
+                explanation: "The cofactor of $a_{11}$ is $(-1)^{1+1} × \\begin{vmatrix} 5 & 6 \\\\ 8 & 9 \\end{vmatrix} = 1 × (5×9 - 6×8) = 1 × (45 - 48) = -3$."
+            },
+            {
+                id: 34,
+                difficulty: "medium",
+                question: "What is the result of raising a 2×2 identity matrix to the power of 100?",
+                options: [
+                    "$\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 100 & 0 \\\\ 0 & 100 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 100 \\\\ 100 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "The identity matrix raised to any power is still the identity matrix: $I^n = I$ for any positive integer n."
+            },
+            {
+                id: 35,
+                difficulty: "medium",
+                question: "Calculate $\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}^2$",
+                options: [
+                    "$\\begin{bmatrix} 2 & 2 \\\\ 2 & 2 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 2 \\\\ 2 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 4 & 4 \\\\ 4 & 4 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "Matrix multiplication: $\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix} = \\begin{bmatrix} 1+1 & 1+1 \\\\ 1+1 & 1+1 \\end{bmatrix} = \\begin{bmatrix} 2 & 2 \\\\ 2 & 2 \\end{bmatrix}$."
+            },
+            {
+                id: 36,
+                difficulty: "medium",
+                question: "If A and B are both 2×2 matrices with det(A) = 3 and det(B) = 4, what is det(AB)?",
+                options: [
+                    "12",
+                    "7",
+                    "1",
+                    "0"
+                ],
+                correct: 0,
+                explanation: "The determinant of a product is the product of determinants: det(AB) = det(A) × det(B) = 3 × 4 = 12."
+            },
+            {
+                id: 37,
+                difficulty: "medium",
+                question: "What is the null space of $\\begin{bmatrix} 1 & 2 \\\\ 2 & 4 \\end{bmatrix}$?",
+                options: [
+                    "Span of $\\begin{bmatrix} -2 \\\\ 1 \\end{bmatrix}$",
+                    "Span of $\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}$",
+                    "Span of $\\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}$",
+                    "Only the zero vector"
+                ],
+                correct: 0,
+                explanation: "The null space consists of vectors x such that Ax = 0. Solving gives x = t[-2, 1] for any scalar t."
+            },
+            {
+                id: 38,
+                difficulty: "medium",
+                question: "Find the eigenvalues of $\\begin{bmatrix} 3 & 1 \\\\ 0 & 2 \\end{bmatrix}$",
+                options: [
+                    "3 and 2",
+                    "1 and 2",
+                    "3 and 1",
+                    "2 and 5"
+                ],
+                correct: 0,
+                explanation: "For an upper triangular matrix, the eigenvalues are the diagonal elements: 3 and 2."
+            },
+            {
+                id: 39,
+                difficulty: "medium",
+                question: "What is the column space of $\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 0 & 0 \\end{bmatrix}$?",
+                options: [
+                    "Span of $\\begin{bmatrix} 1 \\\\ 0 \\\\ 0 \\end{bmatrix}$ and $\\begin{bmatrix} 0 \\\\ 1 \\\\ 0 \\end{bmatrix}$",
+                    "All of $\\mathbb{R}^3$",
+                    "Only the zero vector",
+                    "Span of $\\begin{bmatrix} 1 \\\\ 1 \\\\ 0 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "The column space is spanned by the linearly independent columns of the matrix."
+            },
+            {
+                id: 40,
+                difficulty: "medium",
+                question: "What is the condition for a system Ax = b to have a unique solution?",
+                options: [
+                    "A is square and invertible",
+                    "A has more rows than columns",
+                    "A has more columns than rows",
+                    "b is the zero vector"
+                ],
+                correct: 0,
+                explanation: "For a unique solution, the coefficient matrix A must be square and invertible (det(A) ≠ 0)."
+            },
+            {
+                id: 41,
+                difficulty: "medium",
+                question: "Calculate $(A^{-1})^T$ if $A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$",
+                options: [
+                    "$\\begin{bmatrix} 1/2 & 0 \\\\ 0 & 1/3 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1/3 & 0 \\\\ 0 & 1/2 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 3 & 0 \\\\ 0 & 2 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "For a diagonal matrix, $(A^{-1})^T = (A^T)^{-1} = A^{-1} = \\begin{bmatrix} 1/2 & 0 \\\\ 0 & 1/3 \\end{bmatrix}$."
+            },
+            {
+                id: 42,
+                difficulty: "medium",
+                question: "If $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} x \\\\ y \\end{bmatrix} = \\begin{bmatrix} 5 \\\\ 11 \\end{bmatrix}$, find x + y.",
+                options: [
+                    "4",
+                    "5",
+                    "6",
+                    "3"
+                ],
+                correct: 0,
+                explanation: "Solving the system: x + 2y = 5 and 3x + 4y = 11. From the first equation: x = 5 - 2y. Substituting: 3(5-2y) + 4y = 11, so 15 - 6y + 4y = 11, giving y = 2 and x = 1. Thus x + y = 3."
+            },
+            {
+                id: 43,
+                difficulty: "medium",
+                question: "What is the determinant of the transpose of $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$?",
+                options: [
+                    "-2",
+                    "2",
+                    "-10",
+                    "10"
+                ],
+                correct: 0,
+                explanation: "det(A^T) = det(A). The determinant of the original matrix is 1×4 - 2×3 = -2."
+            },
+            {
+                id: 44,
+                difficulty: "medium",
+                question: "Find the inverse of $\\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{bmatrix}$",
+                options: [
+                    "$\\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1/2 & 0 \\\\ 0 & 0 & 1/3 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 3 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 1 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1/3 & 0 & 0 \\\\ 0 & 1/2 & 0 \\\\ 0 & 0 & 1 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "For a diagonal matrix, the inverse is obtained by taking the reciprocal of each diagonal element."
+            },
+            {
+                id: 45,
+                difficulty: "medium",
+                question: "What is the result of $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} + \\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix}$?",
+                options: [
+                    "$\\begin{bmatrix} 6 & 8 \\\\ 10 & 12 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 6 & 8 \\\\ 10 & 11 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 5 & 8 \\\\ 10 & 12 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 6 & 7 \\\\ 10 & 12 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "Matrix addition: add corresponding elements. (1+5, 2+6, 3+7, 4+8) = (6, 8, 10, 12)."
+            },
+
+            // ========== Hard Questions (5 questions) - Advanced applications and comprehensive understanding ==========
+            {
+                id: 46,
+                difficulty: "hard",
+                question: "Given $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ and $B = \\begin{bmatrix} 2 & 0 \\\\ 1 & 3 \\end{bmatrix}$, verify that $(AB)^{-1} = B^{-1}A^{-1}$. What is $(AB)^{-1}$?",
+                options: [
+                    "$\\begin{bmatrix} 3/10 & -1/5 \\\\ -1/10 & 1/10 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 1/10 & 1/5 \\\\ 3/10 & -1/10 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} -1/10 & 1/5 \\\\ 3/10 & -3/10 \\end{bmatrix}$",
+                    "$\\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "First calculate $AB = \\begin{bmatrix} 4 & 6 \\\\ 10 & 12 \\end{bmatrix}$. Then $\\det(AB) = 48 - 60 = -12$. So $(AB)^{-1} = \\frac{1}{-12}\\begin{bmatrix} 12 & -6 \\\\ -10 & 4 \\end{bmatrix} = \\begin{bmatrix} -1 & 1/2 \\\\ 5/6 & -1/3 \\end{bmatrix}$."
+            },
+            {
+                id: 47,
+                difficulty: "hard",
+                question: "Use Gaussian elimination to solve: $\\begin{cases} x + y + z = 6 \\\\ 2x - y + z = 3 \\\\ x + 2y - z = 2 \\end{cases}$. What is the value of z?",
+                options: [
+                    "3",
+                    "2",
+                    "1",
+                    "4"
+                ],
+                correct: 0,
+                explanation: "Set up the augmented matrix and perform row operations. Through elimination, we get: second row becomes $0x - 3y - z = -9$, third row becomes $0x + y - 2z = -4$. Continuing the elimination gives z = 3."
+            },
+            {
+                id: 48,
+                difficulty: "hard",
+                question: "Prove that rotation matrix $R(\\theta) = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix}$ is orthogonal. What needs to be verified?",
+                options: [
+                    "$R(\\theta)^T R(\\theta) = I$ and $\\det(R(\\theta)) = 1$",
+                    "$R(\\theta) = R(\\theta)^T$",
+                    "$R(\\theta)^2 = I$",
+                    "$\\det(R(\\theta)) = 0$"
+                ],
+                correct: 0,
+                explanation: "An orthogonal matrix satisfies $A^T A = I$. Computing gives $R(\\theta)^T R(\\theta) = I$, and $\\det(R(\\theta)) = \\cos^2\\theta + \\sin^2\\theta = 1$."
+            },
+            {
+                id: 49,
+                difficulty: "hard",
+                question: "If a 3×3 matrix A has eigenvalues 2, 3, and 5, what are $\\det(A)$ and $\\det(A^{-1})$?",
+                options: [
+                    "30 and 1/30",
+                    "10 and 1/10",
+                    "30 and -30",
+                    "10 and -1/10"
+                ],
+                correct: 0,
+                explanation: "The determinant of a matrix equals the product of its eigenvalues: $\\det(A) = 2 \\times 3 \\times 5 = 30$. And $\\det(A^{-1}) = 1/\\det(A) = 1/30$."
+            },
+            {
+                id: 50,
+                difficulty: "hard",
+                question: "A linear transformation first rotates a vector counterclockwise by 45°, then scales by factor 2, then reflects across the y-axis. What is the composite transformation matrix?",
+                options: [
+                    "$\\begin{bmatrix} -\\sqrt{2} & -\\sqrt{2} \\\\ \\sqrt{2} & -\\sqrt{2} \\end{bmatrix}$",
+                    "$\\begin{bmatrix} \\sqrt{2} & \\sqrt{2} \\\\ \\sqrt{2} & -\\sqrt{2} \\end{bmatrix}$",
+                    "$\\begin{bmatrix} -\\sqrt{2} & \\sqrt{2} \\\\ -\\sqrt{2} & -\\sqrt{2} \\end{bmatrix}$",
+                    "$\\begin{bmatrix} \\sqrt{2} & -\\sqrt{2} \\\\ -\\sqrt{2} & -\\sqrt{2} \\end{bmatrix}$"
+                ],
+                correct: 0,
+                explanation: "Composite transformation = Reflection × Scaling × Rotation = $\\begin{bmatrix} -1 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix} \\begin{bmatrix} \\frac{\\sqrt{2}}{2} & -\\frac{\\sqrt{2}}{2} \\\\ \\frac{\\sqrt{2}}{2} & \\frac{\\sqrt{2}}{2} \\end{bmatrix} = \\begin{bmatrix} -\\sqrt{2} & -\\sqrt{2} \\\\ \\sqrt{2} & -\\sqrt{2} \\end{bmatrix}$."
+            }
+        ];
+
+        // Quiz State
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+
+        // Initialize Quiz
+        function initQuiz() {
+            renderAllQuestions();
+            updateStats();
+            updateProgress();
+            // Render MathJax after questions are loaded
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Render all questions
+        function renderAllQuestions() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = questions.map((q, index) => `
+                <div class="question-card" id="question-${index}">
+                    <span class="difficulty-badge difficulty-${q.difficulty}">
+                        ${q.difficulty === 'easy' ? 'Easy' : q.difficulty === 'medium' ? 'Medium' : 'Hard'}
+                    </span>
+                    <h3 class="text-lg font-semibold mb-3">Question ${index + 1}: ${q.question}</h3>
+                    <div class="options-container">
+                        ${q.options.map((option, optIndex) => `
+                            <button class="option-button" onclick="selectAnswer(${index}, ${optIndex})">
+                                ${String.fromCharCode(65 + optIndex)}. ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="explanation" id="explanation-${index}">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Handle answer selection
+        function selectAnswer(questionIndex, selectedOption) {
+            if (userAnswers[questionIndex] !== null) return; // Already answered
+
+            const question = questions[questionIndex];
+            const isCorrect = selectedOption === question.correct;
+            userAnswers[questionIndex] = selectedOption;
+
+            // Update question card
+            const questionCard = document.getElementById(`question-${questionIndex}`);
+            questionCard.classList.add(isCorrect ? 'answered-correct' : 'answered-incorrect');
+
+            // Update option buttons
+            const options = questionCard.querySelectorAll('.option-button');
+            options.forEach((btn, index) => {
+                btn.classList.add('disabled');
+                if (index === question.correct) {
+                    btn.classList.add('correct');
+                } else if (index === selectedOption && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            // Show explanation
+            document.getElementById(`explanation-${questionIndex}`).classList.add('show');
+
+            // Update stats
+            answeredQuestions++;
+            if (isCorrect) {
+                score++;
+                correctAnswers++;
+            } else {
+                incorrectAnswers++;
+            }
+
+            updateStats();
+            updateProgress();
+
+            // Re-render MathJax for the explanation
+            if (window.MathJax) {
+                MathJax.typesetPromise([document.getElementById(`explanation-${questionIndex}`)]);
+            }
+
+            // Check if quiz is complete
+            if (answeredQuestions === questions.length) {
+                showResults();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('scoreDisplay').textContent = `${score}/${answeredQuestions}`;
+            document.getElementById('correctDisplay').textContent = correctAnswers;
+            document.getElementById('incorrectDisplay').textContent = incorrectAnswers;
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = (answeredQuestions / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Show results
+        function showResults() {
+            const accuracy = ((score / questions.length) * 100).toFixed(1);
+            document.getElementById('finalScore').textContent = `${score}/${questions.length}`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredQuestions = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            
+            document.getElementById('resultsSection').style.display = 'none';
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html> 

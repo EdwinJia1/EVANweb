@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Pointers Course | COMP1511</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+        .interactive-button {
+            background-color: #e07a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0.5rem;
+        }
+        .interactive-button:hover {
+            background-color: #d06850;
+            transform: translateY(-2px);
+        }
+        .interactive-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .interactive-button.secondary {
+            background-color: #f4a261;
+        }
+        .interactive-button.secondary:hover {
+            background-color: #e3941f;
+        }
+        .memory-visual {
+            display: inline-flex;
+            border: 2px solid #e07a5f;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin: 0.5rem;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .memory-visual.highlighted {
+            border-color: #f4a261;
+            box-shadow: 0 0 15px rgba(244, 162, 97, 0.5);
+        }
+        .memory-address {
+            padding: 0.75rem 1rem;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #8b8589;
+            font-family: 'Courier New', monospace;
+            min-width: 5rem;
+            text-align: center;
+        }
+        .memory-value {
+            padding: 0.75rem;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            min-width: 4rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        .pointer-visual {
+            display: inline-flex;
+            border: 2px solid #f4a261;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin: 0.5rem;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .pointer-visual.highlighted {
+            border-color: #e07a5f;
+            box-shadow: 0 0 15px rgba(224, 122, 95, 0.5);
+        }
+        .pointer-name {
+            padding: 0.75rem 1rem;
+            background-color: #f4a261;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #f4a261;
+            min-width: 4rem;
+            text-align: center;
+        }
+        .pointer-value {
+            padding: 0.75rem;
+            background-color: #fff7ed;
+            color: #2c2c2c;
+            min-width: 6rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        .canvas-container {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 2rem;
+            margin: 1rem 0;
+            min-height: 300px;
+            border: 2px dashed #e07a5f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .input-field {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #e07a5f;
+        }
+        .array-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .array-element {
+            display: inline-flex;
+            border: 2px solid #8b8589;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .array-element.pointer-target {
+            border-color: #f4a261;
+            box-shadow: 0 0 10px rgba(244, 162, 97, 0.5);
+        }
+        .array-index {
+            padding: 0.5rem;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #8b8589;
+            font-size: 0.8rem;
+        }
+        .array-value {
+            padding: 0.5rem 1rem;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            min-width: 3rem;
+            text-align: center;
+        }
+        .status-message {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .error-message {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .step-indicator {
+            background-color: #22c55e;
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-left: 1rem;
+        }
+        .pointer-arrow {
+            font-size: 1.5rem;
+            color: #f4a261;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+        }
+        .pointer-arrow.animated {
+            transform: scale(1.2);
+            color: #e07a5f;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
+        
+        <!-- Back to COMP1511 Button -->
+        <a href="../comp1511.html" class="back-button">
+            <span>←</span>
+            <span>Back to COMP1511</span>
+        </a>
+
+        <!-- Chapter Header -->
+        <header class="text-center mb-8">
+            <h1 class="chapter-title">指针互动课程</h1>
+            <p class="text-xl text-gray-600">Interactive Pointers Course</p>
+        </header>
+
+        <!-- Course Introduction -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">课程目标</h2>
+            <p class="text-lg mb-4">
+                通过交互式演示和可视化，深入理解指针的工作原理。本课程包含两个核心模块：
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <h3 class="text-lg font-bold mb-2">📍 模块一：地址与解引用</h3>
+                    <p>动态创建变量和指针，可视化地址指向关系</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <h3 class="text-lg font-bold mb-2">🔢 模块二：指针算术</h3>
+                    <p>展示指针在数组中的移动和计算过程</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 1: Address and Dereference -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">模块一：地址与解引用可视化</h3>
+            
+            <p class="text-lg mb-4">
+                在这个模块中，你可以创建变量和指针，然后观察它们之间的关系。通过指针修改变量值，实时看到变化。
+            </p>
+
+            <!-- Controls -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-bold text-lg mb-3">控制面板</h4>
+                
+                <div class="input-group">
+                    <label class="font-medium">变量名：</label>
+                    <input type="text" id="varName" class="input-field" placeholder="例如: x" maxlength="10">
+                    <label class="font-medium">初始值：</label>
+                    <input type="number" id="varValue" class="input-field" placeholder="例如: 42" style="width: 100px;">
+                    <button onclick="createVariable()" class="interactive-button">创建变量</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="font-medium">指针名：</label>
+                    <input type="text" id="ptrName" class="input-field" placeholder="例如: ptr" maxlength="10">
+                    <label class="font-medium">指向变量：</label>
+                    <select id="ptrTarget" class="input-field" style="width: 120px;">
+                        <option value="">选择变量</option>
+                    </select>
+                    <button onclick="createPointer()" class="interactive-button">创建指针</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="font-medium">通过指针修改值：</label>
+                    <select id="modifyPtr" class="input-field" style="width: 120px;">
+                        <option value="">选择指针</option>
+                    </select>
+                    <input type="number" id="newValue" class="input-field" placeholder="新值" style="width: 100px;">
+                    <button onclick="modifyThroughPointer()" class="interactive-button secondary">修改值</button>
+                </div>
+
+                <div class="input-group">
+                    <button onclick="clearMemory()" class="interactive-button" style="background-color: #6b7280;">清空内存</button>
+                    <button onclick="showExample()" class="interactive-button secondary">显示示例</button>
+                </div>
+            </div>
+
+            <!-- Memory Visualization -->
+            <div class="canvas-container" id="memoryCanvas">
+                <p class="text-gray-500">点击"创建变量"开始可视化内存布局</p>
+            </div>
+
+            <!-- Status Messages -->
+            <div id="statusMessage" class="hidden"></div>
+        </div>
+
+        <!-- Module 2: Pointer Arithmetic -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">模块二：指针算术演示</h3>
+            
+            <p class="text-lg mb-4">
+                在这个模块中，你将看到指针如何在数组中移动，理解指针算术的工作原理。
+            </p>
+
+            <!-- Array Setup -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-bold text-lg mb-3">数组设置</h4>
+                
+                <div class="input-group">
+                    <label class="font-medium">数组元素（用逗号分隔）：</label>
+                    <input type="text" id="arrayInput" class="input-field" placeholder="例如: 10,20,30,40,50" style="width: 200px;">
+                    <button onclick="createArray()" class="interactive-button">创建数组</button>
+                </div>
+
+                <div class="input-group">
+                    <button onclick="movePointerLeft()" class="interactive-button" id="ptrLeftBtn" disabled>ptr--</button>
+                    <button onclick="movePointerRight()" class="interactive-button" id="ptrRightBtn" disabled>ptr++</button>
+                    <button onclick="resetArrayPointer()" class="interactive-button secondary" id="resetPtrBtn" disabled>重置指针</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="font-medium">指针偏移：</label>
+                    <input type="number" id="offsetInput" class="input-field" placeholder="偏移量" style="width: 100px;" min="0">
+                    <button onclick="jumpToOffset()" class="interactive-button secondary" id="jumpBtn" disabled>跳转到 ptr+n</button>
+                </div>
+            </div>
+
+            <!-- Array Visualization -->
+            <div class="canvas-container" id="arrayCanvas">
+                <p class="text-gray-500">输入数组元素并点击"创建数组"开始演示</p>
+            </div>
+
+            <!-- Pointer Info -->
+            <div id="pointerInfo" class="hidden status-message">
+                <h4 class="font-bold">当前指针状态：</h4>
+                <p id="pointerStatus"></p>
+            </div>
+        </div>
+
+        <!-- Code Examples -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">对应的C代码</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold text-lg mb-2">模块一代码示例：</h4>
+                    <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm">
+<pre>int x = 42;           // 创建变量
+int *ptr = &x;        // 创建指针
+
+printf("x 的值: %d\n", x);
+printf("x 的地址: %p\n", &x);
+printf("ptr 的值: %p\n", ptr);
+printf("*ptr 的值: %d\n", *ptr);
+
+*ptr = 100;           // 通过指针修改
+printf("修改后 x: %d\n", x);</pre>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-2">模块二代码示例：</h4>
+                    <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm">
+<pre>int arr[] = {10,20,30,40,50};
+int *ptr = arr;       // 指向数组首元素
+
+printf("*ptr = %d\n", *ptr);     // 10
+ptr++;                           // 移动指针
+printf("*ptr = %d\n", *ptr);     // 20
+
+printf("*(ptr+2) = %d\n", *(ptr+2)); // 40
+ptr = arr;                       // 重置指针</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="concept-card text-center">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-4">继续学习</h3>
+            <div class="space-y-4">
+                <a href="./1511_pointers_notes.html" class="back-button inline-flex">
+                    <span>📖</span>
+                    <span>回到指针笔记</span>
+                </a>
+                <br>
+                <a href="./1511_cmd_args_interactive.html" class="back-button inline-flex">
+                    <span>🚀</span>
+                    <span>命令行参数互动课程</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Module 1: Memory Management
+        let variables = {};
+        let pointers = {};
+        let nextAddress = 0x1000;
+
+        function generateAddress() {
+            const addr = nextAddress;
+            nextAddress += 4; // Assume 4-byte integers
+            return `0x${addr.toString(16).toUpperCase()}`;
+        }
+
+        function createVariable() {
+            const name = document.getElementById('varName').value.trim();
+            const value = parseInt(document.getElementById('varValue').value);
+            
+            if (!name) {
+                showStatusMessage('请输入变量名', 'error');
+                return;
+            }
+            
+            if (isNaN(value)) {
+                showStatusMessage('请输入有效的数值', 'error');
+                return;
+            }
+
+            if (variables[name]) {
+                showStatusMessage(`变量 ${name} 已存在`, 'error');
+                return;
+            }
+
+            const address = generateAddress();
+            variables[name] = { value: value, address: address };
+            
+            updateVariableSelects();
+            renderMemory();
+            showStatusMessage(`创建变量 ${name} = ${value}，地址: ${address}`, 'success');
+            
+            // Clear inputs
+            document.getElementById('varName').value = '';
+            document.getElementById('varValue').value = '';
+        }
+
+        function createPointer() {
+            const name = document.getElementById('ptrName').value.trim();
+            const target = document.getElementById('ptrTarget').value;
+            
+            if (!name) {
+                showStatusMessage('请输入指针名', 'error');
+                return;
+            }
+            
+            if (!target) {
+                showStatusMessage('请选择指向的变量', 'error');
+                return;
+            }
+
+            if (pointers[name]) {
+                showStatusMessage(`指针 ${name} 已存在`, 'error');
+                return;
+            }
+
+            const address = generateAddress();
+            pointers[name] = { 
+                target: target, 
+                address: address,
+                value: variables[target].address 
+            };
+            
+            updatePointerSelects();
+            renderMemory();
+            showStatusMessage(`创建指针 ${name}，指向变量 ${target}`, 'success');
+            
+            // Clear inputs
+            document.getElementById('ptrName').value = '';
+            document.getElementById('ptrTarget').value = '';
+        }
+
+        function modifyThroughPointer() {
+            const ptrName = document.getElementById('modifyPtr').value;
+            const newValue = parseInt(document.getElementById('newValue').value);
+            
+            if (!ptrName) {
+                showStatusMessage('请选择指针', 'error');
+                return;
+            }
+            
+            if (isNaN(newValue)) {
+                showStatusMessage('请输入有效的数值', 'error');
+                return;
+            }
+
+            const pointer = pointers[ptrName];
+            const targetVar = pointer.target;
+            const oldValue = variables[targetVar].value;
+            
+            variables[targetVar].value = newValue;
+            renderMemory();
+            showStatusMessage(`通过指针 ${ptrName} 修改 ${targetVar}: ${oldValue} → ${newValue}`, 'success');
+            
+            document.getElementById('newValue').value = '';
+        }
+
+        function updateVariableSelects() {
+            const ptrTargetSelect = document.getElementById('ptrTarget');
+            ptrTargetSelect.innerHTML = '<option value="">选择变量</option>';
+            
+            for (const varName in variables) {
+                const option = document.createElement('option');
+                option.value = varName;
+                option.textContent = varName;
+                ptrTargetSelect.appendChild(option);
+            }
+        }
+
+        function updatePointerSelects() {
+            const modifySelect = document.getElementById('modifyPtr');
+            modifySelect.innerHTML = '<option value="">选择指针</option>';
+            
+            for (const ptrName in pointers) {
+                const option = document.createElement('option');
+                option.value = ptrName;
+                option.textContent = ptrName;
+                modifySelect.appendChild(option);
+            }
+        }
+
+        function renderMemory() {
+            const canvas = document.getElementById('memoryCanvas');
+            canvas.innerHTML = '';
+
+            if (Object.keys(variables).length === 0 && Object.keys(pointers).length === 0) {
+                canvas.innerHTML = '<p class="text-gray-500">点击"创建变量"开始可视化内存布局</p>';
+                return;
+            }
+
+            const memoryDiv = document.createElement('div');
+            memoryDiv.className = 'w-full';
+
+            // Render variables
+            if (Object.keys(variables).length > 0) {
+                const varSection = document.createElement('div');
+                varSection.innerHTML = '<h4 class="font-bold mb-4">变量内存区域</h4>';
+                const varContainer = document.createElement('div');
+                varContainer.className = 'flex flex-wrap justify-center items-center gap-4 mb-6';
+
+                for (const [varName, varData] of Object.entries(variables)) {
+                    const varDiv = document.createElement('div');
+                    varDiv.className = 'text-center';
+                    
+                    const varVisual = document.createElement('div');
+                    varVisual.className = 'memory-visual';
+                    
+                    varVisual.innerHTML = `
+                        <div class="memory-address">${varData.address}</div>
+                        <div class="memory-value">${varData.value}</div>
+                    `;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'mt-2 text-sm font-medium';
+                    label.textContent = `变量 ${varName}`;
+                    
+                    varDiv.appendChild(varVisual);
+                    varDiv.appendChild(label);
+                    varContainer.appendChild(varDiv);
+                }
+                
+                varSection.appendChild(varContainer);
+                memoryDiv.appendChild(varSection);
+            }
+
+            // Render pointers
+            if (Object.keys(pointers).length > 0) {
+                const ptrSection = document.createElement('div');
+                ptrSection.innerHTML = '<h4 class="font-bold mb-4">指针内存区域</h4>';
+                const ptrContainer = document.createElement('div');
+                ptrContainer.className = 'flex flex-wrap justify-center items-center gap-4';
+
+                for (const [ptrName, ptrData] of Object.entries(pointers)) {
+                    const ptrDiv = document.createElement('div');
+                    ptrDiv.className = 'text-center';
+                    
+                    const ptrVisual = document.createElement('div');
+                    ptrVisual.className = 'pointer-visual';
+                    
+                    ptrVisual.innerHTML = `
+                        <div class="pointer-name">${ptrName}</div>
+                        <div class="pointer-value">${ptrData.value}</div>
+                    `;
+                    
+                    const arrow = document.createElement('span');
+                    arrow.className = 'pointer-arrow mx-4';
+                    arrow.innerHTML = '→';
+                    
+                    const targetInfo = document.createElement('div');
+                    targetInfo.className = 'text-sm';
+                    targetInfo.innerHTML = `指向变量 ${ptrData.target}<br>值: ${variables[ptrData.target].value}`;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'mt-2 text-sm font-medium';
+                    label.textContent = `指针 ${ptrName}`;
+                    
+                    const fullDiv = document.createElement('div');
+                    fullDiv.className = 'flex items-center';
+                    fullDiv.appendChild(ptrVisual);
+                    fullDiv.appendChild(arrow);
+                    fullDiv.appendChild(targetInfo);
+                    
+                    ptrDiv.appendChild(fullDiv);
+                    ptrDiv.appendChild(label);
+                    ptrContainer.appendChild(ptrDiv);
+                }
+                
+                ptrSection.appendChild(ptrContainer);
+                memoryDiv.appendChild(ptrSection);
+            }
+
+            canvas.appendChild(memoryDiv);
+        }
+
+        function clearMemory() {
+            variables = {};
+            pointers = {};
+            nextAddress = 0x1000;
+            updateVariableSelects();
+            updatePointerSelects();
+            renderMemory();
+            showStatusMessage('内存已清空', 'success');
+        }
+
+        function showExample() {
+            clearMemory();
+            
+            // Create example variables and pointers
+            variables['x'] = { value: 42, address: '0x1000' };
+            variables['y'] = { value: 100, address: '0x1004' };
+            pointers['ptr'] = { target: 'x', address: '0x2000', value: '0x1000' };
+            
+            nextAddress = 0x2004;
+            updateVariableSelects();
+            updatePointerSelects();
+            renderMemory();
+            showStatusMessage('示例已加载：变量 x=42, y=100，指针 ptr 指向 x', 'success');
+        }
+
+        function showStatusMessage(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = type === 'error' ? 'error-message' : 'status-message';
+            statusDiv.innerHTML = `<p><strong>${type === 'error' ? '错误' : '成功'}:</strong> ${message}</p>`;
+            statusDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Module 2: Array and Pointer Arithmetic
+        let array = [];
+        let currentPointerIndex = 0;
+
+        function createArray() {
+            const input = document.getElementById('arrayInput').value.trim();
+            
+            if (!input) {
+                showArrayMessage('请输入数组元素', 'error');
+                return;
+            }
+
+            try {
+                array = input.split(',').map(x => parseInt(x.trim()));
+                if (array.some(isNaN)) {
+                    throw new Error('无效数字');
+                }
+            } catch (e) {
+                showArrayMessage('请输入有效的数字，用逗号分隔', 'error');
+                return;
+            }
+
+            currentPointerIndex = 0;
+            enableArrayButtons();
+            renderArray();
+            updatePointerInfo();
+            showArrayMessage(`创建了包含 ${array.length} 个元素的数组`, 'success');
+        }
+
+        function movePointerLeft() {
+            if (currentPointerIndex > 0) {
+                currentPointerIndex--;
+                renderArray();
+                updatePointerInfo();
+                showArrayMessage(`指针向左移动到索引 ${currentPointerIndex}`, 'success');
+            }
+        }
+
+        function movePointerRight() {
+            if (currentPointerIndex < array.length - 1) {
+                currentPointerIndex++;
+                renderArray();
+                updatePointerInfo();
+                showArrayMessage(`指针向右移动到索引 ${currentPointerIndex}`, 'success');
+            }
+        }
+
+        function resetArrayPointer() {
+            currentPointerIndex = 0;
+            renderArray();
+            updatePointerInfo();
+            showArrayMessage('指针重置到数组开头', 'success');
+        }
+
+        function jumpToOffset() {
+            const offset = parseInt(document.getElementById('offsetInput').value);
+            
+            if (isNaN(offset) || offset < 0 || offset >= array.length) {
+                showArrayMessage(`偏移量必须在 0 到 ${array.length - 1} 之间`, 'error');
+                return;
+            }
+
+            currentPointerIndex = offset;
+            renderArray();
+            updatePointerInfo();
+            showArrayMessage(`指针跳转到索引 ${offset}`, 'success');
+            document.getElementById('offsetInput').value = '';
+        }
+
+        function enableArrayButtons() {
+            document.getElementById('ptrLeftBtn').disabled = false;
+            document.getElementById('ptrRightBtn').disabled = false;
+            document.getElementById('resetPtrBtn').disabled = false;
+            document.getElementById('jumpBtn').disabled = false;
+        }
+
+        function renderArray() {
+            const canvas = document.getElementById('arrayCanvas');
+            canvas.innerHTML = '';
+
+            if (array.length === 0) {
+                canvas.innerHTML = '<p class="text-gray-500">输入数组元素并点击"创建数组"开始演示</p>';
+                return;
+            }
+
+            const arrayContainer = document.createElement('div');
+            arrayContainer.className = 'array-container';
+
+            // Render array elements
+            for (let i = 0; i < array.length; i++) {
+                const elementDiv = document.createElement('div');
+                elementDiv.className = `array-element ${i === currentPointerIndex ? 'pointer-target' : ''}`;
+                
+                elementDiv.innerHTML = `
+                    <div class="array-index">[${i}]</div>
+                    <div class="array-value">${array[i]}</div>
+                `;
+                
+                arrayContainer.appendChild(elementDiv);
+            }
+
+            // Add pointer indicator
+            const pointerIndicator = document.createElement('div');
+            pointerIndicator.className = 'w-full text-center mt-4';
+            pointerIndicator.innerHTML = `
+                <div class="flex justify-center items-center gap-2">
+                    <span class="text-lg font-bold text-[#f4a261]">ptr</span>
+                    <span class="pointer-arrow animated">↑</span>
+                    <span class="text-sm text-gray-600">指向索引 ${currentPointerIndex}</span>
+                </div>
+            `;
+
+            canvas.appendChild(arrayContainer);
+            canvas.appendChild(pointerIndicator);
+
+            // Update button states
+            document.getElementById('ptrLeftBtn').disabled = currentPointerIndex === 0;
+            document.getElementById('ptrRightBtn').disabled = currentPointerIndex === array.length - 1;
+        }
+
+        function updatePointerInfo() {
+            const infoDiv = document.getElementById('pointerInfo');
+            const statusP = document.getElementById('pointerStatus');
+            
+            if (array.length > 0) {
+                const baseAddress = 0x1000;
+                const currentAddress = baseAddress + (currentPointerIndex * 4); // Assume 4-byte integers
+                
+                statusP.innerHTML = `
+                    <strong>ptr</strong> 指向数组索引 <strong>${currentPointerIndex}</strong><br>
+                    <strong>*ptr</strong> = ${array[currentPointerIndex]}<br>
+                    <strong>ptr</strong> 的地址值: 0x${currentAddress.toString(16).toUpperCase()}<br>
+                    数组基地址: 0x${baseAddress.toString(16).toUpperCase()}，偏移: ${currentPointerIndex * 4} 字节
+                `;
+                infoDiv.classList.remove('hidden');
+            } else {
+                infoDiv.classList.add('hidden');
+            }
+        }
+
+        function showArrayMessage(message, type) {
+            // Create a temporary message element
+            const canvas = document.getElementById('arrayCanvas');
+            const existingMsg = canvas.querySelector('.temp-message');
+            if (existingMsg) existingMsg.remove();
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `temp-message mt-4 p-3 rounded-lg ${type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
+            msgDiv.innerHTML = `<strong>${type === 'error' ? '错误' : '操作'}:</strong> ${message}`;
+            
+            canvas.appendChild(msgDiv);
+            
+            setTimeout(() => {
+                msgDiv.remove();
+            }, 2000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateVariableSelects();
+            updatePointerSelects();
+        });
+    </script>
+</body>
+</html> 

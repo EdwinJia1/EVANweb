@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1131 微积分实验考试2 (Maple) 复习 | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .back-button, .quiz-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            margin-right: 1rem;
+        }
+        .back-button:hover, .quiz-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .quiz-button {
+            background-color: #e07a5f;
+            color: #ffffff;
+        }
+        .quiz-button:hover {
+            background-color: #d06850;
+        }
+        .notes-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .chapter-header {
+            color: #e07a5f;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+        }
+        .section-header {
+            color: #2c2c2c;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .subsection-header {
+            color: #8b8589;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .knowledge-box {
+            background-color: #f8f7f2;
+            border-left: 4px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .formula-box {
+            background-color: #faf9f6;
+            border: 1px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.25rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        .example-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .conclusion-box {
+            background-color: #fef3e2;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .code-block {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .toc {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc-link {
+            color: #e07a5f;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .toc-link:hover {
+            text-decoration: underline;
+        }
+        .important-note {
+            background-color: #fff7ed;
+            border: 2px solid #f4a261;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Navigation Buttons -->
+        <div class="flex flex-wrap mb-4">
+            <a href="../math1131.html" class="back-button">
+                <span>←</span>
+                <span>返回课程主页</span>
+            </a>
+            <a href="./math1131_calculus_lab_test2_quiz.html" class="quiz-button">
+                <span>🎯</span>
+                <span>开始互动测验</span>
+            </a>
+        </div>
+
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Maple 微积分实验考试2</h1>
+            <p class="text-xl text-gray-600 mt-2">MATH1131 核心命令复习</p>
+            <p class="text-sm text-gray-500 mt-1">针对实验考试的 Maple 核心命令复习，涵盖函数定义、求解、绘图与极值问题</p>
+        </header>
+
+        <!-- Important Notice -->
+        <div class="important-note">
+            <p class="text-sm text-orange-700">
+                <strong>💡 复习提示：</strong> 本笔记涵盖10个核心Maple知识点，建议先完整阅读理解概念，再进行互动测验巩固学习成果。
+            </p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="notes-container">
+            <h2 class="chapter-header" style="margin-top: 0;">目录</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <p><strong>1.</strong> <a href="#assignment" class="toc-link">变量赋值 := (冒号等于号)</a></p>
+                <p><strong>2.</strong> <a href="#function-def" class="toc-link">定义函数 -> (箭头)</a></p>
+                <p><strong>3.</strong> <a href="#derivative" class="toc-link">求导 D() (大写D)</a></p>
+                <p><strong>4.</strong> <a href="#fsolve" class="toc-link">数值求解 fsolve()</a></p>
+                <p><strong>5.</strong> <a href="#digits" class="toc-link">控制精度 Digits</a></p>
+                <p><strong>6.</strong> <a href="#integration" class="toc-link">符号积分 int() 与数值计算 evalf()</a></p>
+                <p><strong>7.</strong> <a href="#polarplot" class="toc-link">极坐标绘图 polarplot()</a></p>
+                <p><strong>8.</strong> <a href="#solve" class="toc-link">精确求解 solve()</a></p>
+                <p><strong>9.</strong> <a href="#closed-interval" class="toc-link">闭区间极值法</a></p>
+                <p><strong>10.</strong> <a href="#limits" class="toc-link">求极限与洛必达法则 limit()</a></p>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 1 -->
+        <div class="notes-container" id="assignment">
+            <h2 class="chapter-header" style="margin-top: 0;">1. 变量赋值 := (冒号等于号)</h2>
+            <p>这是 Maple 中最基本也最重要的命令之一。它用来给一个变量<strong>赋值</strong>。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>将一个数字、一个表达式、一个函数或者一个计算结果存到一个你命名的变量里。</li>
+                    <li><strong>语法：</strong>变量名 := 值或表达式;</li>
+                    <li><strong>注意：</strong>它和数学里的单个等号 = 不同。= 在 Maple 里只用于<strong>表示一个方程</strong>，比如 fsolve 里的 df(x) = 0。</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+df := D(f);              // 将 f 的导函数结果赋值给变量 df
+x0 := 0.12345;          // 将数值 0.12345 赋值给变量 x0
+result := x^2 + 3*x;    // 将表达式赋值给变量 result
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 2 -->
+        <div class="notes-container" id="function-def">
+            <h2 class="chapter-header">2. 定义函数 -> (箭头)</h2>
+            <p>这用于创建一个可以重复使用的函数。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>定义一个数学函数，之后可以方便地代入不同的值进行计算。</li>
+                    <li><strong>语法：</strong>函数名 := 自变量 -> 表达式;</li>
+                    <li><strong>调用：</strong>定义之后，你就可以像 f(0.1) 或 f(x0) 这样来调用它了。</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+f := x -> 7^x + 7*cos(7*x/2);     // 定义函数 f
+g := (x, y) -> x^2 + y^2;         // 定义二元函数 g
+h := t -> sin(t) * exp(-t);       // 定义函数 h
+
+// 函数调用
+f(0.1);                           // 计算 f 在 x=0.1 处的值
+g(2, 3);                          // 计算 g(2,3) 的值
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 3 -->
+        <div class="notes-container" id="derivative">
+            <h2 class="chapter-header">3. 求导 D() (大写D)</h2>
+            <p>这是 Maple 的求导算子。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>计算一个函数或表达式的导数。</li>
+                    <li><strong>语法：</strong>
+                        <ul>
+                            <li>求一阶导数: D(函数名)</li>
+                            <li>求二阶导数: D(一阶导函数名) 或者 (D@@2)(原函数名)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+f := x -> x^3 + 2*x^2 - 5*x + 1;  // 定义函数
+df := D(f);                       // 计算 f 的一阶导数，并存入 df
+ddf := D(df);                     // 计算 df 的导数，即 f 的二阶导数
+ddf := (D@@2)(f);                 // 直接计算 f 的二阶导数，效果同上
+
+// 求导数在特定点的值
+df(2);                            // 计算导数在 x=2 处的值
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 4 -->
+        <div class="notes-container" id="fsolve">
+            <h2 class="chapter-header">4. 数值求解 fsolve()</h2>
+            <p>当方程无法直接解出精确的符号解时，用它来找<strong>数值解</strong>（近似解）。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>求解单个或多个方程的数值解。</li>
+                    <li><strong>语法：</strong>
+                        <ul>
+                            <li>基本形式: fsolve(方程, 变量);</li>
+                            <li>在指定区间内求解: fsolve(方程, 变量 = 起点..终点);</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+// 基本求解
+f := x -> x^3 - 2*x - 5;
+fsolve(f(x) = 0, x);              // 在整个实数范围寻找解
+
+// 指定区间求解
+fsolve(df(x) = 0, x = 0..0.3);    // 在 x 位于 0 和 0.3 之间寻找解
+fsolve(sin(x) = 0.5, x = 0..Pi);  // 在指定区间内求解三角方程
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 5 -->
+        <div class="notes-container" id="digits">
+            <h2 class="chapter-header">5. 控制精度 Digits (首字母大写)</h2>
+            <p>这是一个全局变量，用来控制所有浮点数计算的有效数字位数。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>设定计算结果的精度。</li>
+                    <li><strong>语法：</strong>Digits := 你想要的数字;</li>
+                    <li><strong>注意：</strong>Maple 严格区分大小写，Digits 不能写成 digits。</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+Digits := 10;                     // 设置10位有效数字
+evalf(Pi);                        // 计算 π 的近似值
+
+Digits := 20;                     // 提高精度到20位
+evalf(sqrt(2));                   // 计算 √2 的高精度近似值
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 6 -->
+        <div class="notes-container" id="integration">
+            <h2 class="chapter-header">6. 符号积分 int() 与数值计算 evalf()</h2>
+            <p>这是解决数值定积分问题的核心组合。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>int() 的用途：</strong>用来表示一个数学上的积分（定积分或不定积分）。它本身只是建立一个积分的符号表达式。</li>
+                    <li><strong>evalf() 的用途：</strong>用来将一个符号表达式（包括 int 创建的积分表达式）计算出其具体的浮点数值（小数）。</li>
+                    <li><strong>组合用途：</strong>evalf(int(...)) 是解决<strong>数值定积分</strong>问题的标准"黄金组合"。</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+// 数值定积分
+integrand := (exp(-x) * cos(x^2 / 3)) / (5 + x);
+evalf(int(integrand, x = 0..infinity));
+
+// 有限区间积分
+evalf(int(x^2 * sin(x), x = 0..Pi));
+
+// 不定积分（符号积分）
+int(x^2 * exp(x), x);             // 返回符号结果
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h4 class="subsection-header">特殊常数</h4>
+                <ul>
+                    <li>无穷大 ∞ → infinity</li>
+                    <li>圆周率 π → Pi (P大写)</li>
+                    <li>虚数单位 i → I (I大写)</li>
+                    <li>自然对数的底 e → 通过 exp(1) 表示</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 7 -->
+        <div class="notes-container" id="polarplot">
+            <h2 class="chapter-header">7. 极坐标绘图 polarplot()</h2>
+            <p>这是解决"根据函数选择图像"这类问题的核心命令。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>用于绘制<strong>极坐标系</strong>下的函数图像 r = f(θ)。这对于从多个选项中选择正确图像的题目至关重要。</li>
+                    <li><strong>重要前提：</strong>绘图功能通常在一个叫 plots 的程序包里，因此需要先用 with(plots); 命令加载这个包。</li>
+                    <li><strong>语法：</strong>polarplot(r的表达式, 角度变量 = 下限..上限);</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+with(plots);                                         // 加载绘图包
+polarplot(3*sin(theta) - cos(4*theta), theta = 0..2*Pi);
+
+// 玫瑰曲线
+polarplot(sin(3*theta), theta = 0..Pi);
+
+// 心形线
+polarplot(1 + cos(theta), theta = 0..2*Pi);
+
+// 螺旋线
+polarplot(theta, theta = 0..4*Pi);
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h4 class="subsection-header">注意事项</h4>
+                <ul>
+                    <li><strong>加载程序包：</strong>with(plots); 只需要在每个 Maple 会话的开头执行一次。</li>
+                    <li><strong>变量名：</strong>Maple 能够直接识别 theta 作为希腊字母 θ。</li>
+                    <li><strong>常数：</strong>圆周率 π 必须写作 Pi (P大写)，例如 2*Pi。</li>
+                    <li><strong>输出类型：</strong>这个命令的输出是一个<strong>图像</strong>，而不是一个数值。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 8 -->
+        <div class="notes-container" id="solve">
+            <h2 class="chapter-header">8. 精确求解 solve()</h2>
+            <p>用于求解方程，并给出<strong>精确的符号解</strong>（例如整数、分数、根式等）。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心要点</h3>
+                <ul>
+                    <li><strong>用途：</strong>求解方程，给出精确的符号解。这在题目要求 "exact values" 时至关重要。</li>
+                    <li><strong>与 fsolve() 的区别：</strong>solve() 追求精确解；fsolve() 给出数值近似解（小数）。</li>
+                    <li><strong>语法：</strong>solve(方程, 变量);</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+// 二次方程的精确解
+solve(x^2 + 2*x - 24 = 0, x);       // 输出精确的整数解 -6, 4
+solve(x^2 - 2 = 0, x);               // 输出带根号的精确解 sqrt(2), -sqrt(2)
+
+// 三角方程的精确解
+solve(sin(x) = 1/2, x);              // 输出精确的角度解
+
+// 系统方程
+solve({x + y = 5, x - y = 1}, {x, y}); // 解方程组
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h4 class="subsection-header">选择指南</h4>
+                <ul>
+                    <li><strong>使用 solve()：</strong>当题目要求精确值、分数、根式等符号形式的答案时。</li>
+                    <li><strong>使用 fsolve()：</strong>当需要数值近似解，或者方程过于复杂无法得到符号解时。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 9 -->
+        <div class="notes-container" id="closed-interval">
+            <h2 class="chapter-header">9. 寻找临界点与闭区间极值 (The Closed Interval Method)</h2>
+            <p>这是解决"求函数在闭区间 [a,b] 上的绝对最大/最小值"这类问题的标准方法。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心理论 (极值定理)</h3>
+                <p>任何一个在<strong>闭区间</strong> [a,b] 上的<strong>连续函数</strong>，都<strong>必然</strong>存在一个绝对最大值和一个绝对最小值。</p>
+            </div>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">候选点 (Candidate Points)</h3>
+                <p>这些最大/最小值只会出现在以下三类"候选点"上：</p>
+                <ol>
+                    <li><strong>驻点 (Stationary Points)：</strong>在区间内部 (a, b)，使得导数 f'(x) = 0 的点。</li>
+                    <li><strong>奇点 (Singular Points)：</strong>在区间内部 (a, b)，使得导数 f'(x) 不存在的点。</li>
+                    <li><strong>区间端点 (Endpoints)：</strong>即 x = a 和 x = b。</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">完整解题流程</h4>
+                <ol>
+                    <li><strong>找出所有候选点：</strong>驻点、奇点、端点。</li>
+                    <li><strong>筛选：</strong>只保留所有在闭区间 [a,b] 内的、不重复的候选点。</li>
+                    <li><strong>求值：</strong>将筛选后的所有候选点逐个代入<strong>原始函数 f(x)</strong> 中计算函数值。</li>
+                    <li><strong>比较：</strong>所有计算出的函数值中，最大的就是绝对最大值，最小的就是绝对最小值。</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">针对绝对值函数 f(x) = |g(x)| 的特殊策略</h4>
+                <div class="code-block">
+f := x -> abs(x^3 - 2*x^2 - 7*x - 4);
+g := x -> x^3 - 2*x^2 - 7*x - 4;
+
+// 找驻点：求解 g'(x) = 0
+solve(D(g)(x) = 0, x);
+
+// 找奇点：求解 g(x) = 0（绝对值函数的尖角点）
+solve(g(x) = 0, x);
+
+// 然后手动筛选在指定区间内的点，代入原函数求值并比较
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Point 10 -->
+        <div class="notes-container" id="limits">
+            <h2 class="chapter-header">10. 求极限与洛必达法则的验证 (limit)</h2>
+            <p>limit 命令是 Maple 中计算函数极限的核心工具，尤其在处理洛必达法则问题时，它是你最可靠的<strong>验证助手</strong>。</p>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">核心理论 (洛必达法则)</h3>
+                <p>只有当极限是 <strong>0/0</strong> 或 <strong>∞/∞</strong> 的<strong>不定式</strong>时，才可以尝试使用洛必达法则。</p>
+            </div>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">Maple 的策略性用途</h3>
+                <ol>
+                    <li><strong>验证前提：</strong>分别计算分子和分母的极限，以<strong>确定极限的类型</strong>。这是判断能否使用洛必达法则的关键一步。</li>
+                    <li><strong>验证答案：</strong>直接计算整个分式的极限，以核对你的最终答案（无论是否使用了洛必达法则）。</li>
+                </ol>
+            </div>
+
+            <div class="knowledge-box">
+                <h3 class="section-header">语法</h3>
+                <ul>
+                    <li><strong>双边极限：</strong>limit(表达式, 变量=趋近的值);</li>
+                    <li><strong>单边极限：</strong>limit(表达式, 变量=趋近的值, left); 或 limit(表达式, 变量=趋近的值, right);</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">示例代码</h4>
+                <div class="code-block">
+// 基本极限计算
+limit(sin(x)/x, x=0);              // 输出 1
+
+// 单边极限
+limit(ln(x), x=0, right);          // 输出 -infinity
+
+// 验证洛必达法则条件的例子
+// 问题: lim(x->0) cos(x)/ln(x) 是否可用洛必达？
+
+// 1. 验证分子极限
+limit(cos(x), x=0);                // 输出: 1
+
+// 2. 验证分母极限  
+limit(ln(x), x=0, right);          // 输出: -infinity
+
+// 3. 结论: 极限类型是 1/(-∞)，不是不定式，不能使用洛必达法则
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h4 class="subsection-header">验证流程总结</h4>
+                <ol>
+                    <li>分别计算分子和分母的极限</li>
+                    <li>判断是否为 0/0 或 ∞/∞ 不定式</li>
+                    <li>如果是不定式，可以使用洛必达法则</li>
+                    <li>如果不是，直接计算原极限或使用其他方法</li>
+                    <li>最后用 limit 命令验证最终答案</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Comprehensive Examples -->
+        <div class="notes-container">
+            <h2 class="chapter-header">综合示例</h2>
+            
+            <div class="example-box">
+                <h4 class="subsection-header">例1：求转折点 (fsolve)</h4>
+                <div class="code-block">
+Digits := 10;
+f := x -> 3*sin(x^2/2) - (sin(x/2))^2;
+df := D(f);
+x0 := fsolve(df(x) = 0, x = 1..2);
+ddf := D(df);
+ddf(x0);
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">例2：求数值定积分 (evalf & int)</h4>
+                <div class="code-block">
+Digits := 10;
+integrand := (exp(-x) * cos(x^2 / 3)) / (5 + x);
+evalf(int(integrand, x = 0..infinity));
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4 class="subsection-header">例3：绘制极坐标图像 (polarplot)</h4>
+                <div class="code-block">
+with(plots);
+polarplot(3*sin(theta) - cos(4*theta), theta = 0..2*Pi);
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Quiz Link -->
+        <div class="important-note">
+            <p class="text-lg font-semibold text-orange-700 mb-2">🎯 准备好测试您的掌握程度了吗？</p>
+            <a href="./math1131_calculus_lab_test2_quiz.html" class="quiz-button" style="margin: 0;">
+                <span>开始70道互动测验</span>
+                <span>→</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

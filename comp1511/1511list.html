@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链表 (Linked List) 图文笔记</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <script src="[https://cdn.jsdelivr.net/npm/chart.js](https://cdn.jsdelivr.net/npm/chart.js)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap)" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: #F8F9FA;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .node {
+            display: flex;
+            border: 2px solid #007BFF;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: #E9F4FF;
+            min-width: 100px;
+            text-align: center;
+        }
+        .node-data {
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            color: #0056b3;
+            border-right: 2px solid #007BFF;
+        }
+        .node-next {
+            padding: 0.75rem 0.5rem;
+            background-color: #007BFF;
+            color: white;
+            font-family: monospace;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pointer {
+            font-size: 2.5rem;
+            color: #007BFF;
+            margin: 0 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .code-block {
+            background-color: #212529;
+            color: #F8F9FA;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+        }
+        .kpi {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #007BFF;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #E9F4FF;
+            border: 1px solid #007BFF;
+            color: #0056b3;
+            font-weight: 600;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #007BFF;
+            margin: 0 0.5rem;
+        }
+        .interactive-step {
+            display: none;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .interactive-step.active {
+            display: flex;
+        }
+        .node.highlight {
+            border-color: #FFC107;
+            background-color: #FFF3CD;
+        }
+        .pointer.highlight {
+            color: #FFC107;
+        }
+        .node.new {
+            border-color: #28A745;
+            background-color: #D4EDDA;
+        }
+        .pointer.new {
+            color: #28A745;
+        }
+        .node.deleted {
+            opacity: 0.3;
+            filter: grayscale(100%);
+            transition: opacity 0.5s ease, filter 0.5s ease;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">链表图文笔记</h1>
+            <p class="mt-4 text-lg text-gray-600">一个关于链表核心概念的可视化指南</p>
+        </header>
+
+        <main class="space-y-12">
+            <section class="card lg:col-span-2">
+                <h2 class="text-2xl font-bold mb-4 text-center">1. 什么是链表? (Anatomy of a Linked List)</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">链表是一种灵活的数据结构，由一系列通过指针连接的节点组成。与在内存中连续存储的数组不同，链表的节点可以分散在任何地方。</p>
+                <div class="flex items-center justify-center flex-wrap">
+                    <div class="flex flex-col items-center">
+                        <div class="text-lg font-semibold text-gray-700">Head</div>
+                        <div class="text-2xl font-bold text-blue-600">↓</div>
+                    </div>
+                    <div class="flex items-center justify-center mt-4 md:mt-0">
+                        <div class="node"><div class="node-data">11</div><div class="node-next">➔</div></div>
+                        <div class="pointer">→</div>
+                        <div class="node"><div class="node-data">8</div><div class="node-next">➔</div></div>
+                        <div class="pointer">→</div>
+                        <div class="node"><div class="node-data">55</div><div class="node-next">NULL</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card lg:col-span-1">
+                    <h2 class="text-2xl font-bold mb-4">2. 节点：构建块</h2>
+                    <p class="text-gray-600 mb-4">每个节点都包含两部分：存储实际值的“数据”和指向下一个节点的“指针”。</p>
+                    <div class="chart-container h-64">
+                        <canvas id="nodeCompositionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card lg:col-span-2">
+                    <h2 class="text-2xl font-bold mb-4">节点结构 (C 语言)</h2>
+                    <p class="text-gray-600 mb-4">在 C 语言中，节点通常使用自引用结构体来定义。</p>
+                    <div class="code-block">
+struct node {
+    int data;
+    struct node *next;
+};
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <p class="font-semibold text-blue-800"><span class="font-bold">`struct node *next;`</span> 是关键！它是一个指向相同类型结构体的指针，从而将节点连接成链。</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-8">3. 核心操作 (Core Operations)</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="text-xl font-bold mb-4">创建新节点 (`malloc`)</h3>
+                        <p class="text-gray-600 mb-6">为了添加新元素，我们必须首先使用 `malloc` 在堆上动态分配内存来创建一个新节点。</p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div class="flow-step">1. 请求内存 (malloc)</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">2. 存储数据</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">3. 设置 next 为 NULL</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="text-xl font-bold mb-4">遍历 (Traversal)</h3>
+                        <p class="text-gray-600 mb-6">从 `head` 开始，跟随 `next` 指针逐个访问节点，直到遇到 `NULL`。</p>
+                        <div class="code-block">
+struct node *current = head;
+while (current != NULL) {
+    // ... process current->data ...
+    current = current->next;
+}
+                        </div>
+                    </div>
+
+                    <div class="card lg:col-span-2">
+                        <h3 class="text-xl font-bold mb-4 text-center">互动演示：插入节点 (Interactive Demo: Insertion)</h3>
+                        <p class="text-gray-600 mb-6 text-center">点击“下一步”观察指针如何重定向以插入新节点。</p>
+                        <div id="insertion-demo" class="relative overflow-hidden">
+                            <div class="interactive-step active" data-step="0">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">初始状态：链表 A → B → C</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                            </div>
+                            <div class="interactive-step" data-step="1">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 1: 创建新节点 (NEW)</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-20">
+                                    <div class="node new"><div class="node-data">NEW</div><div class="node-next new">NULL</div></div>
+                                </div>
+                            </div>
+                            <div class="interactive-step" data-step="2">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 2: `old_next` 记住 B (即 `current->next`)</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node highlight"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-20">
+                                    <div class="node new"><div class="node-data">NEW</div><div class="node-next new">NULL</div></div>
+                                </div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-40 text-sm text-gray-600">`old_next` → B</div>
+                            </div>
+                             <div class="interactive-step" data-step="3">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 3: A 的 `next` 指向 NEW (`current->next = new_node;`)</p>
+                                <div class="node highlight"><div class="node-data">A</div><div class="node-next new">➔</div></div>
+                                <div class="pointer new">→</div>
+                                <div class="node deleted"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer deleted">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-20">
+                                    <div class="node new"><div class="node-data">NEW</div><div class="node-next new">NULL</div></div>
+                                </div>
+                            </div>
+                            <div class="interactive-step" data-step="4">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 4: NEW 的 `next` 指向 B (`new_node->next = old_next;`)</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next new">➔</div></div>
+                                <div class="pointer new">→</div>
+                                <div class="node new"><div class="node-data">NEW</div><div class="node-next highlight">➔</div></div>
+                                <div class="pointer highlight">→</div>
+                                <div class="node"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mt-6 space-x-4">
+                            <button id="prev-insert" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50" disabled>上一步</button>
+                            <button id="next-insert" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">下一步</button>
+                        </div>
+                    </div>
+
+                    <div class="card lg:col-span-2">
+                        <h3 class="text-xl font-bold mb-4 text-center">互动演示：删除节点 (Interactive Demo: Deletion)</h3>
+                        <p class="text-gray-600 mb-6 text-center">点击“下一步”观察节点如何从链表中移除并释放内存。</p>
+                        <div id="deletion-demo" class="relative overflow-hidden">
+                            <div class="interactive-step active" data-step="0">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">初始状态：链表 A → B → C</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                            </div>
+                            <div class="interactive-step" data-step="1">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 1: `node_to_free` 记住 B</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node highlight"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-20 text-sm text-gray-600">`node_to_free` → B</div>
+                            </div>
+                            <div class="interactive-step" data-step="2">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 2: `to_point_at` 记住 C</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">B</div><div class="node-next highlight">➔</div></div>
+                                <div class="pointer highlight">→</div>
+                                <div class="node highlight"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-20 text-sm text-gray-600">`to_point_at` → C</div>
+                            </div>
+                             <div class="interactive-step" data-step="3">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 3: A 的 `next` 指向 C (`current->next = current->next->next;`)</p>
+                                <div class="node highlight"><div class="node-data">A</div><div class="node-next highlight">➔</div></div>
+                                <div class="pointer highlight">→</div>
+                                <div class="node deleted"><div class="node-data">B</div><div class="node-next">➔</div></div>
+                                <div class="pointer deleted">→</div>
+                                <div class="node highlight"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                            </div>
+                            <div class="interactive-step" data-step="4">
+                                <p class="font-semibold text-gray-700 w-full text-center mb-4">步骤 4: 释放 B 的内存 (`free(node_to_free);`)</p>
+                                <div class="node"><div class="node-data">A</div><div class="node-next">➔</div></div>
+                                <div class="pointer">→</div>
+                                <div class="node"><div class="node-data">C</div><div class="node-next">NULL</div></div>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-20 text-red-600 font-bold">Node B Freed!</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mt-6 space-x-4">
+                            <button id="prev-delete" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50" disabled>上一步</button>
+                            <button id="next-delete" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">下一步</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-8">4. 链表 vs. 数组 (Linked Lists vs. Arrays)</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="text-xl font-bold mb-4">操作性能比较</h3>
+                        <p class="text-gray-600 mb-4">链表在插入和删除方面表现出色（无需移动元素），但在访问方面较慢。</p>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                         <h3 class="text-xl font-bold mb-4">关键差异</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="p-3 font-semibold">特性</th>
+                                        <th class="p-3 font-semibold">链表</th>
+                                        <th class="p-3 font-semibold">数组</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-medium">大小</td>
+                                        <td class="p-3">动态</td>
+                                        <td class="p-3">固定</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-medium">内存</td>
+                                        <td class="p-3">分散</td>
+                                        <td class="p-3">连续</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <td class="p-3 font-medium">元素访问</td>
+                                        <td class="p-3">慢 (O(n))</td>
+                                        <td class="p-3">快 (O(1))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-medium">插入/删除</td>
+                                        <td class="p-3">快 (O(1))</td>
+                                        <td class="p-3">慢 (O(n))</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="text-center mt-16 py-8 border-t">
+            <p class="text-gray-600">链表图文笔记 - 让数据结构更易于理解</p>
+        </footer>
+    </div>
+
+    <script>
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    }
+                }
+            }
+        };
+
+        const nodeCtx = document.getElementById('nodeCompositionChart').getContext('2d');
+        new Chart(nodeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['数据 (Data)', '指针 (Pointer)'],
+                datasets: [{
+                    label: 'Node Composition',
+                    data: [65, 35],
+                    backgroundColor: ['#007BFF', '#4D5BFA'],
+                    borderColor: ['#FFFFFF'],
+                    borderWidth: 2
+                }]
+            },
+            options: commonChartOptions
+        });
+        
+        const perfCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(perfCtx, {
+            type: 'bar',
+            data: {
+                labels: ['访问元素', '在开头插入/删除', '在中间插入/删除'],
+                datasets: [{
+                    label: '链表 (时间复杂度)',
+                    data: [10, 1, 1],
+                    backgroundColor: '#007BFF',
+                    borderColor: '#0056b3',
+                    borderWidth: 1
+                }, {
+                    label: '数组 (时间复杂度)',
+                    data: [1, 10, 10],
+                    backgroundColor: '#00C6FF',
+                    borderColor: '#00a3d9',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return value === 1 ? '快 O(1)' : '慢 O(n)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function setupInteractiveDemo(containerId, prevBtnId, nextBtnId) {
+            const container = document.getElementById(containerId);
+            const steps = Array.from(container.querySelectorAll('.interactive-step'));
+            const prevBtn = document.getElementById(prevBtnId);
+            const nextBtn = document.getElementById(nextBtnId);
+            let currentStepIndex = 0;
+
+            function showStep(index) {
+                steps.forEach((step, i) => {
+                    if (i === index) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === steps.length - 1;
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStepIndex > 0) {
+                    currentStepIndex--;
+                    showStep(currentStepIndex);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStepIndex < steps.length - 1) {
+                    currentStepIndex++;
+                    showStep(currentStepIndex);
+                }
+            });
+
+            showStep(currentStepIndex);
+        }
+
+        setupInteractiveDemo('insertion-demo', 'prev-insert', 'next-insert');
+        setupInteractiveDemo('deletion-demo', 'prev-delete', 'next-delete');
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1081 - Lab Test 2 详细笔记 | 逻辑与组合数学</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .notes-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .section-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #e07a5f;
+        }
+        .formula-box {
+            background-color: #e0f2fe;
+            border: 2px solid #0ea5e9;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .example-box {
+            background-color: #f0fdf4;
+            border: 2px solid #22c55e;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .tip-box {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .quiz-link {
+            background-color: #8b5cf6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        .quiz-link:hover {
+            background-color: #7c3aed;
+            transform: translateY(-2px);
+        }
+        .truth-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .truth-table th, .truth-table td {
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem;
+            text-align: center;
+        }
+        .truth-table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+        }
+        .step-number {
+            background-color: #e07a5f;
+            color: white;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <a href="../math1081.html" class="home-button">← 返回MATH1081</a>
+        
+        <div class="notes-container">
+            <h1 class="text-4xl font-bold text-center text-[#e07a5f] mb-4">MATH1081 Lab Test 2 详细笔记</h1>
+            <h2 class="text-2xl text-center text-gray-600 mb-6">逻辑表达式简化 | 真值表分析 | 组合数学应用</h2>
+            
+            <div class="text-center mb-8">
+                <a href="./math1081_lab_test_2_quiz.html" class="quiz-link">🎯 开始Lab Test 2测验 (30题)</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-blue-100 p-4 rounded-lg text-center">
+                    <h3 class="font-bold text-blue-800">Question 1</h3>
+                    <p class="text-blue-600">逻辑表达式简化与类型判断</p>
+                </div>
+                <div class="bg-green-100 p-4 rounded-lg text-center">
+                    <h3 class="font-bold text-green-800">Question 2</h3>
+                    <p class="text-green-600">真值表分析与逻辑等价</p>
+                </div>
+                <div class="bg-orange-100 p-4 rounded-lg text-center">
+                    <h3 class="font-bold text-orange-800">Question 3</h3>
+                    <p class="text-orange-600">组合数学综合应用</p>
+                </div>
+                <div class="bg-purple-100 p-4 rounded-lg text-center">
+                    <h3 class="font-bold text-purple-800">Question 4-7</h3>
+                    <p class="text-purple-600">高级计数问题与递推关系</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 1: 逻辑表达式简化与类型判断 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">1</span>
+                逻辑表达式简化与类型判断
+            </h2>
+            
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">基础操作口诀</h3>
+            <p class="text-lg mb-4">这是你填写真值表时需要刻在脑子里的四条规则：</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-2">1. ∧ (且/AND)</h4>
+                    <p class="text-lg"><strong>一假则假</strong></p>
+                    <p class="text-sm">只要有一个 F，结果就是 F</p>
+                </div>
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-2">2. ∨ (或/OR)</h4>
+                    <p class="text-lg"><strong>一真则真</strong></p>
+                    <p class="text-sm">只要有一个 T，结果就是 T</p>
+                </div>
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-2">3. ¬ (非/NOT)</h4>
+                    <p class="text-lg"><strong>真变假，假变真</strong></p>
+                    <p class="text-sm">简单的取反操作</p>
+                </div>
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-2">4. → (蕴含/IMPLIES)</h4>
+                    <p class="text-lg"><strong>真推假，才是假</strong></p>
+                    <p class="text-sm">只有 T → F 是 F，其他都是 T</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">核心目标：判断表达式类型</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="example-box">
+                    <h4 class="font-bold text-green-800 mb-2">重言式 (Tautology)</h4>
+                    <p><strong>特征：</strong>永真式</p>
+                    <p>无论 p, q 是什么，结果永远是 <strong>T</strong></p>
+                    <p class="text-sm mt-2 italic">记忆：必然真理</p>
+                    <p class="text-sm">例：$p ∨ ¬p ≡ T$</p>
+                </div>
+                <div class="example-box">
+                    <h4 class="font-bold text-green-800 mb-2">矛盾式 (Contradiction)</h4>
+                    <p><strong>特征：</strong>永假式</p>
+                    <p>无论 p, q 是什么，结果永远是 <strong>F</strong></p>
+                    <p class="text-sm mt-2 italic">记忆：必然矛盾</p>
+                    <p class="text-sm">例：$p ∧ ¬p ≡ F$</p>
+                </div>
+                <div class="example-box">
+                    <h4 class="font-bold text-green-800 mb-2">偶发式 (Contingency)</h4>
+                    <p><strong>特征：</strong>不确定</p>
+                    <p>结果有真有假，取决于 p, q 的取值</p>
+                    <p class="text-sm mt-2 italic">记忆：看情况</p>
+                    <p class="text-sm">例：$p ∧ q$</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">万能解题公式</h3>
+            <div class="tip-box">
+                <p class="font-bold text-amber-800 mb-2">🎯 不要依赖真值表！用下面的公式化步骤，更快更准。</p>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>步骤1：简化。</strong>用公式工具箱里的公式，把复杂表达式一步步简化到最简形式。</li>
+                    <li><strong>步骤2：判断。</strong>看简化后的最终结果：
+                        <ul class="list-disc list-inside ml-4 mt-1">
+                            <li>如果结果是 <strong>T</strong> → 重言式 (Tautology)</li>
+                            <li>如果结果是 <strong>F</strong> → 矛盾式 (Contradiction)</li>
+                            <li>如果结果包含 p, q 的式子 → 偶发式 (Contingency)</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">公式工具箱</h3>
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">必须死记硬背的核心公式：</h4>
+                <div class="space-y-3">
+                    <div>
+                        <strong>1. 蕴含等价式 (最重要!)：</strong>
+                        <p>$A → B ≡ ¬A ∨ B$</p>
+                        <p class="text-sm italic">用于消灭 → 符号</p>
+                    </div>
+                    <div>
+                        <strong>2. 德摩根定律：</strong>
+                        <p>$¬(A ∨ B) ≡ ¬A ∧ ¬B$</p>
+                        <p>$¬(A ∧ B) ≡ ¬A ∨ ¬B$</p>
+                        <p class="text-sm italic">用于处理括号外的 ¬ 符号</p>
+                    </div>
+                    <div>
+                        <strong>3. 双重否定律：</strong>
+                        <p>$¬(¬A) ≡ A$</p>
+                        <p class="text-sm italic">负负得正</p>
+                    </div>
+                    <div>
+                        <strong>4. 否定律：</strong>
+                        <p>$A ∨ ¬A ≡ T$ (排中律)</p>
+                        <p>$A ∧ ¬A ≡ F$ (矛盾律)</p>
+                        <p class="text-sm italic">判断重言式和矛盾式的最后一步</p>
+                    </div>
+                    <div>
+                        <strong>5. 其他常用公式：</strong>
+                        <p><strong>幂等律：</strong> $A ∨ A ≡ A$；$A ∧ A ≡ A$</p>
+                        <p><strong>支配律：</strong> $A ∨ T ≡ T$；$A ∧ F ≡ F$</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">实战演练示例</h3>
+            
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">例1：判断 $¬(¬p ∨ ¬q) ∧ ¬(p → q)$</h4>
+                <div class="space-y-2">
+                    <p><strong>目标：</strong>简化这个表达式</p>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li><strong>原式：</strong> $¬(¬p ∨ ¬q) ∧ ¬(p → q)$</li>
+                        <li><strong>第一步 (德摩根 + 蕴含等价)：</strong> $(¬(¬p) ∧ ¬(¬q)) ∧ ¬(¬p ∨ q)$</li>
+                        <li><strong>第二步 (双重否定 + 德摩根)：</strong> $(p ∧ q) ∧ (¬(¬p) ∧ ¬q)$</li>
+                        <li><strong>第三步 (双重否定)：</strong> $(p ∧ q) ∧ (p ∧ ¬q)$</li>
+                        <li><strong>第四步 (合并同类项)：</strong> $p ∧ p ∧ q ∧ ¬q$</li>
+                        <li><strong>第五步 (幂等律 + 否定律)：</strong> $p ∧ F$</li>
+                        <li><strong>第六步 (支配律)：</strong> $F$</li>
+                    </ol>
+                    <p class="mt-3 font-bold text-green-800">结论：最终结果是 F，所以它是矛盾式 (Contradiction)。</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">例2：判断 $(¬p ∨ ¬q) → (p ∧ q)$</h4>
+                <div class="space-y-2">
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li><strong>原式：</strong> $(¬p ∨ ¬q) → (p ∧ q)$</li>
+                        <li><strong>第一步 (蕴含等价)：</strong> $¬(¬p ∨ ¬q) ∨ (p ∧ q)$</li>
+                        <li><strong>第二步 (德摩根)：</strong> $(¬(¬p) ∧ ¬(¬q)) ∨ (p ∧ q)$</li>
+                        <li><strong>第三步 (双重否定)：</strong> $(p ∧ q) ∨ (p ∧ q)$</li>
+                        <li><strong>第四步 (幂等律)：</strong> $p ∧ q$</li>
+                    </ol>
+                    <p class="mt-3 font-bold text-green-800">结论：最终结果是 $p ∧ q$，它不是 T 也不是 F，它的真假"看情况"，所以它是偶发式 (Contingency)。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 2: 真值表分析与逻辑等价 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">2</span>
+                真值表分析与逻辑等价
+            </h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">示例真值表</h3>
+            <table class="truth-table mb-6">
+                <tr>
+                    <th>p</th>
+                    <th>q</th>
+                    <th>r</th>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>F</td>
+                    <td>T</td>
+                </tr>
+                <tr>
+                    <td>F</td>
+                    <td>T</td>
+                    <td>F</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>T</td>
+                    <td>T</td>
+                </tr>
+                <tr>
+                    <td>F</td>
+                    <td>F</td>
+                    <td>F</td>
+                </tr>
+            </table>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part a) 找出逻辑等价式</h3>
+            
+            <div class="tip-box">
+                <h4 class="font-bold text-amber-800 mb-2">核心概念：</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>双蕴含 X ⟷ Y：</strong>意味着 X 和 Y 的真值列必须完全一样</li>
+                    <li><strong>蕴含 Y → Z：</strong>只有在 Y 是 T 且 Z 是 F 时，结果才是 F</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">做题步骤 (口诀："找唯一假，再全验！")：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>观察单个命题的真值列：</strong>看哪个最特殊</li>
+                    <li><strong>"找唯一假"：</strong>计算常见蕴含式的真值列</li>
+                    <li><strong>全面比较：</strong>将蕴含式的真值列与所有单个命题比较</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">示例分析：</h4>
+                <div class="space-y-3">
+                    <p><strong>1. 计算 p → q 的真值列：</strong></p>
+                    <ul class="list-disc list-inside ml-4">
+                        <li>T → F = F (第1行)</li>
+                        <li>F → T = T (第2行)</li>
+                        <li>T → T = T (第3行)</li>
+                        <li>F → F = T (第4行)</li>
+                    </ul>
+                    <p>所以 p → q 的真值列是：<strong>F, T, T, T</strong></p>
+                    
+                    <p><strong>2. 比较各命题的真值列：</strong></p>
+                    <ul class="list-disc list-inside ml-4">
+                        <li>r 列: T, F, T, F</li>
+                        <li>¬r 列: F, T, F, T</li>
+                        <li>p → q: F, T, T, T</li>
+                    </ul>
+                    
+                    <p class="font-bold text-green-800">发现：¬r 的真值列与 p → q 的真值列不完全一样，但可能存在其他等价关系。</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part b) 逻辑操作三大类型详解</h3>
+            
+            <div class="tip-box">
+                <h4 class="font-bold text-amber-800 mb-2">⚠️ 重要概念区分：</h4>
+                <p><strong>Negation</strong> 与 <strong>Converse (逆命题)</strong> 和 <strong>Contrapositive (逆否命题)</strong> 是三种完全不同的逻辑操作。</p>
+                <ul class="list-disc list-inside space-y-1 mt-2">
+                    <li><strong>Converse/Contrapositive：</strong>是对原命题进行"结构重组"</li>
+                    <li><strong>Negation：</strong>是求原命题的"反义词"，即找出让原命题为假的条件</li>
+                </ul>
+            </div>
+
+            <div class="formula-box mb-6">
+                <h4 class="font-bold text-blue-800 mb-3">Question 2 速成笔记 (V3.0 最终版)</h4>
+                <p class="mb-3"><strong>核心概念：</strong>严格区分三种逻辑操作</p>
+                <table class="w-full border-collapse border border-gray-300">
+                    <tr class="bg-blue-100">
+                        <th class="border border-gray-300 p-3 text-left">操作类型</th>
+                        <th class="border border-gray-300 p-3 text-left">目标</th>
+                        <th class="border border-gray-300 p-3 text-left">变形规则</th>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3"><strong>1. 求逆命题 (Converse)</strong></td>
+                        <td class="border border-gray-300 p-3">$A → B ⇒ B → A$</td>
+                        <td class="border border-gray-300 p-3">
+                            1. 前后对调 得到 $B → A$<br/>
+                            2. 再用蕴含等价式 $¬B ∨ A$ 消灭箭头
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3"><strong>2. 求逆否命题 (Contrapositive)</strong></td>
+                        <td class="border border-gray-300 p-3">$A → B ⇒ ¬B → ¬A$</td>
+                        <td class="border border-gray-300 p-3">
+                            1. 换位再取反 得到 $¬B → ¬A$<br/>
+                            2. 再用蕴含等价式 $¬(¬B) ∨ ¬A = B ∨ ¬A$ 消灭箭头
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3"><strong>3. 求否定 (Negation)</strong></td>
+                        <td class="border border-gray-300 p-3">$A → B ⇒ A ∧ ¬B$</td>
+                        <td class="border border-gray-300 p-3">
+                            <strong>方法一 (三连招):</strong><br/>
+                            1. $¬(A→B)$<br/>
+                            2. $¬(¬A∨B)$<br/>
+                            3. $A∧¬B$<br/>
+                            <strong>方法二 (记口诀):</strong> "箭头变'与'，后面取反"
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">重点：求解"否定(Negation)"的标准公式</h4>
+                <p class="mb-3">对于一个蕴含式 $A → B$，求它的否定 $¬(A → B)$ 有一套固定的<strong>"三连招"公式</strong>。</p>
+                
+                <div class="formula-box mb-4">
+                    <h5 class="font-bold text-blue-800 mb-2">"三连招"：消灭箭头 → 德摩根 → 双重否定</h5>
+                    <div class="space-y-3">
+                        <div>
+                            <p><strong>第一招：蕴含等价式 (消灭箭头)</strong></p>
+                            <p class="ml-4">$¬(A → B) ≡ ¬(¬A ∨ B)$</p>
+                        </div>
+                        <div>
+                            <p><strong>第二招：德摩根定律</strong></p>
+                            <p class="ml-4">$¬(¬A ∨ B) ≡ ¬(¬A) ∧ ¬B$</p>
+                        </div>
+                        <div>
+                            <p><strong>第三招：双重否定律</strong></p>
+                            <p class="ml-4">$¬(¬A) ∧ ¬B ≡ A ∧ ¬B$</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-green-100 rounded">
+                        <p class="font-bold text-green-800">结论：$A → B$ 的否定，就是 $A ∧ ¬B$</p>
+                        <p class="text-sm mt-1">口诀可以记为："箭头变'与'，后面取反"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">解答本题 Part (b) - 完整实战演练</h4>
+                
+                <div class="space-y-4">
+                    <div>
+                        <h5 class="font-bold text-gray-800 mb-2">第一步：确定 Part (a) 的右侧命题</h5>
+                        <p>首先，我们需要根据真值表确定 Part (a) 的完整陈述。我们来看一下真值表 (p, q, r) 为真的情况：</p>
+                        <p class="ml-4 font-mono">(T, T, T), (T, F, F), (F, T, T), (F, F, T)</p>
+                        
+                        <p class="mt-2">我们来检验一下 r 和 p → q 的关系：</p>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                            <li>p=T, q=T: p→q 为 T. r 为 T. r ↔ (p→q) 为 T. (匹配)</li>
+                            <li>p=T, q=F: p→q 为 F. r 为 F. r ↔ (p→q) 为 T. (匹配)</li>
+                            <li>p=F, q=T: p→q 为 T. r 为 T. r ↔ (p→q) 为 T. (匹配)</li>
+                            <li>p=F, q=F: p→q 为 T. r 为 T. r ↔ (p→q) 为 T. (匹配)</li>
+                        </ul>
+                        
+                        <div class="mt-3 p-2 bg-green-50 rounded">
+                            <p class="font-bold text-green-800">太棒了！Part(a) 的陈述就是 r ↔ (p → q)。所以，它的右侧命题是 p → q。</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-bold text-gray-800 mb-2">第二步：求 p → q 的否定 (Negation)</h5>
+                        <p>我们直接套用刚刚总结的公式 $¬(A → B) ≡ A ∧ ¬B$。</p>
+                        <p class="ml-4">在这里, A 是 p, B 是 q。</p>
+                        <p class="ml-4">所以，$¬(p → q)$ 的等价式是：<strong>$p ∧ ¬q$</strong></p>
+                        
+                        <div class="mt-3 p-2 bg-amber-50 rounded">
+                            <p class="font-bold text-amber-800">Numbas 答案: 在下拉菜单中选择 p, ∧, ¬q</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <p class="font-bold text-amber-800">💡 学习流程总结：</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>解题流程:</strong> "先变形，再消箭头" 或 "直接用否定公式"</li>
+                    <li><strong>三种操作要分清：</strong>逆命题 (前后对调)、逆否命题 (换位再取反)、否定 (求"反义词")</li>
+                    <li><strong>否定最重要：</strong>掌握"三连招"公式和"箭头变'与'，后面取反"口诀</li>
+                    <li><strong>真值表验证：</strong>每次都要先确认 Part a) 的等价关系</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Question 3: 组合数学综合应用 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">3</span>
+                组合数学综合应用
+            </h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">核心概念区分</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-3">组合 (Combination)</h4>
+                    <p class="text-lg mb-2">$C(n, k)$ 或 $\binom{n}{k}$</p>
+                    <p><strong>定义：</strong>从 n 个不同元素中选出 k 个元素，<strong>不考虑顺序</strong></p>
+                    <p><strong>公式：</strong>$C(n,k) = \frac{n!}{k!(n-k)!}$</p>
+                    <div class="mt-3 p-2 bg-blue-50 rounded">
+                        <p><strong>口诀：</strong>"只选不排"</p>
+                        <p class="text-sm">适用：挑选小组成员、抽奖、选水果</p>
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-3">排列 (Permutation)</h4>
+                    <p class="text-lg mb-2">$P(n, k)$ 或 $A_n^k$</p>
+                    <p><strong>定义：</strong>从 n 个不同元素中选出 k 个元素并进行<strong>排列</strong></p>
+                    <p><strong>公式：</strong>$P(n,k) = \frac{n!}{(n-k)!}$</p>
+                    <div class="mt-3 p-2 bg-blue-50 rounded">
+                        <p><strong>口诀：</strong>"选了要排"</p>
+                        <p class="text-sm">适用：排队、分配职务、数字密码</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4 class="font-bold text-blue-800 mb-3">阶乘 (Factorial)</h4>
+                <p>$n! = n × (n-1) × (n-2) × \ldots × 2 × 1$</p>
+                <p><strong>特殊值：</strong>$0! = 1$，$1! = 1$</p>
+                <p><strong>全排列：</strong>$P(n,n) = n!$</p>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part a) 剧团选角与角色分配</h3>
+            
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">题目：19 人试镜，8 人入选。其中 6 人有命名角色。问有多少种情况？</h4>
+                
+                <div class="tip-box mb-4">
+                    <p><strong>思路分解：</strong>这是分两步进行的事件，每一步都是独立的，所以用<strong>乘法原理</strong>。</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <p><strong>第一步：从 19 人中选出 8 人入选</strong></p>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>"选出"意味着<strong>不考虑顺序</strong>，所以是<strong>组合</strong></li>
+                            <li>计算：$C(19, 8)$</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <p><strong>第二步：从这 8 名入选者中，有 6 人获得命名角色</strong></p>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>"命名角色"意味着<strong>有特定的职务或位置，需要排序</strong>，所以是<strong>排列</strong></li>
+                            <li>注意：这 6 人是从<strong>已经选出的 8 人</strong>中选出来的</li>
+                            <li>计算：$P(8, 6)$</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-4 bg-green-100 rounded">
+                    <p class="font-bold text-green-800 text-lg">答案：$C(19, 8) × P(8, 6)$</p>
+                </div>
+
+                <div class="tip-box mt-4">
+                    <p><strong>记忆点：</strong></p>
+                    <ul class="list-disc list-inside">
+                        <li>"挑人入选" → 组合 (无序)</li>
+                        <li>"命名角色" → 排列 (有序)</li>
+                        <li>"分步完成" → 乘法</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part b) 男女交替排列</h3>
+            
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">题目：4 男 4 女排成一列，使男女交替排列。问有多少种方式？</h4>
+                
+                <div class="space-y-4">
+                    <p><strong>思路分解：</strong>交替排列意味着两种基本模式：</p>
+                    <ol class="list-decimal list-inside ml-4 space-y-1">
+                        <li>男-女-男-女-男-女-男-女 (BGBGBGBG)</li>
+                        <li>女-男-女-男-女-男-女-男 (GBGBGBGB)</li>
+                    </ol>
+                    
+                    <p><strong>计算步骤：</strong></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li><strong>内部排列：</strong>4 名男生可以有 4! 种方式排列</li>
+                        <li><strong>内部排列：</strong>4 名女生可以有 4! 种方式排列</li>
+                        <li><strong>模式选择：</strong>有 2 种交替模式（以男开头或以女开头）</li>
+                    </ul>
+                </div>
+
+                <div class="mt-4 p-4 bg-green-100 rounded">
+                    <p class="font-bold text-green-800 text-lg">答案：$4! × 4! × 2$</p>
+                    <p class="text-sm">= 24 × 24 × 2 = 1152</p>
+                </div>
+
+                <div class="tip-box mt-4">
+                    <p><strong>记忆点：</strong>"交替排列" → 考虑<strong>开头</strong>（男女两种），然后<strong>各自内部排列</strong></p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part c) 5 位数，所有数字不同且都是奇数</h3>
+            
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">题目：有多少个 5 位数，满足所有数字都不同，并且所有数字都是奇数？</h4>
+                
+                <div class="space-y-4">
+                    <p><strong>思路分解：</strong></p>
+                    <ol class="list-decimal list-inside ml-4 space-y-2">
+                        <li><strong>确定可用数字：</strong>奇数有 1, 3, 5, 7, 9，总共 5 个</li>
+                        <li><strong>确定位数：</strong>5 位数</li>
+                        <li><strong>条件：</strong>所有数字都不同，且都是奇数</li>
+                    </ol>
+                    
+                    <p>这意味着我们必须使用这 5 个奇数，并且把它们全部排列起来组成 5 位数。这实际上是 5 个不同元素的<strong>全排列</strong>。</p>
+                    
+                    <p><strong>计算：</strong></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li>第一位有 5 种选择 (从 1, 3, 5, 7, 9 中选一个)</li>
+                        <li>第二位有 4 种选择 (剩下的 4 个中选一个)</li>
+                        <li>第三位有 3 种选择</li>
+                        <li>第四位有 2 种选择</li>
+                        <li>第五位有 1 种选择</li>
+                    </ul>
+                </div>
+
+                <div class="mt-4 p-4 bg-green-100 rounded">
+                    <p class="font-bold text-green-800 text-lg">答案：$5 × 4 × 3 × 2 × 1 = 5! = 120$</p>
+                </div>
+
+                <div class="tip-box mt-4">
+                    <p><strong>记忆点：</strong>"所有数字不同，且所有数字都是奇数，组成一个由这些奇数组成的 5 位数" → <strong>就是这些奇数的全排列</strong></p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part d) 元素相邻问题 - 捆绑法详解</h3>
+            
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">题目：7个男生和3个女生排成一列，要求两个特定的学生必须相邻。有多少种排列方式？</h4>
+                
+                <div class="tip-box mb-4">
+                    <p><strong>问题分析：</strong>为什么"男女交替"的笔记不适用？</p>
+                    <ul class="list-disc list-inside ml-4">
+                        <li><strong>男女交替：</strong>核心要求是形成一个特定模式 (Pattern)，比如 BGBGBG...</li>
+                        <li><strong>两人相邻：</strong>核心要求是让某几个元素<strong>"黏"在一起</strong>，像胶水一样粘住，不关心其他人的位置模式</li>
+                    </ul>
+                    <p class="mt-2 font-bold">所以，我们需要为这个新题型建立一个全新的"速成笔记"。</p>
+                </div>
+
+                <div class="formula-box">
+                    <h4 class="font-bold text-blue-800 mb-3">解题方法："捆绑法"三步走</h4>
+                    <p class="text-lg mb-2"><strong>口诀：</strong>"先捆绑，再排外，后排内"</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <h5 class="font-bold text-gray-800 mb-2">
+                            <span class="step-number">1</span>
+                            第一步：捆绑 (Bundle)
+                        </h5>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li><strong>任务：</strong>把必须相邻的元素看作一个不可分割的整体</li>
+                            <li><strong>操作：</strong>题目要求"两个特定的学生"相邻。我们用一根绳子把这两个学生"捆"在一起，把他们当成一个"巨无霸学生"</li>
+                            <li><strong>示例：</strong>比如这两个学生是 A 和 B，我们就创造一个新单位 (AB)</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-bold text-gray-800 mb-2">
+                            <span class="step-number">2</span>
+                            第二步：排外 (Arrange the Outside)
+                        </h5>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li><strong>任务：</strong>将"巨无霸"单位和其他剩余的元素进行全排列</li>
+                            <li><strong>操作：</strong>
+                                <ul class="list-disc list-inside ml-6 mt-1">
+                                    <li>原来总共有 7+3 = 10 个学生</li>
+                                    <li>我们拿走了 2 个学生，捆成了 1 个"巨无霸"</li>
+                                    <li>现在需要排列的"单位"总数是：8 个普通学生 + 1 个"巨无霸"单位 = 9 个单位</li>
+                                    <li>把这 9 个单位进行全排列，方法数是 9!</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-bold text-gray-800 mb-2">
+                            <span class="step-number">3</span>
+                            第三步：排内 (Arrange the Inside)
+                        </h5>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li><strong>任务：</strong>考虑被"捆绑"的那个整体，其内部成员也可以有自己的排列</li>
+                            <li><strong>操作：</strong>
+                                <ul class="list-disc list-inside ml-6 mt-1">
+                                    <li>我们捆绑的是 A 和 B 两个学生</li>
+                                    <li>在"巨无霸"单位内部，可以是 (A, B) 的顺序，也可以是 (B, A) 的顺序</li>
+                                    <li>他们内部的排列方法数是 2!</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-bold text-gray-800 mb-2">
+                            <span class="step-number">4</span>
+                            最后一步：相乘
+                        </h5>
+                        <p class="ml-4">根据乘法原理，总的排列方法数就是"排外"的方法数乘以"排内"的方法数。</p>
+                        <div class="ml-4 mt-2 p-3 bg-green-100 rounded">
+                            <p class="font-bold text-green-800">总方法数 = 9! × 2!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mt-4">
+                    <h5 class="font-bold text-amber-800 mb-2">Numbas 答案格式</h5>
+                    <p>根据系统偏好，使用 perm(n, k) 函数来表示阶乘 n! (perm(n, n))。</p>
+                    <div class="mt-2 p-2 bg-amber-50 rounded font-mono">
+                        <strong>最终答案：</strong>perm(9, 9) * perm(2, 2)
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-box mt-6">
+                <h4 class="font-bold text-blue-800 mb-3">【新】捆绑法通用公式表</h4>
+                <table class="w-full mt-3 border-collapse border border-gray-300">
+                    <tr class="bg-blue-100">
+                        <th class="border border-gray-300 p-3 text-left">题型</th>
+                        <th class="border border-gray-300 p-3 text-left">核心方法</th>
+                        <th class="border border-gray-300 p-3 text-left">口诀</th>
+                        <th class="border border-gray-300 p-3 text-left">公式化步骤</th>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3">元素相邻问题<br/>(如: 2人相邻, 3人相邻)</td>
+                        <td class="border border-gray-300 p-3">捆绑法 (Bundling)</td>
+                        <td class="border border-gray-300 p-3">先捆绑，再排外，后排内</td>
+                        <td class="border border-gray-300 p-3">
+                            1. 捆绑: 将 k 个必须相邻的元素视为 1 个大单位。<br/>
+                            2. 排外: 计算 (总人数 - k + 1) 个单位的全排列，即 (n - k + 1)!。<br/>
+                            3. 排内: 计算被捆绑的 k 个元素内部的全排列，即 k!。<br/>
+                            4. 相乘: 最终答案 = (n - k + 1)! * k!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3">男女交替问题</td>
+                        <td class="border border-gray-300 p-3">插空法/模式法</td>
+                        <td class="border border-gray-300 p-3">先排一队，再插另一队</td>
+                        <td class="border border-gray-300 p-3">
+                            1. 内部排: 计算男队内部排列 (男!) 和女队内部排列 (女!)。<br/>
+                            2. 模式选: 看有几种开头模式 (男开头或女开头)。<br/>
+                            3. 相乘: 答案 = 男! * 女! * 模式数。
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">高级应用技巧</h3>
+            
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">常见解题策略：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>分步计数原理：</strong>如果一个过程可以分解为几个步骤，用乘法</li>
+                    <li><strong>分类计数原理：</strong>如果问题可以分为几种情况，用加法</li>
+                    <li><strong>容斥原理：</strong>总数 - 不满足条件的数量</li>
+                    <li><strong>限制条件处理：</strong>先处理限制，再处理其余</li>
+                    <li><strong>相邻问题：</strong>捆绑法（相邻的看作一个单位）</li>
+                    <li><strong>不相邻问题：</strong>插空法（先排其他，再插入）</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">复杂示例：编程竞赛队组建</h4>
+                <p class="mb-3"><strong>情境：</strong>15名学生申请，选6人组队，其中4人担任特定角色，2人为普通队员</p>
+                
+                <div class="space-y-3">
+                    <p><strong>解题思路：</strong></p>
+                    <ol class="list-decimal list-inside ml-4 space-y-2">
+                        <li><strong>第一步：</strong>从15人中选6人 → $C(15,6)$</li>
+                        <li><strong>第二步：</strong>从6人中选4人担任特定角色 → $P(6,4)$</li>
+                        <li><strong>答案：</strong>$C(15,6) × P(6,4)$</li>
+                    </ol>
+                    
+                    <p class="mt-3"><strong>或者用另一种思路：</strong></p>
+                    <ol class="list-decimal list-inside ml-4 space-y-2">
+                        <li><strong>直接选4人担任角色：</strong>$P(15,4)$</li>
+                        <li><strong>从剩下11人中选2人：</strong>$C(11,2)$</li>
+                        <li><strong>答案：</strong>$P(15,4) × C(11,2)$</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4: 日程安排与鸽巢原理 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">4</span>
+                日程安排与鸽巢原理 (Scheduling & Pigeonhole Principle)
+            </h2>
+            
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part a) 计算日程总数</h3>
+            <div class="tip-box">
+                <p class="font-bold text-amber-800 mb-2">🎯 核心思路：分两步走，先选出哪几天是全天，再为剩下的半天安排时段。</p>
+            </div>
+            
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">万能公式:</h4>
+                <p class="text-lg mb-2">总日程数 = C(总天数, 全天数) × 2^(半天数)</p>
+                <p class="text-sm">在 Numbas 中输入: comb(n, k1) * 2^k2</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">解题步骤：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>识别题目参数：</strong>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>总天数 (n): 公司每周工作的总天数</li>
+                            <li>全天数 (k1): 员工需要工作的全天数量</li>
+                            <li>半天数 (k2): 员工需要工作的半天数量</li>
+                        </ul>
+                    </li>
+                    <li><strong>第一部分 (选日子)：</strong>从 n 天中选 k1 天作为全天 → C(n, k1)</li>
+                    <li><strong>第二部分 (排时段)：</strong>剩下的 k2 天是半天，每天有2种选择 → 2^k2</li>
+                    <li><strong>最终结果：</strong>comb(n, k1) × 2^k2</li>
+                </ol>
+                
+                <div class="mt-4 p-3 bg-green-50 rounded">
+                    <p><strong>例子：</strong>n=7, k1=2, k2=5</p>
+                    <p><strong>计算：</strong>comb(7, 2) × 2^5 = 21 × 32 = 672</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part b) 鸽巢原理 - 相同日程的最少人数</h3>
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">万能公式 (向上取整):</h4>
+                <p class="text-lg">ceil(员工总数 / 日程总数)</p>
+                <p class="text-sm">记忆口诀："人数除以选项数，结果向上取个整"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">解题步骤：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>识别参数：</strong>员工总数 (N)，日程总数 (k，来自Part a)</li>
+                    <li><strong>计算：</strong>N ÷ k</li>
+                    <li><strong>取整：</strong>如果是整数直接用；如果是小数，向上取整</li>
+                </ol>
+                
+                <div class="mt-4 p-3 bg-green-50 rounded">
+                    <p><strong>例子：</strong>N=3972, k=672</p>
+                    <p><strong>计算：</strong>ceil(3972 ÷ 672) = ceil(5.91...) = 6</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part c) 保证特定人数有相同日程的最少员工数</h3>
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">万能公式 (逆向思考):</h4>
+                <p class="text-lg">最少员工数 = (日程总数) × (目标人数 - 1) + 1</p>
+                <p class="text-sm">记忆口诀："选项数乘以(目标数减一)，最后再加一"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">解题步骤：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>识别参数：</strong>日程总数 (k)，目标人数 (m)</li>
+                    <li><strong>计算：</strong>k × (m - 1) + 1</li>
+                </ol>
+                
+                <div class="mt-4 p-3 bg-green-50 rounded">
+                    <p><strong>例子：</strong>k=672, m=5</p>
+                    <p><strong>计算：</strong>672 × (5 - 1) + 1 = 672 × 4 + 1 = 2689</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 5: 分组计数问题 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">5</span>
+                分组计数问题 (Grouping & Counting)
+            </h2>
+            
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part a & b) 选人投骰子</h3>
+            <div class="tip-box">
+                <p class="font-bold text-amber-800 mb-2">🎯 核心思路：将不同的人根据结果分组，遵循"先选人，再管剩下的人"原则。</p>
+            </div>
+            
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">解题模板:</h4>
+                <p class="text-lg mb-2">总方式 = (选第一组人的方式) × (选第二组人的方式) × ... × (剩下的人的方式)</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">步骤详解：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>第一组：</strong>从总人数中选出符合第一个条件的人 → C(总人数, 第一组人数)</li>
+                    <li><strong>第二组：</strong>从剩下的人数中选出符合第二个条件的人 → C(剩下人数, 第二组人数)</li>
+                    <li><strong>重复此步骤</strong>，直到所有"特殊"组都选完</li>
+                    <li><strong>处理"剩下的人"：</strong>
+                        <ul class="list-disc list-inside ml-4 mt-1">
+                            <li>计算最终还剩多少人</li>
+                            <li>由于"exactly(恰好)"限制，他们不能投出任何前面特殊组的结果</li>
+                            <li>公式：(总选项数 - 已被占用的选项数)^(剩下的人数)</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">实战演练：</h4>
+                <div class="space-y-4">
+                    <div>
+                        <p><strong>Part a) 8人投10面骰，恰好5人投出8：</strong></p>
+                        <ol class="list-decimal list-inside ml-4 space-y-1">
+                            <li>选人投8：从8人中选5人 → C(8, 5)</li>
+                            <li>剩下的人：剩下3人，不能投8，每人有9种选择 → 9^3</li>
+                            <li>总数：C(8, 5) × 9^3</li>
+                        </ol>
+                    </div>
+                    
+                    <div>
+                        <p><strong>Part b) 45人投12面骰，分3组：</strong></p>
+                        <ol class="list-decimal list-inside ml-4 space-y-1">
+                            <li>选5人投5：C(45, 5)</li>
+                            <li>选6人投6：C(40, 6)</li>
+                            <li>选10人投10：C(34, 10)</li>
+                            <li>剩下24人不能投5,6,10，每人有9种选择：9^24</li>
+                            <li>总数：C(45, 5) × C(40, 6) × C(34, 10) × 9^24</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part c) 带约束的数字计数</h3>
+            <div class="tip-box">
+                <p class="font-bold text-amber-800 mb-2">🎯 对于"小于某个数"的限制，必须使用分类讨论，从最高位开始分析。</p>
+            </div>
+
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">解题模板:</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>明确限制：</strong>可用数字、位数、上限</li>
+                    <li><strong>按最高位分类：</strong>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>"安全" Case：最高位使数字必然小于上限</li>
+                            <li>"边界" Case：最高位与上限最高位相同，需继续细分</li>
+                        </ul>
+                    </li>
+                    <li><strong>逐位细分边界Case</strong></li>
+                    <li><strong>汇总：</strong>将所有不重叠的Case结果相加</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">实战演练 (小于4122，数字0-6)：</h4>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Case 1:</strong> 第一位是1,2,3 (安全) → 3 × 7^3</li>
+                    <li><strong>Case 2:</strong> 第一位是4 (边界)
+                        <ul class="list-disc list-inside ml-4">
+                            <li>Sub-case 2a: 第二位是0 → 1 × 1 × 7 × 7</li>
+                            <li>Sub-case 2b: 第二位是1 (继续细分)</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p class="mt-3 font-bold text-green-800">总数 = 各Case之和</p>
+            </div>
+        </div>
+
+        <!-- Question 6: 整数方程解 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">6</span>
+                整数方程解 (Integer Equation Solutions)
+            </h2>
+            
+            <div class="tip-box">
+                <p class="font-bold text-amber-800 mb-2">⚠️ 重要提醒：在MATH1081的Numbas系统中，xᵢ ∈ ℕ 定义为 xᵢ ≥ 0 (非负整数)，而不是 xᵢ ≥ 1。</p>
+            </div>
+
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">核心方程: x₁ + x₂ + x₃ + x₄ + x₅ + x₆ = 61，其中 xᵢ 为正整数 (xᵢ ≥ 1)</h4>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part a) 下限问题：xᵢ ≥ 4 for all i</h3>
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">Numbas答案: comb(42, 5)</h4>
+                <p class="text-sm">口诀："先给足，再平移，剩下随便分"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">下限平移法：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>变量代换：</strong>令 yᵢ = xᵢ - 4，则 yᵢ ≥ 0</li>
+                    <li><strong>平移方程：</strong>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>(y₁+4) + (y₂+4) + ... + (y₆+4) = 61</li>
+                            <li>y₁ + y₂ + ... + y₆ = 61 - 24 = 37</li>
+                        </ul>
+                    </li>
+                    <li><strong>套用公式：</strong>C(37 + 6 - 1, 6 - 1) = C(42, 5)</li>
+                </ol>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part b) 上限问题：xᵢ ≤ 27 for all i</h3>
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">Numbas答案: comb(60, 5) - comb(6, 1) * comb(33, 5) + comb(6, 2) * comb(6, 5)</h4>
+                <p class="text-sm">口诀："总量减去坏的，再加上多减的"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">上限容斥法：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>计算总量：</strong>忽略上限，只考虑 xᵢ ≥ 1 → C(60, 5)</li>
+                    <li><strong>减去"至少一个坏"：</strong>至少一个 xᵢ ≥ 28 → C(6,1) × C(33,5)</li>
+                    <li><strong>加回"至少两个坏"：</strong>至少两个 xᵢ ≥ 28 → C(6,2) × C(6,5)</li>
+                    <li><strong>"三个或更多坏"：</strong>3×28=84>61，不可能</li>
+                </ol>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Part c) 复合限制：x₁ ≥ 15 and xᵢ ≡ i (mod 5)</h3>
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">Numbas答案: comb(12, 5)</h4>
+                <p class="text-sm">口诀："按模改写，代入化简，解新方程"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">模限制代换法：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>按模改写：</strong>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>x₁=5k₁+1, x₂=5k₂+2, x₃=5k₃+3</li>
+                            <li>x₄=5k₄+4, x₅=5k₅+5, x₆=5k₆+1</li>
+                        </ul>
+                    </li>
+                    <li><strong>代入原方程：</strong>5(Σkᵢ) + 16 = 61 → Σkᵢ = 9</li>
+                    <li><strong>附加限制：</strong>x₁ ≥ 15 → 5k₁+1 ≥ 15 → k₁ ≥ 3</li>
+                    <li><strong>再次平移：</strong>令j₁=k₁-3，得到 Σjᵢ = 6，所有jᵢ ≥ 0</li>
+                    <li><strong>最终答案：</strong>C(6+6-1, 6-1) = C(12, 5)</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Question 7: 递推关系 -->
+        <div class="section-card">
+            <h2 class="text-3xl font-bold text-[#e07a5f] mb-6">
+                <span class="step-number">7</span>
+                递推关系 (Recurrence Relations)
+            </h2>
+            
+            <div class="formula-box">
+                <h4 class="font-bold mb-3">核心公式: 通解 = 齐次解 + 特解 (General = Homogeneous + Particular)</h4>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">第一步：求齐次解 aₙ⁽ʰ⁾</h3>
+            <div class="tip-box">
+                <p class="font-bold text-amber-800">口诀："移项、立特征、解方程、定形态"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">步骤：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>标准形式：</strong>aₙ + c₁aₙ₋₁ + c₂aₙ₋₂ = 0</li>
+                    <li><strong>特征方程：</strong>r² + c₁r + c₂ = 0</li>
+                    <li><strong>解出特征根r，确定齐次解形态：</strong></li>
+                </ol>
+                <table class="w-full mt-3 border-collapse border border-gray-300">
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-2 text-left">特征根情况</th>
+                        <th class="border border-gray-300 p-2 text-left">齐次解形态</th>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-2">两个不等实根 r₁, r₂</td>
+                        <td class="border border-gray-300 p-2">A × r₁ⁿ + B × r₂ⁿ</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-2">重复根 r</td>
+                        <td class="border border-gray-300 p-2">(A + Bn) × rⁿ</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">第二步：求特解 aₙ⁽ᵖ⁾</h3>
+            <div class="tip-box">
+                <p class="font-bold text-amber-800">口诀："尾巴长啥样，我就猜啥样；一有撞车，立马乘n"</p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">猜测规则：</h4>
+                <table class="w-full mt-3 border-collapse border border-gray-300">
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-2 text-left">"小尾巴"F(n)形式</th>
+                        <th class="border border-gray-300 p-2 text-left">初步猜测</th>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-2">一次多项式 (-36n-12)</td>
+                        <td class="border border-gray-300 p-2">Dn + E</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-2">指数函数 (-12×3ⁿ)</td>
+                        <td class="border border-gray-300 p-2">D × 3ⁿ</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="tip-box mt-4">
+                <h4 class="font-bold text-amber-800 mb-2">⚠️ 撞车检查 - 最关键的陷阱！</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>无撞车：</strong>直接使用初步猜测</li>
+                    <li><strong>一次撞车：</strong>初步猜测 × n</li>
+                    <li><strong>二次撞车：</strong>初步猜测 × n²</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">撞车示例：</h4>
+                <div class="space-y-3">
+                    <div>
+                        <p><strong>例子1 (无撞车)：</strong>bₙ = -6bₙ₋₁ - 5bₙ₋₂ - 36n - 12</p>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>齐次解：A×(-1)ⁿ + B×(-5)ⁿ</li>
+                            <li>猜测：Dn+E (无撞车，直接使用)</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <p><strong>例子2 (一次撞车)：</strong>cₙ = -3cₙ₋₁ + 40cₙ₋₂ - 26×5ⁿ</p>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>齐次解：A×5ⁿ + B×(-8)ⁿ</li>
+                            <li>初步猜测：D×5ⁿ (与A×5ⁿ撞车)</li>
+                            <li>升级猜测：Dn×5ⁿ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">第三步：合并通解并求解系数</h3>
+            <div class="example-box">
+                <h4 class="font-bold text-green-800 mb-3">最终步骤：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>合并：</strong>aₙ = aₙ⁽ʰ⁾ + aₙ⁽ᵖ⁾</li>
+                    <li><strong>代入初值：</strong>使用给定的初始条件建立方程组</li>
+                    <li><strong>求解：</strong>解出所有未知系数</li>
+                    <li><strong>最终答案：</strong>写出完整的递推关系解</li>
+                </ol>
+                
+                <div class="mt-3 p-3 bg-green-50 rounded">
+                    <p><strong>示例：</strong>cₙ = (A + Bn - 6n²) × 3ⁿ</p>
+                    <p>通过c₀=2, c₁=-6 可求出 A=2, B=2</p>
+                    <p><strong>最终答案：</strong>cₙ = (2 + 2n - 6n²) × 3ⁿ</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 总结和练习指导 -->
+        <div class="notes-container">
+            <h2 class="text-3xl font-bold text-center text-[#e07a5f] mb-6">学习总结与练习指导</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="tip-box">
+                    <h3 class="font-bold text-amber-800 mb-2">💡 Question 1-3</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>逻辑表达式简化</li>
+                        <li>真值表分析</li>
+                        <li>基础组合数学</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3 class="font-bold text-amber-800 mb-2">💡 Question 4</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>日程安排计数</li>
+                        <li>鸽巢原理应用</li>
+                        <li>向上取整技巧</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3 class="font-bold text-amber-800 mb-2">💡 Question 5</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>分组计数问题</li>
+                        <li>约束条件处理</li>
+                        <li>分类讨论方法</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3 class="font-bold text-amber-800 mb-2">💡 Question 6-7</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>整数方程解</li>
+                        <li>容斥原理</li>
+                        <li>递推关系</li>
+                        <li>特征方程法</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="./math1081_lab_test_2_quiz.html" class="quiz-link text-xl">
+                    🚀 现在开始 Lab Test 2 专项测验
+                </a>
+                <p class="text-gray-600 mt-2">30道精心设计的题目，全面检验你的掌握程度</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

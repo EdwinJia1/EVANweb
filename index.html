@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .course-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .course-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* Course Overview Cards */
+        .course-overview-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+            border: 2px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .course-overview-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+            border-color: #e07a5f;
+        }
+
+        .course-overview-card p {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">UNSW Study Materials</h1>
+            <p class="text-lg text-gray-600 mt-4">Made by Evan</p>
+            <p class="text-sm text-gray-500 mt-1" id="last-updated"></p>
+        </header>
+
+        <!-- Course Overview Cards -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-center text-[#2c2c2c] mb-8">Core Courses</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- MATH1081 Overview Card -->
+                <a href="./math1081.html" class="course-link">
+                    <div class="course-overview-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-2">MATH1081</h3>
+                        <h4 class="text-lg font-semibold text-[#2c2c2c] mb-3">Discrete Mathematics</h4>
+                        <p class="text-gray-600 text-sm mb-4">Complete notes with interactive visualizations for Set Theory, Number Theory, and Relations</p>
+                    </div>
+                </a>
+
+                <!-- MATH1131 Overview Card -->
+                <a href="./math1131.html" class="course-link">
+                    <div class="course-overview-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-2">MATH1131</h3>
+                        <h4 class="text-lg font-semibold text-[#2c2c2c] mb-3">Mathematics 1A</h4>
+                        <p class="text-gray-600 text-sm mb-4">Algebra & Vectors with 2D/3D visualizations, Complex Numbers, and Calculus Review materials</p>
+                    </div>
+                </a>
+
+                <!-- COMP1511 Overview Card -->
+                <a href="./comp1511.html" class="course-link">
+                    <div class="course-overview-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-2">COMP1511</h3>
+                        <h4 class="text-lg font-semibold text-[#2c2c2c] mb-3">Programming Fundamentals</h4>
+                        <p class="text-gray-600 text-sm mb-4">Comprehensive programming notes with interactive demos for Linked Lists, Pointers, and Command Line Arguments</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        
+    </div>
+
+    <script>
+        // Set last updated date to current date
+        const lastUpdated = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('last-updated').textContent = `Last Updated: ${lastUpdated.toLocaleDateString('en-US', options)}`;
+    </script>
+</body>
+</html>

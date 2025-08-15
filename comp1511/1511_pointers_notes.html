@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointers - Core Notes | COMP1511</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+        .code-block {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #e07a5f;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .diagram {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            border: 2px dashed #e07a5f;
+        }
+        .highlight {
+            background-color: #fff7ed;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .memory-visual {
+            display: inline-flex;
+            border: 2px solid #e07a5f;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin: 0.5rem;
+            background-color: #ffffff;
+        }
+        .memory-address {
+            padding: 0.5rem 1rem;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #8b8589;
+            font-family: 'Courier New', monospace;
+        }
+        .memory-value {
+            padding: 0.5rem;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            min-width: 3rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .pointer-visual {
+            display: inline-flex;
+            border: 2px solid #f4a261;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin: 0.5rem;
+            background-color: #ffffff;
+        }
+        .pointer-name {
+            padding: 0.5rem 1rem;
+            background-color: #f4a261;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #f4a261;
+        }
+        .pointer-value {
+            padding: 0.5rem;
+            background-color: #fff7ed;
+            color: #2c2c2c;
+            min-width: 6rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .warning {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .tip {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Back to COMP1511 Button -->
+        <a href="../comp1511.html" class="back-button">
+            <span>←</span>
+            <span>Back to COMP1511</span>
+        </a>
+
+        <!-- Chapter Header -->
+        <header class="text-center mb-8">
+            <h1 class="chapter-title">指针基础</h1>
+            <p class="text-xl text-gray-600">Pointers Fundamentals</p>
+        </header>
+
+        <!-- Course Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">课程概述 | Course Overview</h2>
+            <p class="text-lg mb-4">
+                指针是C语言中最重要也是最强大的特性之一。理解指针是掌握C语言的关键，它让我们能够：
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>直接操作内存地址，提高程序效率</li>
+                <li>实现动态内存分配</li>
+                <li>构建复杂的数据结构（链表、树等）</li>
+                <li>函数间高效传递大型数据</li>
+                <li>理解程序在内存中的运行机制</li>
+            </ul>
+        </div>
+
+        <!-- Chapter 1: What is a Pointer? -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">1. 什么是指针？</h3>
+            
+            <p class="text-lg mb-4">
+                <strong>指针</strong>是一个变量，它存储的是另一个变量的内存地址。换句话说，指针"指向"内存中的某个位置。
+            </p>
+
+            <div class="highlight">
+                <h4 class="font-bold text-lg mb-2">关键概念：</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>变量</strong>：存储数据值</li>
+                    <li><strong>指针</strong>：存储变量的地址</li>
+                    <li><strong>地址</strong>：内存中的位置标识符</li>
+                </ul>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">内存模型可视化：</h4>
+            <div class="diagram">
+                <p class="mb-4">内存布局示例：</p>
+                <div class="flex flex-wrap justify-center items-center">
+                    <div class="memory-visual">
+                        <div class="memory-address">0x1000</div>
+                        <div class="memory-value">42</div>
+                    </div>
+                    <span class="mx-2">← 变量 x</span>
+                </div>
+                <div class="flex flex-wrap justify-center items-center mt-4">
+                    <div class="pointer-visual">
+                        <div class="pointer-name">ptr</div>
+                        <div class="pointer-value">0x1000</div>
+                    </div>
+                    <span class="mx-2">← 指针 ptr，指向 x</span>
+                </div>
+            </div>
+
+            <div class="code-block">
+<pre>// 声明和初始化示例
+int x = 42;           // 普通变量
+int *ptr = &x;        // 指针变量，指向 x 的地址
+
+printf("x 的值: %d\n", x);           // 输出: 42
+printf("x 的地址: %p\n", &x);        // 输出: 0x1000 (示例地址)
+printf("ptr 的值: %p\n", ptr);       // 输出: 0x1000 (与 &x 相同)
+printf("ptr 指向的值: %d\n", *ptr);  // 输出: 42 (与 x 相同)</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 2: Address Operator & -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">2. 取地址操作符 &</h3>
+            
+            <p class="text-lg mb-4">
+                <strong>&</strong> 操作符用于获取变量的内存地址。它是"取地址"的意思。
+            </p>
+
+            <div class="code-block">
+<pre>int num = 100;
+int *pointer;
+
+pointer = &num;  // 将 num 的地址赋给 pointer
+
+printf("num 的值: %d\n", num);              // 输出: 100
+printf("num 的地址: %p\n", &num);           // 输出: 0x7fff5fbff6ac (示例)
+printf("pointer 存储的地址: %p\n", pointer); // 输出: 0x7fff5fbff6ac (与上面相同)</pre>
+            </div>
+
+            <div class="tip">
+                <h4 class="font-bold">💡 重要提示：</h4>
+                <p>每次程序运行时，变量的地址可能会不同，这是正常的。重要的是理解指针和变量之间的关系。</p>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">不同数据类型的指针：</h4>
+            <div class="code-block">
+<pre>int    i = 10;      int    *int_ptr = &i;
+float  f = 3.14;    float  *float_ptr = &f;
+char   c = 'A';     char   *char_ptr = &c;
+double d = 2.718;   double *double_ptr = &d;
+
+// 打印各种类型的地址
+printf("int地址:    %p\n", int_ptr);
+printf("float地址:  %p\n", float_ptr);
+printf("char地址:   %p\n", char_ptr);
+printf("double地址: %p\n", double_ptr);</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 3: Dereference Operator * -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">3. 解引用操作符 *</h3>
+            
+            <p class="text-lg mb-4">
+                <strong>*</strong> 操作符用于访问指针指向的变量的值。这个过程叫做"解引用"或"间接访问"。
+            </p>
+
+            <div class="highlight">
+                <h4 class="font-bold text-lg mb-2">两种用法：</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>声明时</strong>：<code>int *ptr;</code> - 声明一个指向int的指针</li>
+                    <li><strong>使用时</strong>：<code>*ptr</code> - 访问指针指向的值</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+<pre>int x = 50;
+int *ptr = &x;
+
+// 通过指针读取值
+printf("x 的值: %d\n", x);      // 输出: 50
+printf("*ptr 的值: %d\n", *ptr); // 输出: 50 (相同的值)
+
+// 通过指针修改值
+*ptr = 75;  // 通过指针改变 x 的值
+
+printf("修改后 x 的值: %d\n", x);      // 输出: 75
+printf("修改后 *ptr 的值: %d\n", *ptr); // 输出: 75</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">解引用过程可视化：</h4>
+            <div class="diagram">
+                <p class="mb-4">解引用步骤：</p>
+                <div class="space-y-4">
+                    <div class="flex flex-wrap justify-center items-center">
+                        <span class="mx-2">1. ptr 存储地址</span>
+                        <div class="pointer-visual">
+                            <div class="pointer-name">ptr</div>
+                            <div class="pointer-value">0x1000</div>
+                        </div>
+                    </div>
+                    <div class="text-center">↓ 解引用 (*ptr)</div>
+                    <div class="flex flex-wrap justify-center items-center">
+                        <span class="mx-2">2. 访问地址 0x1000 的值</span>
+                        <div class="memory-visual">
+                            <div class="memory-address">0x1000</div>
+                            <div class="memory-value">50</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter 4: Pointers and Arrays -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">4. 指针与数组</h3>
+            
+            <p class="text-lg mb-4">
+                在C语言中，数组名本身就是指向数组第一个元素的指针。这种特性使得指针和数组密切相关。
+            </p>
+
+            <div class="code-block">
+<pre>int arr[5] = {10, 20, 30, 40, 50};
+int *ptr = arr;  // arr 等价于 &arr[0]
+
+// 以下三种访问方式是等价的：
+printf("第一个元素: %d\n", arr[0]);    // 数组下标
+printf("第一个元素: %d\n", *arr);      // 数组名解引用
+printf("第一个元素: %d\n", *ptr);      // 指针解引用
+
+// 访问其他元素
+printf("第二个元素: %d\n", arr[1]);    // 数组下标
+printf("第二个元素: %d\n", *(arr+1));  // 指针算术
+printf("第二个元素: %d\n", *(ptr+1));  // 指针算术</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">指针算术：</h4>
+            <div class="diagram">
+                <p class="mb-4">数组在内存中的布局：</p>
+                <div class="flex flex-wrap justify-center space-x-1">
+                    <div class="memory-visual">
+                        <div class="memory-address">0x1000</div>
+                        <div class="memory-value">10</div>
+                    </div>
+                    <div class="memory-visual">
+                        <div class="memory-address">0x1004</div>
+                        <div class="memory-value">20</div>
+                    </div>
+                    <div class="memory-visual">
+                        <div class="memory-address">0x1008</div>
+                        <div class="memory-value">30</div>
+                    </div>
+                    <div class="memory-visual">
+                        <div class="memory-address">0x100C</div>
+                        <div class="memory-value">40</div>
+                    </div>
+                    <div class="memory-visual">
+                        <div class="memory-address">0x1010</div>
+                        <div class="memory-value">50</div>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm">arr[0]   arr[1]   arr[2]   arr[3]   arr[4]</p>
+            </div>
+
+            <div class="code-block">
+<pre>int arr[5] = {10, 20, 30, 40, 50};
+int *ptr = arr;
+
+// 指针算术示例
+printf("ptr 指向: %d\n", *ptr);       // 10
+printf("ptr+1 指向: %d\n", *(ptr+1)); // 20
+printf("ptr+2 指向: %d\n", *(ptr+2)); // 30
+
+// 移动指针
+ptr++;  // ptr 现在指向 arr[1]
+printf("移动后 ptr 指向: %d\n", *ptr); // 20</pre>
+            </div>
+
+            <div class="tip">
+                <h4 class="font-bold">💡 关键理解：</h4>
+                <p>当对指针进行 +1 操作时，实际移动的字节数取决于指针的类型。对于 int* 指针，+1 意味着移动 sizeof(int) 个字节（通常是4字节）。</p>
+            </div>
+        </div>
+
+        <!-- Chapter 5: Pointers and Functions -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">5. 指针与函数</h3>
+            
+            <p class="text-lg mb-4">
+                指针在函数中有两个主要用途：<strong>传值 vs 传引用</strong> 和 <strong>返回多个值</strong>。
+            </p>
+
+            <h4 class="font-bold text-lg mb-2">5.1 传值 vs 传引用</h4>
+            <div class="code-block">
+<pre>// 传值 (Pass by Value) - 不能修改原变量
+void increment_value(int x) {
+    x++;  // 只修改副本，不影响原变量
+    printf("函数内 x = %d\n", x);
+}
+
+// 传引用 (Pass by Reference) - 可以修改原变量
+void increment_pointer(int *x) {
+    (*x)++;  // 修改指针指向的值
+    printf("函数内 *x = %d\n", *x);
+}
+
+int main() {
+    int num = 10;
+    
+    printf("调用前: num = %d\n", num);        // 10
+    
+    increment_value(num);                      // 传值
+    printf("传值后: num = %d\n", num);        // 10 (没有改变)
+    
+    increment_pointer(&num);                   // 传引用
+    printf("传引用后: num = %d\n", num);      // 11 (改变了)
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">5.2 函数返回多个值</h4>
+            <div class="code-block">
+<pre>// 使用指针返回多个值
+void calculate(int a, int b, int *sum, int *product, int *difference) {
+    *sum = a + b;
+    *product = a * b;
+    *difference = a - b;
+}
+
+int main() {
+    int x = 15, y = 5;
+    int sum, product, difference;
+    
+    // 传递变量的地址
+    calculate(x, y, &sum, &product, &difference);
+    
+    printf("和: %d\n", sum);           // 20
+    printf("积: %d\n", product);       // 75
+    printf("差: %d\n", difference);    // 10
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">5.3 数组作为函数参数</h4>
+            <div class="code-block">
+<pre>// 数组参数实际上是指针
+void print_array(int arr[], int size) {
+    // 或者写成: void print_array(int *arr, int size)
+    for (int i = 0; i < size; i++) {
+        printf("arr[%d] = %d\n", i, arr[i]);
+    }
+}
+
+void modify_array(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        arr[i] *= 2;  // 修改原数组的值
+    }
+}
+
+int main() {
+    int numbers[4] = {1, 2, 3, 4};
+    
+    printf("原数组:\n");
+    print_array(numbers, 4);
+    
+    modify_array(numbers, 4);
+    
+    printf("修改后:\n");
+    print_array(numbers, 4);  // 输出: 2, 4, 6, 8
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 6: Common Mistakes -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">6. 常见错误与调试</h3>
+            
+            <div class="warning">
+                <h4 class="font-bold text-lg mb-2">⚠️ 常见错误 1：未初始化的指针</h4>
+                <div class="code-block">
+<pre>// 错误示例
+int *ptr;        // 指针未初始化
+*ptr = 10;       // 危险！可能导致程序崩溃
+
+// 正确示例
+int x;
+int *ptr = &x;   // 先初始化指针
+*ptr = 10;       // 安全</pre>
+                </div>
+            </div>
+
+            <div class="warning">
+                <h4 class="font-bold text-lg mb-2">⚠️ 常见错误 2：空指针解引用</h4>
+                <div class="code-block">
+<pre>// 错误示例
+int *ptr = NULL;
+*ptr = 5;        // 程序崩溃！
+
+// 正确示例
+int *ptr = NULL;
+if (ptr != NULL) {
+    *ptr = 5;    // 先检查再使用
+} else {
+    printf("指针为空，无法使用\n");
+}</pre>
+                </div>
+            </div>
+
+            <div class="warning">
+                <h4 class="font-bold text-lg mb-2">⚠️ 常见错误 3：指针类型不匹配</h4>
+                <div class="code-block">
+<pre>// 错误示例
+int x = 10;
+float *ptr = &x;  // 类型不匹配警告
+
+// 正确示例
+int x = 10;
+int *ptr = &x;    // 类型匹配</pre>
+                </div>
+            </div>
+
+            <div class="tip">
+                <h4 class="font-bold">🛠️ 调试技巧：</h4>
+                <ul class="list-disc list-inside space-y-1 mt-2">
+                    <li>始终初始化指针</li>
+                    <li>使用前检查指针是否为 NULL</li>
+                    <li>确保指针类型与目标变量类型匹配</li>
+                    <li>使用 <code>printf</code> 打印地址和值来调试</li>
+                    <li>使用静态分析工具检查代码</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Chapter 7: Practice Examples -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">7. 实践练习</h3>
+            
+            <h4 class="font-bold text-lg mb-2">练习 1：交换两个变量</h4>
+            <div class="code-block">
+<pre>void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int x = 10, y = 20;
+    printf("交换前: x=%d, y=%d\n", x, y);
+    
+    swap(&x, &y);
+    
+    printf("交换后: x=%d, y=%d\n", x, y);
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">练习 2：查找数组中的最大值和最小值</h4>
+            <div class="code-block">
+<pre>void find_min_max(int arr[], int size, int *min, int *max) {
+    *min = *max = arr[0];
+    
+    for (int i = 1; i < size; i++) {
+        if (arr[i] < *min) {
+            *min = arr[i];
+        }
+        if (arr[i] > *max) {
+            *max = arr[i];
+        }
+    }
+}
+
+int main() {
+    int numbers[] = {64, 34, 25, 12, 22, 11, 90};
+    int size = sizeof(numbers) / sizeof(numbers[0]);
+    int min, max;
+    
+    find_min_max(numbers, size, &min, &max);
+    
+    printf("最小值: %d\n", min);
+    printf("最大值: %d\n", max);
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">练习 3：字符串长度计算</h4>
+            <div class="code-block">
+<pre>int string_length(char *str) {
+    int length = 0;
+    while (*str != '\0') {  // 直到遇到字符串结束符
+        length++;
+        str++;              // 移动指针到下一个字符
+    }
+    return length;
+}
+
+int main() {
+    char message[] = "Hello, World!";
+    int len = string_length(message);
+    
+    printf("字符串 '%s' 的长度是: %d\n", message, len);
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">总结 | Summary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-3">核心概念：</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>指针存储变量的地址</li>
+                        <li>& 操作符获取地址</li>
+                        <li>* 操作符解引用</li>
+                        <li>指针算术与数组</li>
+                        <li>函数参数传递</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-3">最佳实践：</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>始终初始化指针</li>
+                        <li>检查 NULL 指针</li>
+                        <li>匹配指针类型</li>
+                        <li>小心指针算术</li>
+                        <li>使用调试技巧</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-lg mt-4">
+                掌握指针是C语言编程的重要里程碑。通过大量练习和实际应用，你将能够熟练使用指针来构建更高效、更强大的程序。
+            </p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="concept-card text-center">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-4">继续学习</h3>
+            <div class="space-y-4">
+                <a href="./1511_pointers_interactive.html" class="back-button inline-flex">
+                    <span>🚀</span>
+                    <span>进入指针互动课程</span>
+                </a>
+                <br>
+                <a href="./1511_cmd_args_notes.html" class="back-button inline-flex">
+                    <span>📖</span>
+                    <span>学习命令行参数</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

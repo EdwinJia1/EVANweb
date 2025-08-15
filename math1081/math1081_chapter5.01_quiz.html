@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1081 - 第五章图论测验 | Graph Theory Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .question-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-card.answered-correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .question-card.answered-incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-button:hover:not(.disabled) {
+            border-color: #e07a5f;
+            transform: translateX(5px);
+        }
+        .option-button.correct {
+            border-color: #22c55e;
+            background-color: #dcfce7;
+        }
+        .option-button.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+        .option-button.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            border-radius: 0 0.375rem 0.375rem 0;
+            display: none;
+        }
+        .explanation.show {
+            display: block;
+        }
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .difficulty-easy {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .difficulty-medium {
+            background-color: #fed7aa;
+            color: #9a3412;
+        }
+        .difficulty-hard {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+        .difficulty-expert {
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .score-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e07a5f 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #22c55e;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <a href="../index.html" class="home-button">← 返回主页</a>
+        
+        <div class="quiz-container">
+            <h1 class="text-3xl font-bold text-center mb-2">MATH1081 第五章图论测验</h1>
+            <p class="text-center text-gray-600 mb-6">Graph Theory Quiz - 70道题目测试你的图论知识</p>
+            
+            <div class="score-card">
+                <h2 class="text-xl font-bold mb-2">测验进度</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p id="score-text">已完成: 0/70 题</p>
+                <p id="accuracy-text">正确率: 0%</p>
+            </div>
+        </div>
+
+        <!-- 简单题目 (1-20) -->
+        <div class="quiz-container">
+            <h2 class="text-2xl font-bold mb-4 text-center">简单题目 (1-20)</h2>
+            
+            <!-- Question 1 -->
+            <div class="question-card" data-question="1">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">1. 图论的创始人是谁？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 高斯</button>
+                    <button class="option-button" data-answer="correct">B. 欧拉</button>
+                    <button class="option-button" data-answer="wrong">C. 拉格朗日</button>
+                    <button class="option-button" data-answer="wrong">D. 牛顿</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    欧拉在1735年通过解决柯尼斯堡七桥问题创立了图论，成为图论的创始人。
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-card" data-question="2">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">2. 图 G = (V, E) 中，V 表示什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 顶点集合</button>
+                    <button class="option-button" data-answer="wrong">B. 边集合</button>
+                    <button class="option-button" data-answer="wrong">C. 值集合</button>
+                    <button class="option-button" data-answer="wrong">D. 向量集合</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    在图的定义 G = (V, E) 中，V 代表顶点集合（Vertex set），E 代表边集合（Edge set）。
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-card" data-question="3">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">3. 握手定理说明什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 顶点数等于边数</button>
+                    <button class="option-button" data-answer="correct">B. 所有顶点度数之和等于边数的两倍</button>
+                    <button class="option-button" data-answer="wrong">C. 每个顶点的度数都是偶数</button>
+                    <button class="option-button" data-answer="wrong">D. 图中必须有偶数个顶点</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    握手定理表明：∑deg(v) = 2|E|，即所有顶点度数之和等于边数的两倍，因为每条边对两个顶点各贡献1度。
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-card" data-question="4">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">4. 完全图 K₄ 有多少条边？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 4</button>
+                    <button class="option-button" data-answer="wrong">B. 5</button>
+                    <button class="option-button" data-answer="correct">C. 6</button>
+                    <button class="option-button" data-answer="wrong">D. 8</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：C</strong><br>
+                    完全图 Kₙ 的边数公式为 n(n-1)/2。对于 K₄：4×3/2 = 6 条边。
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-card" data-question="5">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">5. 树的定义是什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 连通且无圈的图</button>
+                    <button class="option-button" data-answer="wrong">B. 有向且连通的图</button>
+                    <button class="option-button" data-answer="wrong">C. 完全图的子图</button>
+                    <button class="option-button" data-answer="wrong">D. 所有顶点度数相等的图</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    树是连通且无圈的图。这个定义等价于：连通且|E|=|V|-1，或无圈且|E|=|V|-1。
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question-card" data-question="6">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">6. 度数为1的顶点叫什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 根节点</button>
+                    <button class="option-button" data-answer="correct">B. 叶子节点</button>
+                    <button class="option-button" data-answer="wrong">C. 中心节点</button>
+                    <button class="option-button" data-answer="wrong">D. 分支节点</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    度数为1的顶点称为叶子节点（leaf），特别是在树中，叶子节点只连接一个顶点。
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="question-card" data-question="7">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">7. 什么是连通图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 任意两个顶点之间都有路径相连</button>
+                    <button class="option-button" data-answer="wrong">B. 每个顶点都有相同的度数</button>
+                    <button class="option-button" data-answer="wrong">C. 图中没有圈</button>
+                    <button class="option-button" data-answer="wrong">D. 所有边都是有向边</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    连通图是指任意两个顶点之间都有路径相连的无向图。
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="question-card" data-question="8">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">8. 有n个顶点的树有多少条边？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. n</button>
+                    <button class="option-button" data-answer="correct">B. n-1</button>
+                    <button class="option-button" data-answer="wrong">C. n+1</button>
+                    <button class="option-button" data-answer="wrong">D. 2n</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    树的基本性质之一：有n个顶点的树恰好有n-1条边。
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="question-card" data-question="9">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">9. 什么是图的子图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 顶点集和边集都是原图的子集</button>
+                    <button class="option-button" data-answer="wrong">B. 只包含原图的部分顶点</button>
+                    <button class="option-button" data-answer="wrong">C. 只包含原图的部分边</button>
+                    <button class="option-button" data-answer="wrong">D. 与原图完全相同的图</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    子图G'=(V',E')满足V'⊆V且E'⊆E，即顶点集和边集都是原图的子集。
+                </div>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="question-card" data-question="10">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">10. 什么是简单图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 没有自环和重边的图</button>
+                    <button class="option-button" data-answer="wrong">B. 只有一个顶点的图</button>
+                    <button class="option-button" data-answer="wrong">C. 连通且无圈的图</button>
+                    <button class="option-button" data-answer="wrong">D. 所有顶点度数相等的图</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    简单图是指没有自环（顶点到自身的边）和重边（两顶点间多条边）的图。
+                </div>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="question-card" data-question="11">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">11. 完全图K₃等价于什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 一条路径</button>
+                    <button class="option-button" data-answer="correct">B. 一个三角形</button>
+                    <button class="option-button" data-answer="wrong">C. 一个正方形</button>
+                    <button class="option-button" data-answer="wrong">D. 一条边</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    完全图K₃有3个顶点，每两个顶点之间都有边，形成一个三角形结构。
+                </div>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="question-card" data-question="12">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">12. 什么是图的路径？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 顶点和边的交替序列</button>
+                    <button class="option-button" data-answer="wrong">B. 所有顶点的集合</button>
+                    <button class="option-button" data-answer="wrong">C. 所有边的集合</button>
+                    <button class="option-button" data-answer="wrong">D. 图的直径</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    路径是顶点和边的交替序列v₀e₁v₁e₂...eₖvₖ，其中相邻顶点通过边连接。
+                </div>
+            </div>
+
+            <!-- Question 13 -->
+            <div class="question-card" data-question="13">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">13. 什么是圈（回路）？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 起点和终点相同的路径</button>
+                    <button class="option-button" data-answer="wrong">B. 包含所有顶点的路径</button>
+                    <button class="option-button" data-answer="wrong">C. 不重复顶点的路径</button>
+                    <button class="option-button" data-answer="wrong">D. 最短的路径</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    圈（回路）是起点和终点相同的路径，通常要求除起点外不重复其他顶点。
+                </div>
+            </div>
+
+            <!-- Question 14 -->
+            <div class="question-card" data-question="14">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">14. 二分图的定义是什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 顶点可分为两个独立集</button>
+                    <button class="option-button" data-answer="wrong">B. 恰好有两个连通分量</button>
+                    <button class="option-button" data-answer="wrong">C. 每个顶点度数为2</button>
+                    <button class="option-button" data-answer="wrong">D. 恰好有两条边</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    二分图的顶点集可以分割为两个独立集，使得所有边都连接不同独立集中的顶点。
+                </div>
+            </div>
+
+            <!-- Question 15 -->
+            <div class="question-card" data-question="15">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">15. 星图S₄有多少个顶点？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 4</button>
+                    <button class="option-button" data-answer="correct">B. 5</button>
+                    <button class="option-button" data-answer="wrong">C. 6</button>
+                    <button class="option-button" data-answer="wrong">D. 7</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    星图Sₙ有n+1个顶点，其中一个中心顶点连接其他n个顶点。所以S₄有5个顶点。
+                </div>
+            </div>
+
+            <!-- Question 16 -->
+            <div class="question-card" data-question="16">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">16. 什么是图的直径？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 任意两顶点间最短距离的最大值</button>
+                    <button class="option-button" data-answer="wrong">B. 图中最长边的长度</button>
+                    <button class="option-button" data-answer="wrong">C. 顶点数的一半</button>
+                    <button class="option-button" data-answer="wrong">D. 边数与顶点数的比值</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    图的直径是任意两个顶点之间最短距离的最大值，即图中最远两点的距离。
+                </div>
+            </div>
+
+            <!-- Question 17 -->
+            <div class="question-card" data-question="17">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">17. 图的连通分量是什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 最大连通子图</button>
+                    <button class="option-button" data-answer="wrong">B. 最小连通子图</button>
+                    <button class="option-button" data-answer="wrong">C. 包含所有顶点的子图</button>
+                    <button class="option-button" data-answer="wrong">D. 包含所有边的子图</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    连通分量是图的最大连通子图，即不能再添加顶点而保持连通性的连通子图。
+                </div>
+            </div>
+
+            <!-- Question 18 -->
+            <div class="question-card" data-question="18">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">18. 轮图W₄有多少条边？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 6</button>
+                    <button class="option-button" data-answer="wrong">B. 7</button>
+                    <button class="option-button" data-answer="correct">C. 8</button>
+                    <button class="option-button" data-answer="wrong">D. 9</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：C</strong><br>
+                    轮图Wₙ由圈Cₙ加上一个中心顶点构成，边数为2n。所以W₄有2×4=8条边。
+                </div>
+            </div>
+
+            <!-- Question 19 -->
+            <div class="question-card" data-question="19">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">19. 什么是独立集？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 两两不相邻的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">B. 度数相同的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">C. 连通的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">D. 形成圈的顶点集合</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    独立集是图中两两不相邻的顶点集合，即独立集中任意两个顶点之间都没有边。
+                </div>
+            </div>
+
+            <!-- Question 20 -->
+            <div class="question-card" data-question="20">
+                <div class="difficulty-badge difficulty-easy">简单</div>
+                <h3 class="text-lg font-semibold mb-3">20. 什么是顶点覆盖？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 包含每条边至少一个端点的顶点集</button>
+                    <button class="option-button" data-answer="wrong">B. 所有度数为偶数的顶点集</button>
+                    <button class="option-button" data-answer="wrong">C. 图的最大独立集</button>
+                    <button class="option-button" data-answer="wrong">D. 图的最小生成树的顶点</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    顶点覆盖是图中的一个顶点集合，使得图中每条边都至少有一个端点在该集合中。
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 中等题目 (21-40) -->
+        <div class="quiz-container">
+            <h2 class="text-2xl font-bold mb-4 text-center">中等题目 (21-40)</h2>
+
+            <!-- Question 21 -->
+            <div class="question-card" data-question="21">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">21. 根据欧拉定理，连通图存在欧拉回路的充要条件是什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 每个顶点的度数都是偶数</button>
+                    <button class="option-button" data-answer="wrong">B. 恰好有两个奇度顶点</button>
+                    <button class="option-button" data-answer="wrong">C. 图是连通的</button>
+                    <button class="option-button" data-answer="wrong">D. 图中没有自环</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    欧拉定理：连通图存在欧拉回路当且仅当每个顶点的度数都是偶数。如果恰好有两个奇度顶点，则存在欧拉路径（不是回路）。
+                </div>
+            </div>
+
+            <!-- Question 22 -->
+            <div class="question-card" data-question="22">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">22. 完全二分图 K₃,₄ 有多少条边？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 7</button>
+                    <button class="option-button" data-answer="wrong">B. 10</button>
+                    <button class="option-button" data-answer="correct">C. 12</button>
+                    <button class="option-button" data-answer="wrong">D. 14</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：C</strong><br>
+                    完全二分图 K_{m,n} 的边数为 m×n。因此 K₃,₄ 有 3×4 = 12 条边。
+                </div>
+            </div>
+
+            <!-- Question 23 -->
+            <div class="question-card" data-question="23">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">23. 图G是平面图的必要条件是什么（欧拉公式）？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. |E| ≤ 2|V|</button>
+                    <button class="option-button" data-answer="correct">B. |E| ≤ 3|V| - 6</button>
+                    <button class="option-button" data-answer="wrong">C. |E| ≤ |V|²</button>
+                    <button class="option-button" data-answer="wrong">D. |E| = |V| - 1</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    对于连通平面图，由欧拉公式推导出：|E| ≤ 3|V| - 6（当|V| ≥ 3时）。
+                </div>
+            </div>
+
+            <!-- Question 24 -->
+            <div class="question-card" data-question="24">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">24. 什么是哈密顿路径？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 经过每个顶点恰好一次的路径</button>
+                    <button class="option-button" data-answer="wrong">B. 经过每条边恰好一次的路径</button>
+                    <button class="option-button" data-answer="wrong">C. 最短路径</button>
+                    <button class="option-button" data-answer="wrong">D. 连接所有顶点的最小生成树</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    哈密顿路径是经过图中每个顶点恰好一次的路径。哈密顿回路则是起点和终点相同的哈密顿路径。
+                </div>
+            </div>
+
+            <!-- Question 25 -->
+            <div class="question-card" data-question="25">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">25. 根据狄拉克定理，图G有哈密顿回路的充分条件是？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 每个顶点的度数都至少为n/2</button>
+                    <button class="option-button" data-answer="wrong">B. 图是连通的</button>
+                    <button class="option-button" data-answer="wrong">C. 图是完全图</button>
+                    <button class="option-button" data-answer="wrong">D. 每个顶点的度数都是偶数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    狄拉克定理：如果简单图G有n个顶点（n≥3），且每个顶点的度数都至少为n/2，则G有哈密顿回路。
+                </div>
+            </div>
+
+            <!-- Question 26 -->
+            <div class="question-card" data-question="26">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">26. 什么是图的着色数？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 对图进行正当着色所需的最少颜色数</button>
+                    <button class="option-button" data-answer="wrong">B. 图中顶点的数量</button>
+                    <button class="option-button" data-answer="wrong">C. 图中边的数量</button>
+                    <button class="option-button" data-answer="wrong">D. 图的连通分量数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    图的着色数（色数）是对图进行正当着色（相邻顶点颜色不同）所需的最少颜色数，记作χ(G)。
+                </div>
+            </div>
+
+            <!-- Question 27 -->
+            <div class="question-card" data-question="27">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">27. 完全图Kₙ的着色数是多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 1</button>
+                    <button class="option-button" data-answer="wrong">B. 2</button>
+                    <button class="option-button" data-answer="wrong">C. n-1</button>
+                    <button class="option-button" data-answer="correct">D. n</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：D</strong><br>
+                    完全图Kₙ中每两个顶点都相邻，所以每个顶点都需要不同的颜色，着色数为n。
+                </div>
+            </div>
+
+            <!-- Question 28 -->
+            <div class="question-card" data-question="28">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">28. 二分图的着色数最多是多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 1</button>
+                    <button class="option-button" data-answer="correct">B. 2</button>
+                    <button class="option-button" data-answer="wrong">C. 3</button>
+                    <button class="option-button" data-answer="wrong">D. 无限</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    二分图的两个独立集可以分别用两种不同的颜色着色，所以二分图的着色数最多为2。
+                </div>
+            </div>
+
+            <!-- Question 29 -->
+            <div class="question-card" data-question="29">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">29. 什么是图的匹配？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 两两不相邻的边的集合</button>
+                    <button class="option-button" data-answer="wrong">B. 两两相邻的边的集合</button>
+                    <button class="option-button" data-answer="wrong">C. 连接相同顶点的边的集合</button>
+                    <button class="option-button" data-answer="wrong">D. 形成圈的边的集合</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    匹配是图中两两不相邻（不共享顶点）的边的集合。完美匹配覆盖图中所有顶点。
+                </div>
+            </div>
+
+            <!-- Question 30 -->
+            <div class="question-card" data-question="30">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">30. 根据霍尔定理，二分图G=(X∪Y,E)有完美匹配的充要条件是？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. |X|=|Y|且对X的任意子集S，|N(S)|≥|S|</button>
+                    <button class="option-button" data-answer="wrong">B. 图是连通的</button>
+                    <button class="option-button" data-answer="wrong">C. 每个顶点的度数相等</button>
+                    <button class="option-button" data-answer="wrong">D. |X|+|Y|是偶数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    霍尔定理：二分图有完美匹配当且仅当|X|=|Y|且对X的任意子集S，其邻居集N(S)的大小至少为|S|。
+                </div>
+            </div>
+
+            <!-- Question 31 -->
+            <div class="question-card" data-question="31">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">31. 什么是图的团（clique）？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 两两相邻的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">B. 两两不相邻的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">C. 度数相同的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">D. 形成树的顶点集合</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    团是图中两两相邻的顶点集合，即由这些顶点诱导的子图是完全图。
+                </div>
+            </div>
+
+            <!-- Question 32 -->
+            <div class="question-card" data-question="32">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">32. 对于树T，以下哪个性质是错误的？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 连通且|E|=|V|-1</button>
+                    <button class="option-button" data-answer="wrong">B. 无圈且|E|=|V|-1</button>
+                    <button class="option-button" data-answer="wrong">C. 任意两点间有唯一路径</button>
+                    <button class="option-button" data-answer="correct">D. 每个顶点的度数都大于1</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：D</strong><br>
+                    树中必然存在叶子节点（度数为1），所以"每个顶点的度数都大于1"是错误的。
+                </div>
+            </div>
+
+            <!-- Question 33 -->
+            <div class="question-card" data-question="33">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">33. 生成树的定义是什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 包含所有顶点的树子图</button>
+                    <button class="option-button" data-answer="wrong">B. 包含所有边的树子图</button>
+                    <button class="option-button" data-answer="wrong">C. 度数最小的树</button>
+                    <button class="option-button" data-answer="wrong">D. 最长的路径</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    生成树是连通图的一个子图，它包含图的所有顶点且是一棵树（连通且无圈）。
+                </div>
+            </div>
+
+            <!-- Question 34 -->
+            <div class="question-card" data-question="34">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">34. 根据Kruskal算法，应该如何构造最小生成树？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 按权重从小到大选择不形成圈的边</button>
+                    <button class="option-button" data-answer="wrong">B. 按权重从大到小选择边</button>
+                    <button class="option-button" data-answer="wrong">C. 随机选择边</button>
+                    <button class="option-button" data-answer="wrong">D. 从度数最大的顶点开始</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    Kruskal算法：将边按权重从小到大排序，依次选择不形成圈的边，直到构成生成树。
+                </div>
+            </div>
+
+            <!-- Question 35 -->
+            <div class="question-card" data-question="35">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">35. 根据Prim算法，应该如何构造最小生成树？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 从一个顶点开始，逐步添加最小权重的连接边</button>
+                    <button class="option-button" data-answer="wrong">B. 删除权重最大的边</button>
+                    <button class="option-button" data-answer="wrong">C. 找到所有简单路径</button>
+                    <button class="option-button" data-answer="wrong">D. 计算所有顶点的度数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    Prim算法：从任一顶点开始，逐步添加连接当前树和未访问顶点的最小权重边。
+                </div>
+            </div>
+
+            <!-- Question 36 -->
+            <div class="question-card" data-question="36">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">36. 什么是图的割点？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 删除后增加连通分量数的顶点</button>
+                    <button class="option-button" data-answer="wrong">B. 度数最大的顶点</button>
+                    <button class="option-button" data-answer="wrong">C. 度数为1的顶点</button>
+                    <button class="option-button" data-answer="wrong">D. 位于图中心的顶点</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    割点（关节点）是指删除该顶点及其关联边后，图的连通分量数增加的顶点。
+                </div>
+            </div>
+
+            <!-- Question 37 -->
+            <div class="question-card" data-question="37">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">37. 什么是图的割边？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 删除后增加连通分量数的边</button>
+                    <button class="option-button" data-answer="wrong">B. 权重最大的边</button>
+                    <button class="option-button" data-answer="wrong">C. 连接割点的边</button>
+                    <button class="option-button" data-answer="wrong">D. 最短的边</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    割边（桥）是指删除该边后图的连通分量数增加的边。
+                </div>
+            </div>
+
+            <!-- Question 38 -->
+            <div class="question-card" data-question="38">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">38. 深度优先搜索(DFS)的时间复杂度是多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. O(V)</button>
+                    <button class="option-button" data-answer="correct">B. O(V+E)</button>
+                    <button class="option-button" data-answer="wrong">C. O(V²)</button>
+                    <button class="option-button" data-answer="wrong">D. O(E²)</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    DFS需要访问所有顶点O(V)和检查所有边O(E)，总时间复杂度为O(V+E)。
+                </div>
+            </div>
+
+            <!-- Question 39 -->
+            <div class="question-card" data-question="39">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">39. 广度优先搜索(BFS)可以用来解决什么问题？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 无权图的最短路径</button>
+                    <button class="option-button" data-answer="wrong">B. 最大流问题</button>
+                    <button class="option-button" data-answer="wrong">C. 最小生成树</button>
+                    <button class="option-button" data-answer="wrong">D. 哈密顿回路</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    BFS可以找到无权图中从源点到其他所有顶点的最短路径（最少边数）。
+                </div>
+            </div>
+
+            <!-- Question 40 -->
+            <div class="question-card" data-question="40">
+                <div class="difficulty-badge difficulty-medium">中等</div>
+                <h3 class="text-lg font-semibold mb-3">40. 拓扑排序适用于什么类型的图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 有向无圈图(DAG)</button>
+                    <button class="option-button" data-answer="wrong">B. 完全图</button>
+                    <button class="option-button" data-answer="wrong">C. 二分图</button>
+                    <button class="option-button" data-answer="wrong">D. 欧拉图</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    拓扑排序只适用于有向无圈图(DAG)，用于将顶点线性排序，使得对于每条有向边(u,v)，u都在v之前。
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 困难题目 (41-60) -->
+        <div class="quiz-container">
+            <h2 class="text-2xl font-bold mb-4 text-center">困难题目 (41-60)</h2>
+
+            <!-- Question 41 -->
+            <div class="question-card" data-question="41">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">41. 根据库拉托夫斯基定理，以下哪个图不是平面图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. K₄</button>
+                    <button class="option-button" data-answer="correct">B. K₅</button>
+                    <button class="option-button" data-answer="wrong">C. K₂,₃</button>
+                    <button class="option-button" data-answer="wrong">D. 轮图 W₄</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    库拉托夫斯基定理：图是平面图当且仅当它不包含与 K₅ 或 K₃,₃ 同胚的子图。K₅ 本身就是非平面图。
+                </div>
+            </div>
+
+            <!-- Question 42 -->
+            <div class="question-card" data-question="42">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">42. 根据四色定理，平面图的着色数最多是多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 2</button>
+                    <button class="option-button" data-answer="wrong">B. 3</button>
+                    <button class="option-button" data-answer="correct">C. 4</button>
+                    <button class="option-button" data-answer="wrong">D. 5</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：C</strong><br>
+                    四色定理：任何平面图都可以用至多4种颜色进行正当着色。
+                </div>
+            </div>
+
+            <!-- Question 43 -->
+            <div class="question-card" data-question="43">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">43. 什么是图的边连通度？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 使图不连通需要删除的最少边数</button>
+                    <button class="option-button" data-answer="wrong">B. 图中边的总数</button>
+                    <button class="option-button" data-answer="wrong">C. 最大度数顶点的度数</button>
+                    <button class="option-button" data-answer="wrong">D. 最小生成树的边数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    边连通度κ'(G)是使图不连通需要删除的最少边数，也等于最小边割的大小。
+                </div>
+            </div>
+
+            <!-- Question 44 -->
+            <div class="question-card" data-question="44">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">44. 什么是图的顶点连通度？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 使图不连通需要删除的最少顶点数</button>
+                    <button class="option-button" data-answer="wrong">B. 图中顶点的总数</button>
+                    <button class="option-button" data-answer="wrong">C. 连通分量的数量</button>
+                    <button class="option-button" data-answer="wrong">D. 最长路径的长度</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    顶点连通度κ(G)是使图不连通需要删除的最少顶点数（对于完全图定义为n-1）。
+                </div>
+            </div>
+
+            <!-- Question 45 -->
+            <div class="question-card" data-question="45">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">45. 根据孟格尔定理，两个不相邻顶点间的最大不相交路径数等于什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 最小顶点割的大小</button>
+                    <button class="option-button" data-answer="wrong">B. 最小边割的大小</button>
+                    <button class="option-button" data-answer="wrong">C. 顶点的度数之和</button>
+                    <button class="option-button" data-answer="wrong">D. 图的直径</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    孟格尔定理：两个不相邻顶点间的最大不相交路径数等于分离它们的最小顶点割的大小。
+                </div>
+            </div>
+
+            <!-- Question 46 -->
+            <div class="question-card" data-question="46">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">46. 完全二分图K₃,₃是平面图吗？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 是</button>
+                    <button class="option-button" data-answer="correct">B. 不是</button>
+                    <button class="option-button" data-answer="wrong">C. 取决于具体画法</button>
+                    <button class="option-button" data-answer="wrong">D. 无法确定</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    K₃,₃不是平面图。根据库拉托夫斯基定理，包含K₅或K₃,₃子图的图都不是平面图。
+                </div>
+            </div>
+
+            <!-- Question 47 -->
+            <div class="question-card" data-question="47">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">47. 对于连通平面图，欧拉公式V - E + F = 2中，F表示什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 边数</button>
+                    <button class="option-button" data-answer="wrong">B. 顶点数</button>
+                    <button class="option-button" data-answer="correct">C. 面数</button>
+                    <button class="option-button" data-answer="wrong">D. 度数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：C</strong><br>
+                    在欧拉公式V - E + F = 2中，F表示面数，包括外部无限面。
+                </div>
+            </div>
+
+            <!-- Question 48 -->
+            <div class="question-card" data-question="48">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">48. 什么是图的支配集？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 每个顶点都在集合中或与集合中顶点相邻</button>
+                    <button class="option-button" data-answer="wrong">B. 两两不相邻的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">C. 度数最大的顶点集合</button>
+                    <button class="option-button" data-answer="wrong">D. 形成完全子图的顶点集合</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    支配集是图中的一个顶点集合D，使得图中每个顶点要么在D中，要么与D中某个顶点相邻。
+                </div>
+            </div>
+
+            <!-- Question 49 -->
+            <div class="question-card" data-question="49">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">49. 根据韦伯定理，图G是二分图当且仅当什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. G中不包含奇圈</button>
+                    <button class="option-button" data-answer="wrong">B. G是连通的</button>
+                    <button class="option-button" data-answer="wrong">C. G是平面图</button>
+                    <button class="option-button" data-answer="wrong">D. G的着色数为2</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    韦伯定理：图G是二分图当且仅当G中不包含奇圈（奇数长度的圈）。
+                </div>
+            </div>
+
+            <!-- Question 50 -->
+            <div class="question-card" data-question="50">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">50. 最大流最小割定理说明什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 网络中最大流等于最小割的容量</button>
+                    <button class="option-button" data-answer="wrong">B. 最短路径等于最长路径</button>
+                    <button class="option-button" data-answer="wrong">C. 最大匹配等于最小覆盖</button>
+                    <button class="option-button" data-answer="wrong">D. 最大独立集等于最小支配集</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    最大流最小割定理：在网络中，从源点到汇点的最大流量等于分离源点和汇点的最小割的容量。
+                </div>
+            </div>
+
+            <!-- Question 51 -->
+            <div class="question-card" data-question="51">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">51. 什么是图的核？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 独立集且支配集</button>
+                    <button class="option-button" data-answer="wrong">B. 最大团</button>
+                    <button class="option-button" data-answer="wrong">C. 最小顶点覆盖</button>
+                    <button class="option-button" data-answer="wrong">D. 连通分量</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    图的核是既是独立集又是支配集的顶点集合，即集合中顶点两两不相邻，且每个不在集合中的顶点都与集合中某个顶点相邻。
+                </div>
+            </div>
+
+            <!-- Question 52 -->
+            <div class="question-card" data-question="52">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">52. 图的树宽的概念与什么相关？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 图的树分解</button>
+                    <button class="option-button" data-answer="wrong">B. 最小生成树</button>
+                    <button class="option-button" data-answer="wrong">C. 最大团</button>
+                    <button class="option-button" data-answer="wrong">D. 着色数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    树宽是衡量图与树相似程度的参数，定义为图的最优树分解中最大包大小减1。
+                </div>
+            </div>
+
+            <!-- Question 53 -->
+            <div class="question-card" data-question="53">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">53. 彼得森图的着色数是多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 2</button>
+                    <button class="option-button" data-answer="correct">B. 3</button>
+                    <button class="option-button" data-answer="wrong">C. 4</button>
+                    <button class="option-button" data-answer="wrong">D. 5</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    彼得森图是3-正则图，包含奇圈，所以不是二分图，但可以用3种颜色着色。
+                </div>
+            </div>
+
+            <!-- Question 54 -->
+            <div class="question-card" data-question="54">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">54. 什么是图的线图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 以原图的边为顶点，相邻边对应相邻顶点</button>
+                    <button class="option-button" data-answer="wrong">B. 原图的对偶图</button>
+                    <button class="option-button" data-answer="wrong">C. 原图的补图</button>
+                    <button class="option-button" data-answer="wrong">D. 原图的生成树</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    线图L(G)以原图G的边为顶点，当且仅当两条边在G中有公共端点时，它们在L(G)中相邻。
+                </div>
+            </div>
+
+            <!-- Question 55 -->
+            <div class="question-card" data-question="55">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">55. 根据拉姆塞理论，R(3,3)等于多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 5</button>
+                    <button class="option-button" data-answer="correct">B. 6</button>
+                    <button class="option-button" data-answer="wrong">C. 7</button>
+                    <button class="option-button" data-answer="wrong">D. 8</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    拉姆塞数R(3,3)=6，意味着任何6个顶点的完全图的边用红蓝两色着色，必存在单色三角形。
+                </div>
+            </div>
+
+            <!-- Question 56 -->
+            <div class="question-card" data-question="56">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">56. 什么是图的禁用子图特征？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 不包含特定子图的图类的刻画</button>
+                    <button class="option-button" data-answer="wrong">B. 图的着色方案</button>
+                    <button class="option-button" data-answer="wrong">C. 图的匹配算法</button>
+                    <button class="option-button" data-answer="wrong">D. 图的生成树构造</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    禁用子图特征通过禁止包含某些特定子图来刻画图类，如森林（禁用圈）、二分图（禁用奇圈）等。
+                </div>
+            </div>
+
+            <!-- Question 57 -->
+            <div class="question-card" data-question="57">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">57. 什么是图的谱？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 邻接矩阵的特征值集合</button>
+                    <button class="option-button" data-answer="wrong">B. 顶点度数的集合</button>
+                    <button class="option-button" data-answer="wrong">C. 边权重的集合</button>
+                    <button class="option-button" data-answer="wrong">D. 路径长度的集合</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    图的谱是其邻接矩阵的特征值集合，图谱理论研究图的组合性质与其谱性质的关系。
+                </div>
+            </div>
+
+            <!-- Question 58 -->
+            <div class="question-card" data-question="58">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">58. 强正则图的定义涉及哪些参数？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. (n,k,λ,μ)</button>
+                    <button class="option-button" data-answer="wrong">B. (V,E)</button>
+                    <button class="option-button" data-answer="wrong">C. (χ,ω)</button>
+                    <button class="option-button" data-answer="wrong">D. (α,β)</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    强正则图由参数(n,k,λ,μ)刻画：n个顶点，每个顶点度数为k，相邻顶点有λ个公共邻居，不相邻顶点有μ个公共邻居。
+                </div>
+            </div>
+
+            <!-- Question 59 -->
+            <div class="question-card" data-question="59">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">59. 图的团数ω(G)与独立数α(G)有什么关系？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. ω(G) = α(Ḡ)，其中Ḡ是G的补图</button>
+                    <button class="option-button" data-answer="wrong">B. ω(G) = α(G)</button>
+                    <button class="option-button" data-answer="wrong">C. ω(G) + α(G) = |V|</button>
+                    <button class="option-button" data-answer="wrong">D. ω(G) × α(G) = |E|</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    图G的团数等于其补图Ḡ的独立数，因为G中的团对应Ḡ中的独立集。
+                </div>
+            </div>
+
+            <!-- Question 60 -->
+            <div class="question-card" data-question="60">
+                <div class="difficulty-badge difficulty-hard">困难</div>
+                <h3 class="text-lg font-semibold mb-3">60. 什么是图的围长？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 最短圈的长度</button>
+                    <button class="option-button" data-answer="wrong">B. 最长路径的长度</button>
+                    <button class="option-button" data-answer="wrong">C. 图的直径</button>
+                    <button class="option-button" data-answer="wrong">D. 平均度数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    图的围长是图中最短圈的长度。如果图是森林（无圈），则围长定义为无穷大。
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 超难进阶题目 (61-70) -->
+        <div class="quiz-container">
+            <h2 class="text-2xl font-bold mb-4 text-center">超难进阶题目 (61-70)</h2>
+
+            <!-- Question 61 -->
+            <div class="question-card" data-question="61">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">61. 根据凯莱公式，完全图 K₆ 有多少棵不同的生成树？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. 720</button>
+                    <button class="option-button" data-answer="correct">B. 1296</button>
+                    <button class="option-button" data-answer="wrong">C. 1440</button>
+                    <button class="option-button" data-answer="wrong">D. 1620</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    凯莱公式：完全图 Kₙ 的生成树数量为 n^(n-2)。对于 K₆：6^(6-2) = 6⁴ = 1296。
+                </div>
+            </div>
+
+            <!-- Question 62 -->
+            <div class="question-card" data-question="62">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">62. 根据布鲁克斯定理，连通图G的着色数χ(G)与最大度数Δ(G)有什么关系？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. χ(G) ≤ Δ(G)，除非G是完全图或奇圈</button>
+                    <button class="option-button" data-answer="wrong">B. χ(G) = Δ(G)</button>
+                    <button class="option-button" data-answer="wrong">C. χ(G) ≥ Δ(G)</button>
+                    <button class="option-button" data-answer="wrong">D. χ(G) = Δ(G) + 1</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    布鲁克斯定理：对于连通图G，χ(G) ≤ Δ(G)，等号成立当且仅当G是完全图或奇圈。
+                </div>
+            </div>
+
+            <!-- Question 63 -->
+            <div class="question-card" data-question="63">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">63. 什么是图的边着色数（色指数）？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 对图的边进行正当着色所需的最少颜色数</button>
+                    <button class="option-button" data-answer="wrong">B. 顶点着色数的两倍</button>
+                    <button class="option-button" data-answer="wrong">C. 边数与顶点数的比值</button>
+                    <button class="option-button" data-answer="wrong">D. 最大度数加一</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    边着色数χ'(G)是对图的边进行正当着色（相邻边不同色）所需的最少颜色数。
+                </div>
+            </div>
+
+            <!-- Question 64 -->
+            <div class="question-card" data-question="64">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">64. 根据维兹定理，简单图G的边着色数χ'(G)满足什么条件？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. χ'(G) = Δ(G) 或 χ'(G) = Δ(G) + 1</button>
+                    <button class="option-button" data-answer="wrong">B. χ'(G) = Δ(G)</button>
+                    <button class="option-button" data-answer="wrong">C. χ'(G) ≤ Δ(G)</button>
+                    <button class="option-button" data-answer="wrong">D. χ'(G) = 2Δ(G)</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    维兹定理：对于简单图G，边着色数χ'(G)要么等于最大度数Δ(G)，要么等于Δ(G)+1。
+                </div>
+            </div>
+
+            <!-- Question 65 -->
+            <div class="question-card" data-question="65">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">65. 什么是图的点边连通度？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 删除顶点和边使图不连通的最小元素数</button>
+                    <button class="option-button" data-answer="wrong">B. 顶点连通度与边连通度的乘积</button>
+                    <button class="option-button" data-answer="wrong">C. 顶点连通度与边连通度的和</button>
+                    <button class="option-button" data-answer="wrong">D. 最大度数的一半</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    点边连通度是指同时删除顶点和边以使图不连通所需的最少元素（顶点或边）总数。
+                </div>
+            </div>
+
+            <!-- Question 66 -->
+            <div class="question-card" data-question="66">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">66. 完全图Kₙ的边着色数是多少？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="wrong">A. n</button>
+                    <button class="option-button" data-answer="correct">B. n-1（n为偶数时）或 n（n为奇数时）</button>
+                    <button class="option-button" data-answer="wrong">C. 2n-1</button>
+                    <button class="option-button" data-answer="wrong">D. n(n-1)/2</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：B</strong><br>
+                    完全图Kₙ的边着色数：当n为偶数时为n-1，当n为奇数时为n，这等于其最大度数。
+                </div>
+            </div>
+
+            <!-- Question 67 -->
+            <div class="question-card" data-question="67">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">67. 什么是图的完美图？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 每个导出子图的着色数都等于其团数</button>
+                    <button class="option-button" data-answer="wrong">B. 有完美匹配的图</button>
+                    <button class="option-button" data-answer="wrong">C. 每个顶点度数都相等的图</button>
+                    <button class="option-button" data-answer="wrong">D. 着色数等于独立数的图</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    完美图是指图及其每个导出子图的着色数都等于其团数的图。
+                </div>
+            </div>
+
+            <!-- Question 68 -->
+            <div class="question-card" data-question="68">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">68. 根据强完美图定理，图G是完美图当且仅当什么？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. G和其补图都不包含奇圈（长度≥5）</button>
+                    <button class="option-button" data-answer="wrong">B. G是二分图</button>
+                    <button class="option-button" data-answer="wrong">C. G是平面图</button>
+                    <button class="option-button" data-answer="wrong">D. G有完美匹配</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    强完美图定理（洛瓦兹定理）：图G是完美图当且仅当G和其补图都不包含长度至少为5的奇圈。
+                </div>
+            </div>
+
+            <!-- Question 69 -->
+            <div class="question-card" data-question="69">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">69. 什么是图的分数着色数？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 团数的上确界除以独立数的下确界</button>
+                    <button class="option-button" data-answer="wrong">B. 着色数的一半</button>
+                    <button class="option-button" data-answer="wrong">C. 边数除以顶点数</button>
+                    <button class="option-button" data-answer="wrong">D. 最大度数除以平均度数</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    分数着色数χ_f(G) = sup{ω(H)/α(H) : H是G的导出子图}，它总是小于等于普通着色数。
+                </div>
+            </div>
+
+            <!-- Question 70 -->
+            <div class="question-card" data-question="70">
+                <div class="difficulty-badge difficulty-expert">超难</div>
+                <h3 class="text-lg font-semibold mb-3">70. 在图论的哈达马德猜想背景下，什么是强正则图的参数可行性条件？</h3>
+                <div class="space-y-2">
+                    <button class="option-button" data-answer="correct">A. 判别式Δ = (λ-μ)² + 4μ必须是完全平方数</button>
+                    <button class="option-button" data-answer="wrong">B. n必须是2的幂</button>
+                    <button class="option-button" data-answer="wrong">C. k必须整除n</button>
+                    <button class="option-button" data-answer="wrong">D. λ+μ必须等于k</button>
+                </div>
+                <div class="explanation">
+                    <strong>正确答案：A</strong><br>
+                    对于强正则图(n,k,λ,μ)，参数可行性的一个必要条件是判别式Δ = (λ-μ)² + 4μ必须是完全平方数，这来自于特征值的整数性要求。
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentScore = { correct: 0, total: 70, answered: 0 };
+        
+        function updateProgress() {
+            const progressFill = document.getElementById('progress-fill');
+            const scoreText = document.getElementById('score-text');
+            const accuracyText = document.getElementById('accuracy-text');
+            
+            const percentage = (currentScore.answered / currentScore.total) * 100;
+            const accuracy = currentScore.answered > 0 ? (currentScore.correct / currentScore.answered) * 100 : 0;
+            
+            progressFill.style.width = percentage + '%';
+            scoreText.textContent = `已完成: ${currentScore.answered}/${currentScore.total} 题`;
+            accuracyText.textContent = `正确率: ${accuracy.toFixed(1)}%`;
+        }
+
+        function handleAnswer(button, questionCard) {
+            const buttons = questionCard.querySelectorAll('.option-button');
+            const explanation = questionCard.querySelector('.explanation');
+            const isCorrect = button.dataset.answer === 'correct';
+            
+            buttons.forEach(btn => {
+                btn.classList.add('disabled');
+                if (btn.dataset.answer === 'correct') {
+                    btn.classList.add('correct');
+                } else if (btn === button && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            explanation.classList.add('show');
+            
+            if (isCorrect) {
+                questionCard.classList.add('answered-correct');
+                currentScore.correct++;
+            } else {
+                questionCard.classList.add('answered-incorrect');
+            }
+            
+            currentScore.answered++;
+            updateProgress();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const optionButtons = document.querySelectorAll('.option-button');
+            
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    
+                    const questionCard = this.closest('.question-card');
+                    handleAnswer(this, questionCard);
+                });
+            });
+            
+            updateProgress();
+        });
+    </script>
+</body>
+</html> 

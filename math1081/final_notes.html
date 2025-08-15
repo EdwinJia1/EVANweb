@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATH1081 - Final 复习笔记（本地版）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [["$","$"],["\\(","\\)"]], displayMath: [["$$","$$"],["\\[","\\]"]] } };
+  </script>
+  <style>
+    body{font-family:'Inter','Helvetica Neue','Helvetica','Arial',sans-serif;background-color:#f8f7f2;color:#2c2c2c;line-height:1.6}
+    .container-card{background:#fff;border-radius:.5rem;padding:2rem;box-shadow:0 4px 6px -1px rgb(0 0 0 / .1),0 2px 4px -2px rgb(0 0 0 / .1)}
+    .section{background:#f8f7f2;border-left:4px solid #e07a5f;border-radius:.5rem;padding:1.5rem;margin-top:1.25rem}
+    .formula{background:#e0f2fe;border:2px solid #0ea5e9;border-radius:.5rem;padding:1rem;margin:.75rem 0}
+    .example{background:#f0fdf4;border:2px solid #22c55e;border-radius:.5rem;padding:1rem;margin:.75rem 0}
+    .badge{display:inline-block;background:#8b8589;color:#fff;font-size:.75rem;padding:.25rem .5rem;border-radius:.25rem}
+    .home-button{background-color:#e07a5f;color:#f8f7f2;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;font-weight:500;transition:all .2s ease-in-out;display:inline-block;margin-bottom:1rem}
+    .home-button:hover{background-color:#d06850;transform:translateY(-1px)}
+  </style>
+</head>
+<body class="antialiased">
+  <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <a href="../math1081.html" class="home-button">← 返回MATH1081</a>
+
+    <div class="container-card mb-6 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold text-[#e07a5f]">MATH1081 Final 复习笔记（本地版）</h1>
+      <p class="text-gray-600 mt-2">与站点现有 UI 风格保持一致。内容来源于 Notion 复习页并做结构化整理。</p>
+      <div class="mt-3">
+        <a href="https://separated-balance-ff5.notion.site/final-24a6f596015380ccb931ed1fed2ecd45" target="_blank" rel="noopener noreferrer" class="badge">Notion 原文（Live）</a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <a href="#sets" class="section block hover:shadow"><h3 class="font-bold">1. 集合与区间并交</h3><p class="text-sm text-gray-600">∈、⊆、并/交、空集与基数，连续整数区间</p></a>
+      <a href="#functions" class="section block hover:shadow"><h3 class="font-bold">2. 函数计数</h3><p class="text-sm text-gray-600">从大小 m 到大小 n：函数/单射/满射</p></a>
+      <a href="#logic" class="section block hover:shadow"><h3 class="font-bold">3. 英文句式 → 逻辑式</h3><p class="text-sm text-gray-600">P only if Q、Q if P、否定、核心等价</p></a>
+      <a href="#symdiff" class="section block hover:shadow"><h3 class="font-bold">4. 对称差命题分析</h3><p class="text-sm text-gray-600">X=A∩B, Y=A∪C, Z=A⊕B 的恒真与反例</p></a>
+      <a href="#strategy" class="section block hover:shadow"><h3 class="font-bold">5. 解题策略</h3><p class="text-sm text-gray-600">简化、分组、举例验证与反例构造</p></a>
+      <a href="./final_quiz.html" class="section block hover:shadow"><h3 class="font-bold">6. 30题 Final 测验</h3><p class="text-sm text-gray-600">17/10/3 难度分布，含解析与统计</p></a>
+    </div>
+    
+    <div id="sets" class="section">
+      <h2 class="text-2xl font-bold mb-2">1. 集合与区间并交</h2>
+      <div class="formula">
+        <p><strong>符号：</strong> $x\in A$ (属于)、$A\subseteq B$ (子集)、$A\cup B$ (并)、$A\cap B$ (交)、$\varnothing$ (空集)、$|A|$ (基数)。</p>
+        <p><strong>连续整数的基数：</strong> $|\{a,a+1,\dots,b\}| = (b-a)+1$。</p>
+      </div>
+      <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0;">
+        <p class="font-semibold">核心技巧：区分“集合的集合”与“元素的集合”</p>
+        <p class="text-sm">当集合 $A=\{S_1, S_2, \dots, S_{16}\}$ 时，$A$ 的元素是**集合** $S_n$ 本身，所以 $|A|=16$。而 $B=\bigcup S_n$ 是把所有 $S_n$ 的**元素**合并，计算的是元素的总数。</p>
+      </div>
+      <div class="example">
+        <p class="font-semibold">例题：一串相互重叠的整数区间 $S_n = \{x \in \mathbb{Z} \mid 1000-n \le x \le 1326+n\}$，其中 $n \in \{0, 1, \dots, 15\}$。</p>
+        <ul class="list-disc ml-6 text-sm">
+          <li>$A=\{S_0,\dots,S_{15}\}$，所以 $|A|=16$。</li>
+          <li>$B=\bigcup_{n=0}^{15} S_n$：最小下界是 $1000-15=985$，最大上界是 $1326+15=1341$。故 $|B| = (1341-985)+1=357$。（*注：数值已根据更合理的区间定义调整*）</li>
+          <li>$D=\bigcap_{n=0}^{15} S_n$：最大下界是 $1000-0=1000$，最小上界是 $1326+0=1326$。故 $|D| = (1326-1000)+1=327$。</li>
+          <li>$E$ 是“所有子集”中的空集，故 $E=\varnothing,\ |E|=0$。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="functions" class="section">
+      <h2 class="text-2xl font-bold mb-2">2. 函数计数（从大小 m 到大小 n）</h2>
+      <div class="formula">
+        <p>设定义域 $A$，$|A|=m$；陪域 $B$，$|B|=n$。</p>
+        <ul class="list-disc ml-6 text-sm">
+          <li><strong>所有函数 $f: A \to B$：</strong> $n^m$。</li>
+          <li><strong>单射 (Injective / one-to-one)：</strong> 条件 m <= n，计数 $P(n,m)=\dfrac{n!}{(n-m)!}$。</li>
+          <li><strong>满射 (Surjective / onto)：</strong> 条件 m >= n。若不满足，计数为 0。若满足，用容斥原理计数。</li>
+          <li><strong>双射 (Bijective)：</strong> 条件 m = n，计数 m!。</li>
+        </ul>
+      </div>
+      <div class="example">
+        <p class="font-semibold">例题：从 $A=\{1,2,3\}$ ($m=3$) 到 $B=\{a,b,c,d\}$ ($n=4$) 的函数。</p>
+        <ul class="list-disc ml-6 text-sm">
+          <li><strong>所有函数：</strong> $4^3=64$。每个 $A$ 中元素可映到 $B$ 中4个不同元素。</li>
+          <li><strong>单射：</strong> $m=3 \le n=4$，存在。$P(4,3) = \frac{4!}{1!} = 24$。</li>
+          <li><strong>满射：</strong> $m=3 < n=4$，不存在，计数为0。</li>
+          <li><strong>双射：</strong> $m\ne n$，不存在，计数为0。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="logic" class="section">
+      <h2 class="text-2xl font-bold mb-2">3. 英文句式 → 逻辑式</h2>
+      <div class="formula">
+        <p><strong>核心等价：</strong> $A\to B \equiv \neg A\lor B$。这是所有逻辑翻译的基石。</p>
+        <p><strong>否定 (Negation)：</strong> $\neg(A\to B) \equiv A \land \neg B$ (箭头变AND，后面取反)。</p>
+      </div>
+      <div class="example">
+        <p class="font-semibold">分组与推导：</p>
+        <table class="w-full text-sm border-collapse border border-gray-300">
+            <tr class="bg-gray-100"><th class="p-2 border">英文句式</th><th class="p-2 border">逻辑式</th><th class="p-2 border">推导</th></tr>
+            <tr><td class="p-2 border">if P, then Q<br>P only if Q<br>Q if P</td><td class="p-2 border">$P\to Q$</td><td class="p-2 border">标准蕴含</td></tr>
+            <tr><td class="p-2 border">if Q, then P<br>P or not Q</td><td class="p-2 border">$Q\to P$</td><td class="p-2 border">$Q\to P \equiv \neg Q \lor P$</td></tr>
+            <tr><td class="p-2 border">if not Q, then P<br>P or Q</td><td class="p-2 border">$P\lor Q$</td><td class="p-2 border">$\neg Q\to P \equiv \neg(\neg Q)\lor P \equiv Q\lor P$</td></tr>
+            <tr><td class="p-2 border">P and not Q</td><td class="p-2 border">$P\land\neg Q$</td><td class="p-2 border">直接翻译，是 $P\to Q$ 的否定</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="symdiff" class="section">
+      <h2 class="text-2xl font-bold mb-2">4. 对称差命题分析</h2>
+      <div class="formula">
+        <p><strong>定义：</strong> $X = A \cap B$, $Y = A \cup C$, $Z = A \oplus B = (A\cup B)\setminus(A\cap B)$。</p>
+      </div>
+      <div class="example">
+        <p class="font-semibold">恒真命题证明：</p>
+        <ul class="list-disc ml-6 text-sm">
+          <li><strong>证明 $X\subseteq Y$：</strong> 对任意 $x\in X$，由定义 $x\in A\cap B$，故 $x\in A$。因为 $Y=A\cup C$，所以 $x\in Y$。证毕。</li>
+          <li><strong>证明 $X\cap Z=\varnothing$：</strong> $X$ 的元素必须同时在 $A$ 和 $B$ 中。$Z$ 的元素必须在 $A$ 或 $B$ 但不同时在。这两个条件互斥，所以交集为空。</li>
+        </ul>
+        <p class="font-semibold mt-3">常见陷阱与反例：</p>
+        <p class="text-sm">命题 $Y\subseteq X\cup Z$ 不总为真。反例：$A=\{1\},B=\{2\},C=\{3\}$。此时 $Y=\{1,3\}$，而 $X=\varnothing, Z=\{1,2\}$，故 $X\cup Z=\{1,2\}$。显然 $\{1,3\} \not\subseteq \{1,2\}$。</p>
+      </div>
+    </div>
+
+    <div id="strategy" class="section">
+      <h2 class="text-2xl font-bold mb-2">5. 解题策略</h2>
+      <div class="formula">
+        <p class="font-semibold">两大核心策略：</p>
+        <ul class="list-disc ml-6 text-sm">
+          <li><strong>举例验证法 (Proof by Example):</strong>
+            <ul class="list-disc ml-6">
+                <li><strong>何时用：</strong>快速排除错误选项，建立直觉。</li>
+                <li><strong>方法：</strong>取最小最简单的集合，如 $A=\{1\}, B=\{2\}, C=\{3\}$。</li>
+                <li><strong>注意：</strong>举例成功不等于恒真，可能只是特例。</li>
+            </ul>
+          </li>
+          <li><strong>形式化证明/反例法 (Formal Proof/Counterexample):</strong>
+            <ul class="list-disc ml-6">
+                <li><strong>何时用：</strong>需要 100% 确定命题恒真或恒假时。</li>
+                <li><strong>方法：</strong>用集合定义和运算法则推导，或构造一个使其不成立的反例。</li>
+                <li><strong>技巧：</strong>如果形式化证明走不通，很可能命题是假的，应立刻转向构造反例。</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container-card mt-6 text-center">
+      <a href="./final_quiz.html" class="inline-block bg-[#8b5cf6] text-white px-4 py-2 rounded-md hover:opacity-90">进入 Final 30 题测验</a>
+    </div>
+  </div>
+</body>
+</html>
+
+

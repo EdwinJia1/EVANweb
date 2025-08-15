@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1131 Calculus Core Concepts Review | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .back-button, .language-toggle {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            margin-right: 1rem;
+        }
+        .back-button:hover, .language-toggle:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .language-toggle {
+            background-color: #e07a5f;
+            color: #ffffff;
+        }
+        .language-toggle:hover {
+            background-color: #d06850;
+        }
+        .notes-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .chapter-header {
+            color: #e07a5f;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+        }
+        .section-header {
+            color: #2c2c2c;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .subsection-header {
+            color: #8b8589;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .knowledge-box {
+            background-color: #f8f7f2;
+            border-left: 4px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .formula-box {
+            background-color: #faf9f6;
+            border: 1px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.25rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        .example-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .conclusion-box {
+            background-color: #fef3e2;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .toc {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc-link {
+            color: #e07a5f;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .toc-link:hover {
+            text-decoration: underline;
+        }
+        .language-content {
+            display: none;
+        }
+        .language-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Navigation Buttons -->
+        <div class="flex flex-wrap mb-4">
+            <a href="../math1131.html" class="back-button">
+                <span>←</span>
+                <span id="back-text">Back to Course</span>
+            </a>
+            <button class="language-toggle" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="language-btn-text">Switch to English</span>
+            </button>
+        </div>
+
+        <!-- Chinese Content -->
+        <div id="chinese-content" class="language-content active">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Calculus Core Concepts Review</h1>
+                <p class="text-xl text-gray-600 mt-2">MATH1131 Lab Test Preparation</p>
+                <p class="text-sm text-gray-500 mt-1">Domain & Range, Limits & Continuity, Core Theorems</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <div class="notes-container">
+                <h2 class="chapter-header" style="margin-top: 0;">目录</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <p><strong>第一章：</strong> <a href="#domain-range-cn" class="toc-link">函数的定义域与值域</a></p>
+                    <p><strong>第二章：</strong> <a href="#limits-continuity-cn" class="toc-link">极限与连续性</a></p>
+                    <p><strong>第三章：</strong> <a href="#theorems-cn" class="toc-link">微积分核心定理</a></p>
+                </div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <div class="notes-container" id="domain-range-cn">
+                <h2 class="chapter-header" style="margin-top: 0;">1. 函数的定义域与值域</h2>
+                <p>这是微积分的基础，核心是理解不同函数类型带来的限制。</p>
+
+                <h3 class="section-header">知识点 1：根号函数 √g(x)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>定义域限制：</strong> 根号下的表达式必须大于或等于零 (g(x) ≥ 0)。</li>
+                        <li><strong>值域限制：</strong> 主平方根的输出值永远大于或等于零 (√g(x) ≥ 0)。</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">知识点 2：分式函数 f(x)/g(x)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>定义域限制：</strong> 分母不能为零 (g(x) ≠ 0)。</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">知识点 3：极限中的"抓大头"原则</h3>
+                <div class="knowledge-box">
+                    <p>在计算 x → ∞ 的有理函数极限时，极限值由分子和分母的<strong>最高次项</strong>决定，所有低次项都可以忽略不计。</p>
+                </div>
+
+                <h3 class="section-header">解题方法与例题分析</h3>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">类型一：根号在分母里，如 f(x) = 1 / √(-x² + 3x)</h4>
+                    <ol>
+                        <li><strong>建立不等式：</strong> 这是"根号"和"分母"的双重限制，所以根号内的部分必须<strong>严格大于</strong>零。即 -x² + 3x > 0。</li>
+                        <li><strong>解不等式：</strong> 解二次不等式 x(3-x) > 0，得到定义域为 (0, 3)。</li>
+                        <li><strong>求值域：</strong> 问题转化为求 f(x) 在 (0, 3) 上的值域。我们知道 f(x) 的最小值会在内层函数 g(x) = -x² + 3x 取最大值时出现。</li>
+                        <li><strong>找顶点：</strong> g(x) 是开口向下的抛物线，在顶点 x = 1.5 处取最大值 g(1.5) = 2.25。</li>
+                        <li><strong>计算结果：</strong> 所以 f(x) 的最小值为 1 / √2.25 = 1 / 1.5 = 2/3。当x趋近边界0或3时，f(x) 趋近无穷。所以值域是 [2/3, ∞)。</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">类型二：根号不在分母里，如 f(x) = √(-x² + 3x)</h4>
+                    <ol>
+                        <li><strong>建立不等式：</strong> 限制条件变宽松，根号内的部分只需<strong>大于或等于</strong>零。即 -x² + 3x ≥ 0，解得定义域为 [0, 3]。</li>
+                        <li><strong>求值域：</strong> 值域的最小值显然是0（当x=0或x=3时）。最大值同样在内层函数 g(x) 取最大值时出现。</li>
+                        <li><strong>计算结果：</strong> g(x) 的最大值是2.25，所以 f(x) 的最大值是 √2.25 = 1.5。值域为 [0, 1.5]。</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">类型三：x趋于无穷的极限，如 f(x) = (-2x⁷ + 3x² ...) / (-3x² + 4x ...)</h4>
+                    <ol>
+                        <li><strong>抓大头：</strong> 分子的"大头"是 -2x⁷，分母的"大头"是 -3x²。</li>
+                        <li><strong>化简：</strong> f(x) ≈ (-2x⁷) / (-3x²) = (2/3)x⁵。</li>
+                        <li><strong>看趋势：</strong> 当 x → ∞ 时，(2/3)x⁵ 也趋向于 ∞。所以极限是 ∞。</li>
+                    </ol>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 醍醐灌顶</h4>
+                    <ul>
+                        <li><strong>定义域：</strong> 就像给函数找一个"合法的居住地"。根号要求"必须在零度以上地区"，分母要求"不能住在门牌号为0的房子里"。当根号住进分母家时，就必须住在"严格高于零度"的地区。</li>
+                        <li><strong>值域：</strong> 对于复合函数，采用"先内后外"的策略。先分析内层函数的取值范围（找到它的最高点和最低点），再看外层函数会如何"加工"这些值，从而得到最终的输出范围。</li>
+                        <li><strong>无穷极限：</strong> 在无穷的世界里，低次项就像是"蚂蚁"，高次项是"大象"。当大象跑起来时，你只需要关心大象的方向，蚂蚁可以完全忽略。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chapter 2 -->
+            <div class="notes-container" id="limits-continuity-cn">
+                <h2 class="chapter-header">2. 极限与连续性</h2>
+                <p>考察函数在某一点附近的行为，特别是"洞"和"断崖"的区别。</p>
+
+                <h3 class="section-header">知识点</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>连续的定义：</strong> 函数在 c 点连续，当且仅当 <strong>左极限 = 右极限 = 函数在该点的值</strong>。</li>
+                        <li><strong>可去间断点：</strong> 左右极限相等，但<strong>不等于</strong>函数值。这是一个可以被"填补"的"<strong>小坑</strong>"。</li>
+                        <li><strong>跳跃间断点：</strong> 左右极限都存在，但<strong>不相等</strong>。这是一个无法修复的"<strong>断崖</strong>"。</li>
+                        <li><strong>绝对值处理：</strong> |u| 在 u > 0 时等于 u，在 u < 0 时等于 -u。</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">解题方法与例题分析</h3>
+                <div class="example-box">
+                    <h4 class="subsection-header">解题步骤</h4>
+                    <ol>
+                        <li><strong>尝试代入：</strong> 永远先将目标点 c 代入函数。</li>
+                        <li><strong>分析结果：</strong>
+                            <ul>
+                                <li>如果得到一个确定的数值，那么极限就是这个值。</li>
+                                <li>如果得到 <strong>0/0</strong>（不定式），这是一个强烈的信号：<strong>极限可能存在，需要化简！</strong></li>
+                                <li>如果得到 <strong>(非零数)/0</strong>，这是一个强烈的信号：极限是无穷大，存在一个<strong>垂直渐近线</strong>。</li>
+                            </ul>
+                        </li>
+                        <li><strong>化简 (针对0/0)：</strong> 对分子和分母进行<strong>因式分解</strong>，然后约掉导致0/0的公因式。</li>
+                        <li><strong>再次代入：</strong> 将 c 代入化简后的表达式，得到极限值。</li>
+                        <li><strong>判断连续性。</strong></li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">例题1 (小坑)：f(x) = (x+3) / (x² + 2x - 3) 在 x=-3 处</h4>
+                    <ul>
+                        <li>化简后为 1/(x-1)，极限值为 -1/4。</li>
+                        <li>而已知 f(-3) = 0。</li>
+                        <li>因为极限值 -1/4 ≠ 函数值 0，所以不连续。但因为左右极限相等，所以可以通过重新定义 f(-3) = -1/4 来修复它。</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">例题2 (断崖)：g(x) = |x² - x - 20| / (x - 5) 在 x=5 处</h4>
+                    <ul>
+                        <li>因为绝对值的存在，必须讨论左右极限。</li>
+                        <li>在 x→5⁺ 时，x² - x - 20 > 0，函数化简为 x+4，右极限为 9。</li>
+                        <li>在 x→5⁻ 时，x² - x - 20 < 0，函数化简为 -(x+4)，左极限为 -9。</li>
+                        <li>因为左右极限不相等，所以这是一个无法修复的"断崖"，不能通过重新定义 g(5) 使其连续。</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 醍醐灌顶</h4>
+                    <p>极限只关心"路"的终点在哪里，而不在乎终点那个地方的"标记"画的是什么。如果左右两条路能汇合到同一个点（左右极限相等），但那个点的标记却画歪了（函数值不等于极限值），这就是一个可以修复的"小坑"。如果左右两条路通往了不同的地方（左右极限不相等），这就是一个无法修复的"断崖"。</p>
+                </div>
+            </div>
+
+            <!-- Chapter 3 -->
+            <div class="notes-container" id="theorems-cn">
+                <h2 class="chapter-header">3. 微积分核心定理</h2>
+                <p>理解这些定理的"承诺"和生效的"前提条件"。</p>
+
+                <h3 class="section-header">知识点 1：介值定理 (Intermediate Value Theorem, IVT)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>承诺：</strong> 如果一条连续的路径起点在河的一边，终点在另一边，那么途中必然<strong>至少有一次</strong>穿过了河流。</li>
+                        <li><strong>前提条件：</strong> 函数在闭区间 [a, b] 上<strong>连续</strong>。</li>
+                        <li><strong>应用：</strong> 找一个 a 和一个 b，使得 f(a) 和 f(b) 的符号相反（一个正，一个负），就能证明在 (a,b) 之间至少存在一个根。</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">知识点 2：最大-最小值定理 (Maximum-Minimum Theorem / Extreme Value Theorem)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>承诺：</strong> 如果你被关在一个<strong>四壁齐全的封闭房间</strong>里，沿着一条<strong>连续的路径</strong>行走，那么你一定能找到房间里的最高点和最低点。</li>
+                        <li><strong>前提条件：</strong>
+                            <ol>
+                                <li>函数在定义域上<strong>连续</strong>。</li>
+                                <li>定义域是<strong>闭区间 [a, b]</strong>（必须是方括号）。</li>
+                            </ol>
+                        </li>
+                        <li><strong>应用：</strong> 逐一检查选项，只有同时满足"连续"和"闭区间"两个条件的，才能保证最大最小值的存在。</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 醍醐灌顶</h4>
+                    <p>定理就像一份"保险合同"，你必须仔细阅读它的"生效条款"（前提条件）。<strong>介值定理</strong>的条款是"连续"，它保证了"根"的存在性。<strong>最大-最小值定理</strong>的条款是"连续"并且"闭区间"，它保证了"最值"的存在性。做题时，你的任务就是严格地检查这些条款是否被满足。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div id="english-content" class="language-content">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Calculus Core Concepts Review</h1>
+                <p class="text-xl text-gray-600 mt-2">MATH1131 Calculus Lab Test Review</p>
+                <p class="text-sm text-gray-500 mt-1">Domain & Range, Limits & Continuity, Core Theorems</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <div class="notes-container">
+                <h2 class="chapter-header" style="margin-top: 0;">Table of Contents</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <p><strong>Chapter 1:</strong> <a href="#domain-range-en" class="toc-link">Domain and Range of Functions</a></p>
+                    <p><strong>Chapter 2:</strong> <a href="#limits-continuity-en" class="toc-link">Limits and Continuity</a></p>
+                    <p><strong>Chapter 3:</strong> <a href="#theorems-en" class="toc-link">Core Calculus Theorems</a></p>
+                </div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <div class="notes-container" id="domain-range-en">
+                <h2 class="chapter-header" style="margin-top: 0;">1. Domain and Range of Functions</h2>
+                <p>This is the foundation of calculus, with the core being understanding the restrictions imposed by different function types.</p>
+
+                <h3 class="section-header">Key Concept 1: Square Root Functions √g(x)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>Domain Restriction:</strong> The expression under the square root must be greater than or equal to zero (g(x) ≥ 0).</li>
+                        <li><strong>Range Restriction:</strong> The principal square root output is always greater than or equal to zero (√g(x) ≥ 0).</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">Key Concept 2: Rational Functions f(x)/g(x)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>Domain Restriction:</strong> The denominator cannot be zero (g(x) ≠ 0).</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">Key Concept 3: "Dominant Term" Principle for Limits</h3>
+                <div class="knowledge-box">
+                    <p>When calculating limits of rational functions as x → ∞, the limit is determined by the <strong>highest degree terms</strong> in the numerator and denominator, with all lower-order terms becoming negligible.</p>
+                </div>
+
+                <h3 class="section-header">Solution Methods and Example Analysis</h3>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">Type 1: Square Root in Denominator, e.g., f(x) = 1 / √(-x² + 3x)</h4>
+                    <ol>
+                        <li><strong>Set up inequality:</strong> This has both "square root" and "denominator" restrictions, so the expression under the root must be <strong>strictly greater than</strong> zero: -x² + 3x > 0.</li>
+                        <li><strong>Solve inequality:</strong> Solve x(3-x) > 0, giving domain (0, 3).</li>
+                        <li><strong>Find range:</strong> Transform to finding range of f(x) on (0, 3). The minimum of f(x) occurs when inner function g(x) = -x² + 3x reaches its maximum.</li>
+                        <li><strong>Find vertex:</strong> g(x) is a downward parabola with maximum at x = 1.5, where g(1.5) = 2.25.</li>
+                        <li><strong>Calculate result:</strong> So minimum of f(x) is 1 / √2.25 = 1 / 1.5 = 2/3. As x approaches boundaries 0 or 3, f(x) approaches infinity. Range is [2/3, ∞).</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">Type 2: Square Root not in Denominator, e.g., f(x) = √(-x² + 3x)</h4>
+                    <ol>
+                        <li><strong>Set up inequality:</strong> Restrictions are relaxed, expression under root only needs to be <strong>greater than or equal to</strong> zero: -x² + 3x ≥ 0, giving domain [0, 3].</li>
+                        <li><strong>Find range:</strong> Minimum is clearly 0 (when x=0 or x=3). Maximum occurs when inner function g(x) reaches its maximum.</li>
+                        <li><strong>Calculate result:</strong> Maximum of g(x) is 2.25, so maximum of f(x) is √2.25 = 1.5. Range is [0, 1.5].</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">Type 3: Limit as x approaches infinity, e.g., f(x) = (-2x⁷ + 3x² ...) / (-3x² + 4x ...)</h4>
+                    <ol>
+                        <li><strong>Identify dominant terms:</strong> Numerator's "dominant term" is -2x⁷, denominator's is -3x².</li>
+                        <li><strong>Simplify:</strong> f(x) ≈ (-2x⁷) / (-3x²) = (2/3)x⁵.</li>
+                        <li><strong>Analyze behavior:</strong> As x → ∞, (2/3)x⁵ also approaches ∞. So the limit is ∞.</li>
+                    </ol>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 Key Insights</h4>
+                    <ul>
+                        <li><strong>Domain:</strong> Like finding a "legal residence" for the function. Square roots require "above-zero temperature zones," denominators require "non-zero address houses." When square roots move into denominator's house, they must live in "strictly above-zero temperature" areas.</li>
+                        <li><strong>Range:</strong> For composite functions, use "inside-out" strategy. First analyze the range of the inner function (find its highest and lowest points), then see how the outer function will "process" these values to get final output range.</li>
+                        <li><strong>Infinite limits:</strong> In the infinite world, lower-order terms are like "ants" and higher-order terms are "elephants." When elephants run, you only need to care about the elephant's direction; ants can be completely ignored.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chapter 2 -->
+            <div class="notes-container" id="limits-continuity-en">
+                <h2 class="chapter-header">2. Limits and Continuity</h2>
+                <p>Examining function behavior near a point, particularly distinguishing between "holes" and "cliffs."</p>
+
+                <h3 class="section-header">Key Concepts</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>Definition of Continuity:</strong> A function is continuous at point c if and only if <strong>left limit = right limit = function value at that point</strong>.</li>
+                        <li><strong>Removable Discontinuity:</strong> Left and right limits are equal but <strong>not equal to</strong> the function value. This is a fillable "<strong>small hole</strong>".</li>
+                        <li><strong>Jump Discontinuity:</strong> Left and right limits both exist but are <strong>not equal</strong>. This is an unfixable "<strong>cliff</strong>".</li>
+                        <li><strong>Absolute Value Handling:</strong> |u| equals u when u > 0, equals -u when u < 0.</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">Solution Methods and Example Analysis</h3>
+                <div class="example-box">
+                    <h4 class="subsection-header">Solution Steps</h4>
+                    <ol>
+                        <li><strong>Try direct substitution:</strong> Always first substitute target point c into the function.</li>
+                        <li><strong>Analyze result:</strong>
+                            <ul>
+                                <li>If you get a definite number, that's the limit.</li>
+                                <li>If you get <strong>0/0</strong> (indeterminate), this is a strong signal: <strong>limit may exist, need to simplify!</strong></li>
+                                <li>If you get <strong>(non-zero)/0</strong>, this is a strong signal: limit is infinite, there's a <strong>vertical asymptote</strong>.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Simplify (for 0/0):</strong> Factor numerator and denominator, then cancel the common factor causing 0/0.</li>
+                        <li><strong>Substitute again:</strong> Substitute c into the simplified expression to get the limit.</li>
+                        <li><strong>Determine continuity.</strong></li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">Example 1 (Small Hole): f(x) = (x+3) / (x² + 2x - 3) at x=-3</h4>
+                    <ul>
+                        <li>After simplification: 1/(x-1), limit value is -1/4.</li>
+                        <li>Given f(-3) = 0.</li>
+                        <li>Since limit value -1/4 ≠ function value 0, it's discontinuous. But since left and right limits are equal, it can be fixed by redefining f(-3) = -1/4.</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">Example 2 (Cliff): g(x) = |x² - x - 20| / (x - 5) at x=5</h4>
+                    <ul>
+                        <li>Due to absolute value, must consider left and right limits separately.</li>
+                        <li>As x→5⁺, x² - x - 20 > 0, function simplifies to x+4, right limit is 9.</li>
+                        <li>As x→5⁻, x² - x - 20 < 0, function simplifies to -(x+4), left limit is -9.</li>
+                        <li>Since left and right limits are unequal, this is an unfixable "cliff" that cannot be made continuous by redefining g(5).</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 Key Insights</h4>
+                    <p>Limits only care about where the "path" leads, not what "sign" is posted at the destination. If left and right paths converge to the same point (equal left/right limits) but the sign at that point is wrong (function value ≠ limit), that's a fixable "small hole." If left and right paths lead to different places (unequal left/right limits), that's an unfixable "cliff."</p>
+                </div>
+            </div>
+
+            <!-- Chapter 3 -->
+            <div class="notes-container" id="theorems-en">
+                <h2 class="chapter-header">3. Core Calculus Theorems</h2>
+                <p>Understanding these theorems' "promises" and their "prerequisite conditions."</p>
+
+                <h3 class="section-header">Key Concept 1: Intermediate Value Theorem (IVT)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>Promise:</strong> If a continuous path starts on one side of a river and ends on the other side, it must cross the river <strong>at least once</strong>.</li>
+                        <li><strong>Prerequisite:</strong> Function is <strong>continuous</strong> on closed interval [a, b].</li>
+                        <li><strong>Application:</strong> Find an a and a b such that f(a) and f(b) have opposite signs (one positive, one negative), proving at least one root exists in (a,b).</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">Key Concept 2: Extreme Value Theorem (Maximum-Minimum Theorem)</h3>
+                <div class="knowledge-box">
+                    <ul>
+                        <li><strong>Promise:</strong> If you're locked in a <strong>completely enclosed room</strong> following a <strong>continuous path</strong>, you can definitely find the highest and lowest points in the room.</li>
+                        <li><strong>Prerequisites:</strong>
+                            <ol>
+                                <li>Function is <strong>continuous</strong> on its domain.</li>
+                                <li>Domain is a <strong>closed interval [a, b]</strong> (must use square brackets).</li>
+                            </ol>
+                        </li>
+                        <li><strong>Application:</strong> Check each option individually; only those satisfying both "continuous" and "closed interval" conditions guarantee existence of maximum and minimum values.</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 Key Insights</h4>
+                    <p>Theorems are like "insurance contracts" - you must carefully read their "terms and conditions" (prerequisites). The <strong>Intermediate Value Theorem</strong>'s condition is "continuity," guaranteeing existence of roots. The <strong>Extreme Value Theorem</strong>'s conditions are "continuity" and "closed interval," guaranteeing existence of extreme values. When solving problems, your task is to rigorously check whether these conditions are satisfied.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'chinese';
+
+        function toggleLanguage() {
+            const chineseContent = document.getElementById('chinese-content');
+            const englishContent = document.getElementById('english-content');
+            const languageBtnText = document.getElementById('language-btn-text');
+            const backText = document.getElementById('back-text');
+
+            if (currentLanguage === 'chinese') {
+                chineseContent.classList.remove('active');
+                englishContent.classList.add('active');
+                languageBtnText.textContent = 'Switch to Chinese';
+                backText.textContent = 'Back to Course';
+                currentLanguage = 'english';
+            } else {
+                englishContent.classList.remove('active');
+                chineseContent.classList.add('active');
+                languageBtnText.textContent = 'Switch to English';
+                backText.textContent = 'Back to Course';
+                currentLanguage = 'chinese';
+            }
+        }
+
+        // Smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

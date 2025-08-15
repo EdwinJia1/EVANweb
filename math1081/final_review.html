@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATH1081 - Final Review Materials</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [["$","$"],["\\(","\\)"]], displayMath: [["$$","$$"],["\\[","\\]"]] } };
+  </script>
+  <style>
+    body{font-family:'Inter','Helvetica Neue','Helvetica','Arial',sans-serif;background:#f8f7f2;color:#2c2c2c}
+    .card{background:#fff;border-radius:.5rem;padding:1.5rem;box-shadow:0 4px 6px -1px rgb(0 0 0 / .1),0 2px 4px -2px rgb(0 0 0 / .1)}
+    .chip{display:inline-block;background:#e07a5f;color:#fff;border-radius:9999px;padding:.25rem .75rem;font-size:.75rem}
+    .home-button{background-color:#e07a5f;color:#f8f7f2;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;font-weight:500;transition:all .2s ease-in-out;display:inline-block;margin-bottom:1rem}
+    .home-button:hover{background-color:#d06850;transform:translateY(-1px)}
+  </style>
+</head>
+<body class="antialiased">
+  <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <a href="../math1081.html" class="home-button">← 返回MATH1081</a>
+    <div class="card mb-6 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold text-[#e07a5f]">Final Review Materials</h1>
+      <p class="text-gray-600 mt-2">速记卡、公式清单、易错点与最后一周刷题路线图。</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">高频考点速查</h2>
+        <ul class="list-disc ml-6 space-y-1 text-sm text-gray-700">
+          <li>蕴含等价、德摩根、双重否定、支配/幂等/交换/结合</li>
+          <li>排列组合模型：分步/分类、捆绑/插空、圆排列</li>
+          <li>鸽巢原理两公式与上取整</li>
+          <li>整数方程：下限平移、上限容斥、模约束代换</li>
+          <li>递推关系：特征方程、撞车乘 n、尾巴匹配</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">易错清单</h2>
+        <ul class="list-disc ml-6 space-y-1 text-sm text-gray-700">
+          <li>把“否定(¬)”与“逆命题/逆否命题”混淆</li>
+          <li>“小于 M”的数字计数未做边界分类</li>
+          <li>容斥只减不加，忽略交集回补</li>
+          <li>递推特解与齐次项撞车未乘 n 升级</li>
+          <li>鸽巢原理忘记使用 ceiling 或 (k(m-1)+1)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">公式卡</h2>
+        <div class="space-y-2 text-sm text-gray-700">
+          <p><span class="chip">Implication</span> $A\to B\equiv\neg A\lor B$</p>
+          <p><span class="chip">P&C</span> $P(n,k)=\frac{n!}{(n-k)!}$，$C(n,k)=\frac{n!}{k!(n-k)!}$</p>
+          <p><span class="chip">Stars&Bars</span> $C(n+r-1,r-1)$</p>
+          <p><span class="chip">Circle</span> $(n-1)!$</p>
+          <p><span class="chip">Pigeonhole</span> 至少 $\lceil N/k \rceil$；保证 m 人：$k(m-1)+1$</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">最后一周刷题路径</h2>
+        <ol class="list-decimal ml-6 space-y-1 text-sm text-gray-700">
+          <li>阅读《Final 复习笔记》每节的“关键概念+例题”</li>
+          <li>在 <a class="text-[#8b5cf6] underline" href="./final_quiz.html">Final 30题测验</a> 中先做 Easy，记录错题</li>
+          <li>针对错题回看对应小节，再刷 Medium</li>
+          <li>最后冲刺 Hard 与综合题，整理错题本</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm i:*)",
+      "Bash(sudo npm i -g @anthropic-ai/claude-code)",
+      "Bash(npm config:*)",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(ls:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:separated-balance-ff5.notion.site)"
+    ],
+    "deny": []
+  }
+}

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1131 Algebra Lab Test Review | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .back-button, .language-toggle {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            margin-right: 1rem;
+        }
+        .back-button:hover, .language-toggle:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .language-toggle {
+            background-color: #e07a5f;
+            color: #ffffff;
+        }
+        .language-toggle:hover {
+            background-color: #d06850;
+        }
+        .notes-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .chapter-header {
+            color: #e07a5f;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+        }
+        .section-header {
+            color: #2c2c2c;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .subsection-header {
+            color: #8b8589;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .knowledge-box {
+            background-color: #f8f7f2;
+            border-left: 4px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .method-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .example-box {
+            background-color: #fef3e2;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .conclusion-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .visual-arrow {
+            display: inline-block;
+            font-size: 1.2em;
+            color: #e07a5f;
+            margin: 0 0.5rem;
+        }
+        .step-indicator {
+            background-color: #e07a5f;
+            color: white;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .toc {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc-link {
+            color: #e07a5f;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .toc-link:hover {
+            text-decoration: underline;
+        }
+        .language-content {
+            display: none;
+        }
+        .language-content.active {
+            display: block;
+        }
+        .formula-highlight {
+            background-color: #fef3e2;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Navigation Buttons -->
+        <div class="flex flex-wrap mb-4">
+            <a href="../math1131.html" class="back-button">
+                <span>←</span>
+                <span id="back-text">返回课程</span>
+            </a>
+            <button class="language-toggle" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="language-btn-text">切换到英文</span>
+            </button>
+        </div>
+
+        <!-- Chinese Content -->
+        <div id="chinese-content" class="language-content active">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">代数核心考点冲刺笔记</h1>
+                <p class="text-xl text-gray-600 mt-2">MATH1131 Lab Test 01 - Algebra 备考专用</p>
+                <p class="text-sm text-gray-500 mt-1">向量基础、直线平面方程、几何运算与应用</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <div class="notes-container">
+                <h2 class="chapter-header" style="margin-top: 0;">目录</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <p><strong>模块一：</strong> <a href="#module1-cn" class="toc-link">向量的基础与几何关系</a></p>
+                    <p><strong>模块二：</strong> <a href="#module2-cn" class="toc-link">直线与平面的方程</a></p>
+                    <p><strong>模块三：</strong> <a href="#module3-cn" class="toc-link">向量的几何运算与应用</a></p>
+                </div>
+            </div>
+
+            <!-- Module 1 -->
+            <div class="notes-container" id="module1-cn">
+                <h2 class="chapter-header" style="margin-top: 0;">模块一：向量的基础与几何关系</h2>
+                <p>这个模块是所有后续内容的基础，核心是理解点与向量的关系以及它们如何构成几何图形。</p>
+
+                <h3 class="section-header">1.1 判断三点共线 (Testing for Collinearity)</h3>
+                
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>从点创向量：</strong> 从点A到点B的向量 <span class="formula-highlight">AB⃗ = B - A</span></li>
+                        <li><strong>共线 (Collinear)：</strong> 三个或更多的点（如A, B, C）位于同一条直线上</li>
+                        <li><strong>平行向量：</strong> 两个向量方向相同或相反，即 <span class="formula-highlight">v₁ = k·v₂</span>（k为非零常数）</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 通用解题方法</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>创建相连向量：</strong> 计算 <span class="formula-highlight">AB⃗ = B - A</span> 和 <span class="formula-highlight">BC⃗ = C - B</span>
+                            <span class="visual-arrow">→</span>
+                            选择这两个向量是因为它们共享公共点B
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>寻找倍数关系：</strong> 检查是否存在常数k使得 <span class="formula-highlight">BC⃗ = k·AB⃗</span>
+                            <span class="visual-arrow">→</span>
+                            对每个分量检验：kₓ = x₂/x₁，kᵧ = y₂/y₁，kᵧ = z₂/z₁
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>得出结论：</strong> 如果三个k值相同，则向量平行且共点
+                            <span class="visual-arrow">→</span>
+                            因此三点共线
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 例题回顾</h4>
+                    <p><strong>给定点：</strong> A(1,4,-2), B(4,3,3), C(28,-5,43)</p>
+                    <ul>
+                        <li><strong>计算向量：</strong>
+                            <br>AB⃗ = (4-1, 3-4, 3-(-2)) = (3, -1, 5)
+                            <br>BC⃗ = (28-4, -5-3, 43-3) = (24, -8, 40)
+                        </li>
+                        <li><strong>检查倍数：</strong>
+                            <br>x分量: 24/3 = 8
+                            <br>y分量: -8/(-1) = 8
+                            <br>z分量: 40/5 = 8
+                        </li>
+                        <li><strong>结论：</strong> 因为三个k值都是8，所以BC⃗ = 8·AB⃗，三点共线</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">1.2 平行四边形问题 (Parallelogram Problems)</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>对边关系：</strong> 平行四边形的对边平行且等长，即对边向量完全相等</li>
+                        <li><strong>顶点顺序：</strong> ABCD 和 ADBC 是不同的平行四边形，对边关系完全不同</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 通用解题方法</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>画简图，定关系：</strong> 根据顶点顺序确定对边
+                            <span class="visual-arrow">→</span>
+                            如ABCD: 对边是AB⃗与DC⃗，AD⃗与BC⃗
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>向量转坐标：</strong> 选择一个向量等式并转化
+                            <span class="visual-arrow">→</span>
+                            如AB⃗ = DC⃗ ⟹ B - A = C - D
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>解出未知点：</strong> 通过代数移项求解
+                            <span class="visual-arrow">→</span>
+                            D = C - B + A
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 例题对比</h4>
+                    <p><strong>例1：平行四边形ADBC</strong></p>
+                    <ul>
+                        <li>顺序：A → D → B → C → A，对边：AD⃗ 和 CB⃗</li>
+                        <li>关系：AD⃗ = CB⃗ ⟹ D - A = B - C</li>
+                        <li>求解：D = A + B - C</li>
+                    </ul>
+                    
+                    <p><strong>例2：平行四边形ABCD</strong></p>
+                    <ul>
+                        <li>顺序：A → B → C → D → A，对边：AB⃗ 和 DC⃗</li>
+                        <li>关系：AB⃗ = DC⃗ ⟹ B - A = C - D</li>
+                        <li>求解：D = A - B + C</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="notes-container" id="module2-cn">
+                <h2 class="chapter-header">模块二：直线与平面的方程</h2>
+                <p>这个模块是连接几何图形和代数表达式的桥梁，核心在于理解不同形式的方程以及它们之间的转换。</p>
+
+                <h3 class="section-header">2.1 直线方程：笛卡尔与参数形式的转换</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>笛卡尔式：</strong> <span class="formula-highlight">(x-x₀)/a = (y-y₀)/b = (z-z₀)/c</span></li>
+                        <li><strong>参数式：</strong> <span class="formula-highlight">x⃗ = a⃗ + λv⃗</span></li>
+                        <li><strong>对应关系：</strong>
+                            <br>• 点 (x₀,y₀,z₀) ↔ 点向量 a⃗
+                            <br>• 分母 (a,b,c) ↔ 方向向量 v⃗
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 通用解题方法</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>读出初始信息：</strong> 从笛卡尔方程中读出点a₀和方向v⃗
+                            <span class="visual-arrow">→</span>
+                            注意符号，如5x+3意味着x坐标是-3
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>找新点：</strong> 令λ=1或-1，计算x⃗ = a₀ + λv⃗
+                            <span class="visual-arrow">→</span>
+                            得到直线上的新点
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>找新方向：</strong> 将v⃗乘以非零常数
+                            <span class="visual-arrow">→</span>
+                            得到平行的方向向量
+                        </li>
+                        <li>
+                            <span class="step-indicator">4</span>
+                            <strong>判断点在线：</strong> 代入参数方程，求解λ值
+                            <span class="visual-arrow">→</span>
+                            如果三个分量得到相同λ，则点在线上
+                        </li>
+                    </ol>
+                </div>
+
+                <h3 class="section-header">2.2 平面方程：笛卡尔与参数形式的转换</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>参数式：</strong> <span class="formula-highlight">x⃗ = a⃗ + λv₁⃗ + μv₂⃗</span></li>
+                        <li><strong>笛卡尔式：</strong> <span class="formula-highlight">nₓx + nᵧy + nᵧz = d</span></li>
+                        <li><strong>关键关系：</strong> 法向量n⃗垂直于平面内任何方向向量</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 三种转换方法</h4>
+                    
+                    <p><strong>1. 三点 → 参数式：</strong></p>
+                    <ul>
+                        <li>选择一点作为a⃗（如a⃗ = A）</li>
+                        <li>连接点得到方向向量（如v₁⃗ = AB⃗, v₂⃗ = AC⃗）</li>
+                    </ul>
+
+                    <p><strong>2. 笛卡尔 → 参数式：</strong></p>
+                    <ul>
+                        <li><strong>找点：</strong> 给两个变量赋0，解出第三个变量</li>
+                        <li><strong>找方向：</strong> 寻找满足v⃗·n⃗ = 0的两个不平行向量</li>
+                    </ul>
+
+                    <p><strong>3. 参数式 → 笛卡尔式：</strong></p>
+                    <ul>
+                        <li><strong>找法向量：</strong> n⃗ = v₁⃗ × v₂⃗（叉积）</li>
+                        <li><strong>写方程：</strong> nₓx + nᵧy + nᵧz = d</li>
+                        <li><strong>求常数d：</strong> 将点a⃗代入求d</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="notes-container" id="module3-cn">
+                <h2 class="chapter-header">模块三：向量的几何运算与应用</h2>
+                <p>这个模块将代数计算与几何意义紧密结合，是解决实际几何问题的关键。</p>
+
+                <h3 class="section-header">3.1 向量投影 (Vector Projection)</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>投影定义：</strong> 向量u⃗在向量v⃗上的投影是u⃗在v⃗方向上的"影子"向量</li>
+                        <li><strong>投影公式：</strong> <span class="formula-highlight">proj_v⃗(u⃗) = (u⃗·v⃗/|v⃗|²)v⃗</span></li>
+                        <li><strong>公式解读：</strong>
+                            <br>• u⃗·v⃗：点积，衡量u⃗在v⃗方向上的"有效长度"
+                            <br>• |v⃗|²：v⃗长度的平方，用于标准化
+                            <br>• 括号内是标量系数，确定"影子"的长度和方向
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 计算步骤</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>计算点积：</strong> u⃗·v⃗
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>计算模长平方：</strong> |v⃗|² = vₓ² + vᵧ² + vᵧ²
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>计算标量系数：</strong> k = (u⃗·v⃗)/|v⃗|²
+                        </li>
+                        <li>
+                            <span class="step-indicator">4</span>
+                            <strong>最终结果：</strong> 投影向量 = k·v⃗
+                        </li>
+                    </ol>
+                </div>
+
+                <h3 class="section-header">3.2 点到直线的距离 / 三角形的高</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>几何意义：</strong> 点B到直线l的距离 = 三角形中从顶点B到对边的高</li>
+                        <li><strong>计算方法：</strong> 距离 = |AB⃗ - proj_v⃗(AB⃗)|</li>
+                        <li><strong>几何原理：</strong> 构建直角三角形，求垂直向量的长度</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 解题步骤</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>确定三要素：</strong> 直线上的点A，直线外的点B，方向向量v⃗
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>构建连接向量：</strong> AB⃗ = B - A（斜边）
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>计算投影向量：</strong> proj_v⃗(AB⃗)（邻边）
+                        </li>
+                        <li>
+                            <span class="step-indicator">4</span>
+                            <strong>计算垂直向量：</strong> w⃗ = AB⃗ - proj_v⃗(AB⃗)（对边）
+                        </li>
+                        <li>
+                            <span class="step-indicator">5</span>
+                            <strong>求距离：</strong> 距离 = |w⃗|
+                        </li>
+                    </ol>
+                </div>
+
+                <h3 class="section-header">3.3 直线与平面的交点</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心知识点</h4>
+                    <ul>
+                        <li><strong>交点定义：</strong> 唯一同时满足直线方程和平面方程的点</li>
+                        <li><strong>解题本质：</strong> 解联立方程组</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 解题步骤</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>拆解参数方程：</strong> 将x⃗ = a⃗ + λv⃗拆成x, y, z关于λ的表达式
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>代入笛卡尔方程：</strong> 将三个表达式代入平面方程
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>解出λ：</strong> 得到关于λ的线性方程并求解
+                        </li>
+                        <li>
+                            <span class="step-indicator">4</span>
+                            <strong>求交点坐标：</strong> 将λ值代回参数方程
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 例题演示</h4>
+                    <p><strong>直线：</strong> x⃗ = (2,3,0) + λ(4,1,-2)</p>
+                    <p><strong>平面：</strong> 3x + 4y - 4z = -30</p>
+                    
+                    <p><strong>解题过程：</strong></p>
+                    <ul>
+                        <li><strong>拆解：</strong> x = 2 + 4λ, y = 3 + λ, z = -2λ</li>
+                        <li><strong>代入：</strong> 3(2 + 4λ) + 4(3 + λ) - 4(-2λ) = -30</li>
+                        <li><strong>化简：</strong> 6 + 12λ + 12 + 4λ + 8λ = -30 ⟹ 24λ = -48 ⟹ λ = -2</li>
+                        <li><strong>交点：</strong> (-6, 1, 4)</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 核心思想总结</h4>
+                    <ul>
+                        <li><strong>共线检验：</strong> 本质是检验相连向量是否平行（标量倍数关系）</li>
+                        <li><strong>平行四边形：</strong> 关键在于根据顶点顺序确定正确的对边关系</li>
+                        <li><strong>方程转换：</strong> 参数方程像"旅游指南"，笛卡尔方程像"通行密码"</li>
+                        <li><strong>向量投影：</strong> 投影 = (比例系数) × (目标方向向量)</li>
+                        <li><strong>距离计算：</strong> 点到直线距离是向量形式的勾股定理应用</li>
+                        <li><strong>交点求解：</strong> 直线的"活模板"代入平面的"过滤器"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div id="english-content" class="language-content">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Algebra Core Concepts Sprint Notes</h1>
+                <p class="text-xl text-gray-600 mt-2">MATH1131 Lab Test 01 - Algebra Preparation</p>
+                <p class="text-sm text-gray-500 mt-1">Vector Fundamentals, Line & Plane Equations, Geometric Operations</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <div class="notes-container">
+                <h2 class="chapter-header" style="margin-top: 0;">Table of Contents</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <p><strong>Module 1:</strong> <a href="#module1-en" class="toc-link">Vector Fundamentals & Geometric Relations</a></p>
+                    <p><strong>Module 2:</strong> <a href="#module2-en" class="toc-link">Line & Plane Equations</a></p>
+                    <p><strong>Module 3:</strong> <a href="#module3-en" class="toc-link">Vector Geometric Operations & Applications</a></p>
+                </div>
+            </div>
+
+            <!-- Module 1 -->
+            <div class="notes-container" id="module1-en">
+                <h2 class="chapter-header" style="margin-top: 0;">Module 1: Vector Fundamentals & Geometric Relations</h2>
+                <p>This module is the foundation for all subsequent content, focusing on understanding the relationship between points and vectors and how they form geometric shapes.</p>
+
+                <h3 class="section-header">1.1 Testing for Collinearity</h3>
+                
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Creating vectors from points:</strong> Vector from point A to B is <span class="formula-highlight">AB⃗ = B - A</span></li>
+                        <li><strong>Collinear:</strong> Three or more points (A, B, C) lie on the same straight line</li>
+                        <li><strong>Parallel vectors:</strong> Two vectors have the same or opposite direction, i.e., <span class="formula-highlight">v₁ = k·v₂</span> (k ≠ 0)</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 General Solution Method</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>Create connected vectors:</strong> Calculate <span class="formula-highlight">AB⃗ = B - A</span> and <span class="formula-highlight">BC⃗ = C - B</span>
+                            <span class="visual-arrow">→</span>
+                            These vectors share common point B
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>Find scalar relationship:</strong> Check if constant k exists such that <span class="formula-highlight">BC⃗ = k·AB⃗</span>
+                            <span class="visual-arrow">→</span>
+                            Test each component: kₓ = x₂/x₁, kᵧ = y₂/y₁, kᵧ = z₂/z₁
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>Conclusion:</strong> If all three k values are equal, vectors are parallel and share a point
+                            <span class="visual-arrow">→</span>
+                            Therefore, three points are collinear
+                        </li>
+                    </ol>
+                </div>
+
+                <h3 class="section-header">1.2 Parallelogram Problems</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Opposite sides:</strong> Opposite sides of a parallelogram are parallel and equal in length</li>
+                        <li><strong>Vertex order:</strong> ABCD and ADBC are different parallelograms with different opposite side relationships</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 General Solution Method</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>Draw diagram, identify relationships:</strong> Determine opposite sides based on vertex order
+                            <span class="visual-arrow">→</span>
+                            For ABCD: opposite sides are AB⃗ & DC⃗, AD⃗ & BC⃗
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>Convert vectors to coordinates:</strong> Choose one vector equation and convert
+                            <span class="visual-arrow">→</span>
+                            E.g., AB⃗ = DC⃗ ⟹ B - A = C - D
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>Solve for unknown point:</strong> Use algebraic manipulation
+                            <span class="visual-arrow">→</span>
+                            D = C - B + A
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="notes-container" id="module2-en">
+                <h2 class="chapter-header">Module 2: Line & Plane Equations</h2>
+                <p>This module bridges geometric shapes and algebraic expressions, focusing on understanding different equation forms and their conversions.</p>
+
+                <h3 class="section-header">2.1 Line Equations: Cartesian & Parametric Form Conversion</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Cartesian form:</strong> <span class="formula-highlight">(x-x₀)/a = (y-y₀)/b = (z-z₀)/c</span></li>
+                        <li><strong>Parametric form:</strong> <span class="formula-highlight">x⃗ = a⃗ + λv⃗</span></li>
+                        <li><strong>Correspondence:</strong>
+                            <br>• Point (x₀,y₀,z₀) ↔ Position vector a⃗
+                            <br>• Denominator (a,b,c) ↔ Direction vector v⃗
+                        </li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">2.2 Plane Equations: Cartesian & Parametric Form Conversion</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Parametric form:</strong> <span class="formula-highlight">x⃗ = a⃗ + λv₁⃗ + μv₂⃗</span></li>
+                        <li><strong>Cartesian form:</strong> <span class="formula-highlight">nₓx + nᵧy + nᵧz = d</span></li>
+                        <li><strong>Key relationship:</strong> Normal vector n⃗ is perpendicular to any direction vector in the plane</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="notes-container" id="module3-en">
+                <h2 class="chapter-header">Module 3: Vector Geometric Operations & Applications</h2>
+                <p>This module closely combines algebraic calculations with geometric meaning, being key to solving practical geometric problems.</p>
+
+                <h3 class="section-header">3.1 Vector Projection</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Projection definition:</strong> The projection of vector u⃗ onto vector v⃗ is the "shadow" of u⃗ in the direction of v⃗</li>
+                        <li><strong>Projection formula:</strong> <span class="formula-highlight">proj_v⃗(u⃗) = (u⃗·v⃗/|v⃗|²)v⃗</span></li>
+                        <li><strong>Formula interpretation:</strong>
+                            <br>• u⃗·v⃗: dot product, measures "effective length" of u⃗ in v⃗ direction
+                            <br>• |v⃗|²: square of v⃗'s length, for normalization
+                            <br>• Parenthetical part is scalar coefficient determining shadow's length and direction
+                        </li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">3.2 Point-to-Line Distance / Triangle Height</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Geometric meaning:</strong> Distance from point B to line l = height from vertex B to opposite side in triangle</li>
+                        <li><strong>Calculation method:</strong> Distance = |AB⃗ - proj_v⃗(AB⃗)|</li>
+                        <li><strong>Geometric principle:</strong> Construct right triangle, find length of perpendicular vector</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">3.3 Line-Plane Intersection</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Intersection definition:</strong> The unique point that simultaneously satisfies both line and plane equations</li>
+                        <li><strong>Solution essence:</strong> Solving system of simultaneous equations</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 Core Ideas Summary</h4>
+                    <ul>
+                        <li><strong>Collinearity test:</strong> Essentially testing if connected vectors are parallel (scalar multiple relationship)</li>
+                        <li><strong>Parallelogram:</strong> Key is determining correct opposite side relationships based on vertex order</li>
+                        <li><strong>Equation conversion:</strong> Parametric equations are like "travel guides," Cartesian equations like "access codes"</li>
+                        <li><strong>Vector projection:</strong> Projection = (proportional coefficient) × (target direction vector)</li>
+                        <li><strong>Distance calculation:</strong> Point-to-line distance is application of vector form of Pythagorean theorem</li>
+                        <li><strong>Intersection solving:</strong> Line's "template" substituted into plane's "filter"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'chinese';
+
+        function toggleLanguage() {
+            const chineseContent = document.getElementById('chinese-content');
+            const englishContent = document.getElementById('english-content');
+            const languageBtnText = document.getElementById('language-btn-text');
+            const backText = document.getElementById('back-text');
+
+            if (currentLanguage === 'chinese') {
+                chineseContent.classList.remove('active');
+                englishContent.classList.add('active');
+                languageBtnText.textContent = 'Switch to Chinese';
+                backText.textContent = 'Back to Course';
+                currentLanguage = 'english';
+            } else {
+                englishContent.classList.remove('active');
+                chineseContent.classList.add('active');
+                languageBtnText.textContent = '切换到英文';
+                backText.textContent = '返回课程';
+                currentLanguage = 'chinese';
+            }
+        }
+
+        // Smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMP1511 - General Quiz | Programming Fundamentals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .question-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-card.answered-correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .question-card.answered-incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-button:hover:not(.disabled) {
+            border-color: #e07a5f;
+            transform: translateX(5px);
+        }
+        .option-button.correct {
+            border-color: #22c55e;
+            background-color: #dcfce7;
+        }
+        .option-button.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+        .option-button.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            border-radius: 0 0.375rem 0.375rem 0;
+            display: none;
+        }
+        .explanation.show {
+            display: block;
+        }
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .difficulty-easy {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .difficulty-medium {
+            background-color: #fed7aa;
+            color: #9a3412;
+        }
+        .difficulty-hard {
+            background-color: #ddd6fe;
+            color: #5b21b6;
+        }
+        .difficulty-extreme {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #e07a5f 0%, #f4a261 100%);
+            transition: width 0.3s ease;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .update-notice {
+            background-color: #fff7ed;
+            border: 2px solid #f4a261;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .code-block {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .terminal-simulator {
+            background-color: #1f2937;
+            color: #10b981;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .terminal-input {
+            background-color: #374151;
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        .simulator-button {
+            background-color: #e07a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .simulator-button:hover {
+            background-color: #d06850;
+        }
+        .simulator-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            background-color: #2c2c2c;
+            color: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+        .compile-button {
+            background-color: #22c55e;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+        .compile-button:hover {
+            background-color: #16a34a;
+        }
+        .compile-output {
+            background-color: #1f2937;
+            color: #10b981;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .compile-output.show {
+            display: block;
+        }
+        .arg-display {
+            background-color: #f3f4f6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .arg-box {
+            display: inline-block;
+            background-color: #e5e7eb;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Navigation -->
+        <a href="../comp1511.html" class="back-button">
+            <span>←</span>
+            <span>Back to COMP1511</span>
+        </a>
+
+        <!-- Update Notice -->
+        <div class="update-notice">
+            <h3 class="font-bold text-lg text-[#e07a5f] mb-2">🎯 综合知识测验</h3>
+            <p class="text-gray-700">测试命令行参数、文件IO、内存管理等COMP1511核心知识点的综合运用。</p>
+        </div>
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">COMP1511 - General Quiz</h1>
+            <p class="text-xl text-gray-600 mt-2">综合知识测验</p>
+            <p class="text-sm text-gray-500 mt-1">50 questions: 15 easy, 20 medium, 10 hard, 5 extreme</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3 class="text-2xl font-bold text-[#e07a5f]" id="scoreDisplay">0/0</h3>
+                <p class="text-gray-600">总分</p>
+            </div>
+            <div class="stat-card">
+                <h3 class="text-2xl font-bold text-[#22c55e]" id="correctDisplay">0</h3>
+                <p class="text-gray-600">正确</p>
+            </div>
+            <div class="stat-card">
+                <h3 class="text-2xl font-bold text-[#ef4444]" id="incorrectDisplay">0</h3>
+                <p class="text-gray-600">错误</p>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+
+        const questions = [
+            // Easy Questions (15) - Basic concepts
+            {
+                type: 'easy',
+                question: 'main函数的参数argc表示什么？',
+                options: [
+                    '程序名称',
+                    '命令行参数的个数',
+                    '程序的返回值',
+                    '程序的版本号'
+                ],
+                correct: 1,
+                explanation: 'argc (argument count) 表示传递给程序的命令行参数总数，包括程序名本身。'
+            },
+            {
+                type: 'easy',
+                question: 'argv[0]通常包含什么？',
+                options: [
+                    '第一个命令行参数',
+                    '程序名',
+                    '参数个数',
+                    '空字符串'
+                ],
+                correct: 1,
+                explanation: 'argv[0] 通常包含程序的名称（包括路径）。'
+            },
+            {
+                type: 'easy',
+                question: '所有命令行参数的数据类型是什么？',
+                options: [
+                    'int',
+                    'char',
+                    'char*',
+                    'void*'
+                ],
+                correct: 2,
+                explanation: '所有命令行参数都是字符串类型（char*），即使看起来像数字也需要转换。'
+            },
+            {
+                type: 'easy',
+                question: '将字符串转换为整数使用什么函数？',
+                options: [
+                    'atoi()',
+                    'itoa()',
+                    'stoi()',
+                    'parseInt()'
+                ],
+                correct: 0,
+                explanation: 'atoi() 函数用于将字符串转换为整数。'
+            },
+            {
+                type: 'easy',
+                question: '打开文件使用什么函数？',
+                options: [
+                    'open()',
+                    'fopen()',
+                    'file_open()',
+                    'create()'
+                ],
+                correct: 1,
+                explanation: 'fopen() 函数用于打开文件，返回FILE指针。'
+            },
+            {
+                type: 'easy',
+                question: '关闭文件使用什么函数？',
+                options: [
+                    'close()',
+                    'fclose()',
+                    'file_close()',
+                    'end()'
+                ],
+                correct: 1,
+                explanation: 'fclose() 函数用于关闭文件，释放相关资源。'
+            },
+            {
+                type: 'easy',
+                question: 'malloc()函数的作用是什么？',
+                options: [
+                    '释放内存',
+                    '分配内存',
+                    '重新分配内存',
+                    '初始化内存'
+                ],
+                correct: 1,
+                explanation: 'malloc() 函数用于动态分配内存空间。'
+            },
+            {
+                type: 'easy',
+                question: 'free()函数的作用是什么？',
+                options: [
+                    '分配内存',
+                    '释放内存',
+                    '清零内存',
+                    '复制内存'
+                ],
+                correct: 1,
+                explanation: 'free() 函数用于释放malloc()等函数分配的内存。'
+            },
+            {
+                type: 'easy',
+                question: 'C语言中字符串以什么结尾？',
+                options: [
+                    '空格',
+                    '\\n',
+                    '\\0',
+                    'EOF'
+                ],
+                correct: 2,
+                explanation: 'C语言中字符串以null字符(\\0)结尾。'
+            },
+            {
+                type: 'easy',
+                question: 'printf()函数的返回值是什么？',
+                options: [
+                    '无返回值',
+                    '总是0',
+                    '打印的字符数',
+                    '总是1'
+                ],
+                correct: 2,
+                explanation: 'printf() 返回成功打印的字符数，出错时返回负数。'
+            },
+            {
+                type: 'easy',
+                question: 'scanf()读取字符串时的格式说明符是什么？',
+                options: [
+                    '%c',
+                    '%s',
+                    '%d',
+                    '%f'
+                ],
+                correct: 1,
+                explanation: '%s 是scanf()读取字符串的格式说明符。'
+            },
+            {
+                type: 'easy',
+                question: '检查文件是否成功打开的方法是什么？',
+                options: [
+                    '检查返回值是否为0',
+                    '检查返回值是否为NULL',
+                    '检查返回值是否为-1',
+                    '检查返回值是否为1'
+                ],
+                correct: 1,
+                explanation: 'fopen() 失败时返回NULL，成功时返回有效的FILE指针。'
+            },
+            {
+                type: 'easy',
+                question: 'struct关键字用于定义什么？',
+                options: [
+                    '函数',
+                    '变量',
+                    '结构体',
+                    '数组'
+                ],
+                correct: 2,
+                explanation: 'struct关键字用于定义结构体，可以包含多个不同类型的成员。'
+            },
+            {
+                type: 'easy',
+                question: 'C语言中注释使用什么符号？',
+                options: [
+                    '// 和 /* */',
+                    '# 和 ##',
+                    '-- 和 --- ---',
+                    '只有 /* */'
+                ],
+                correct: 0,
+                explanation: 'C语言支持两种注释：// 单行注释 和 /* */ 多行注释。'
+            },
+            {
+                type: 'easy',
+                question: '数组下标从什么开始？',
+                options: [
+                    '1',
+                    '0',
+                    '-1',
+                    '可以任意指定'
+                ],
+                correct: 1,
+                explanation: 'C语言数组下标从0开始。'
+            },
+
+            // Medium Questions (20) - Code reading and understanding
+            {
+                type: 'medium',
+                question: '这个程序运行时需要几个命令行参数？',
+                code: `int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        printf("Usage: %s <file1> <file2>\\n", argv[0]);
+        return 1;
+    }
+    // program logic
+    return 0;
+}`,
+                options: [
+                    '2个',
+                    '3个',
+                    '4个',
+                    '任意个'
+                ],
+                correct: 0,
+                explanation: 'argc != 3 意味着需要3个参数（程序名+2个文件名），即2个命令行参数。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码的输出是什么？',
+                code: `int main(int argc, char *argv[]) {
+    printf("argc = %d\\n", argc);
+    return 0;
+}
+// 运行命令：./program hello world`,
+                options: [
+                    'argc = 2',
+                    'argc = 3',
+                    'argc = 4',
+                    '编译错误'
+                ],
+                correct: 1,
+                explanation: 'argc包含程序名，所以./program hello world有3个参数。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码有什么问题？',
+                code: `int main(int argc, char *argv[]) {
+    int num = atoi(argv[1]);
+    printf("Number: %d\\n", num);
+    return 0;
+}`,
+                options: [
+                    '没有检查argc',
+                    '语法错误',
+                    'atoi用法错误',
+                    '没有问题'
+                ],
+                correct: 0,
+                explanation: '代码没有检查argc，如果没有提供参数，访问argv[1]会导致错误。'
+            },
+            {
+                type: 'medium',
+                question: '这个函数的作用是什么？',
+                code: `void process_args(int argc, char *argv[]) {
+    for (int i = 1; i < argc; i++) {
+        printf("Arg %d: %s\\n", i, argv[i]);
+    }
+}`,
+                options: [
+                    '打印程序名',
+                    '打印所有参数包括程序名',
+                    '打印除程序名外的所有参数',
+                    '计算参数个数'
+                ],
+                correct: 2,
+                explanation: '循环从i=1开始，跳过argv[0]（程序名），只打印命令行参数。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码执行后文件指针fp指向哪里？',
+                code: `FILE *fp = fopen("test.txt", "r");
+if (fp != NULL) {
+    fgetc(fp);
+    fgetc(fp);
+}`,
+                options: [
+                    '文件开头',
+                    '第二个字符',
+                    '第三个字符',
+                    '文件结尾'
+                ],
+                correct: 2,
+                explanation: '每次fgetc()读取一个字符并移动文件指针，两次调用后指向第三个字符。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码的输出是什么？',
+                code: `char *ptr = malloc(10 * sizeof(char));
+if (ptr != NULL) {
+    strcpy(ptr, "Hello");
+    printf("%s\\n", ptr);
+    free(ptr);
+}`,
+                options: [
+                    '编译错误',
+                    'Hello',
+                    '随机字符',
+                    '空字符串'
+                ],
+                correct: 1,
+                explanation: 'malloc分配内存，strcpy复制"Hello"，printf输出"Hello"。'
+            },
+            {
+                type: 'medium',
+                question: '这个条件检查什么？',
+                code: `FILE *fp = fopen("data.txt", "r");
+if (fp == NULL) {
+    perror("Error opening file");
+    return 1;
+}`,
+                options: [
+                    '文件是否存在',
+                    '文件是否为空',
+                    '文件是否可读',
+                    '文件打开是否成功'
+                ],
+                correct: 3,
+                explanation: 'fopen()失败时返回NULL，这个检查确保文件成功打开。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码可能导致什么问题？',
+                code: `char buffer[10];
+scanf("%s", buffer);`,
+                options: [
+                    '无法读取输入',
+                    '缓冲区溢出',
+                    '类型不匹配',
+                    '没有问题'
+                ],
+                correct: 1,
+                explanation: 'scanf("%s")不检查输入长度，输入超过9个字符会导致缓冲区溢出。'
+            },
+            {
+                type: 'medium',
+                question: '这个函数返回什么？',
+                code: `int count_lines(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) return -1;
+    
+    int lines = 0;
+    int c;
+    while ((c = fgetc(fp)) != EOF) {
+        if (c == '\\n') lines++;
+    }
+    fclose(fp);
+    return lines;
+}`,
+                options: [
+                    '文件大小',
+                    '文件行数',
+                    '字符个数',
+                    '单词个数'
+                ],
+                correct: 1,
+                explanation: '函数计算文件中换行符的个数，即文件行数。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码的作用是什么？',
+                code: `struct Point {
+    int x, y;
+};
+
+struct Point create_point(int x, int y) {
+    struct Point p;
+    p.x = x;
+    p.y = y;
+    return p;
+}`,
+                options: [
+                    '定义点结构',
+                    '创建点实例',
+                    '计算距离',
+                    '以上都是'
+                ],
+                correct: 1,
+                explanation: '函数创建并返回一个Point结构体实例。'
+            },
+            {
+                type: 'medium',
+                question: '这个循环执行多少次？',
+                code: `char str[] = "Hello";
+for (int i = 0; str[i] != '\\0'; i++) {
+    printf("%c", str[i]);
+}`,
+                options: [
+                    '4次',
+                    '5次',
+                    '6次',
+                    '无限次'
+                ],
+                correct: 1,
+                explanation: '"Hello"有5个字符，循环会执行5次直到遇到\\0。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码检查什么？',
+                code: `if (argc > 1 && strcmp(argv[1], "-v") == 0) {
+    verbose = 1;
+}`,
+                options: [
+                    '是否有参数',
+                    '是否有verbose选项',
+                    '参数是否为数字',
+                    '参数个数是否正确'
+                ],
+                correct: 1,
+                explanation: '代码检查是否提供了参数，且第一个参数是"-v"（verbose选项）。'
+            },
+            {
+                type: 'medium',
+                question: '这个函数的时间复杂度是什么？',
+                code: `int find_max(int arr[], int size) {
+    int max = arr[0];
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+    return max;
+}`,
+                options: [
+                    'O(1)',
+                    'O(log n)',
+                    'O(n)',
+                    'O(n²)'
+                ],
+                correct: 2,
+                explanation: '函数遍历数组一次，时间复杂度为O(n)。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码实现了什么功能？',
+                code: `void copy_file(char *src, char *dst) {
+    FILE *source = fopen(src, "r");
+    FILE *dest = fopen(dst, "w");
+    
+    if (source && dest) {
+        int c;
+        while ((c = fgetc(source)) != EOF) {
+            fputc(c, dest);
+        }
+    }
+    
+    if (source) fclose(source);
+    if (dest) fclose(dest);
+}`,
+                options: [
+                    '删除文件',
+                    '复制文件',
+                    '重命名文件',
+                    '比较文件'
+                ],
+                correct: 1,
+                explanation: '函数逐字符读取源文件并写入目标文件，实现文件复制。'
+            },
+            {
+                type: 'medium',
+                question: '这个表达式的值是什么？',
+                code: `char str[] = "Programming";
+int len = strlen(str);
+printf("%d", len);`,
+                options: [
+                    '10',
+                    '11',
+                    '12',
+                    '编译错误'
+                ],
+                correct: 1,
+                explanation: '"Programming"包含11个字符，strlen()返回11。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码的问题是什么？',
+                code: `int *create_array(int size) {
+    int arr[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = i;
+    }
+    return arr;
+}`,
+                options: [
+                    '语法错误',
+                    '返回局部数组的地址',
+                    '数组大小错误',
+                    '没有问题'
+                ],
+                correct: 1,
+                explanation: '局部数组arr在函数结束后被销毁，返回其地址是危险的。'
+            },
+            {
+                type: 'medium',
+                question: '这个程序的功能是什么？',
+                code: `int main(int argc, char *argv[]) {
+    if (argc == 2) {
+        FILE *fp = fopen(argv[1], "r");
+        if (fp) {
+            int c;
+            while ((c = fgetc(fp)) != EOF) {
+                putchar(c);
+            }
+            fclose(fp);
+        }
+    }
+    return 0;
+}`,
+                options: [
+                    '创建文件',
+                    '删除文件',
+                    '显示文件内容',
+                    '复制文件'
+                ],
+                correct: 2,
+                explanation: '程序读取命令行指定的文件并显示其内容，类似cat命令。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码的输出是什么？',
+                code: `int arr[] = {1, 2, 3, 4, 5};
+int size = sizeof(arr) / sizeof(arr[0]);
+printf("%d", size);`,
+                options: [
+                    '4',
+                    '5',
+                    '20',
+                    '编译错误'
+                ],
+                correct: 1,
+                explanation: 'sizeof(arr)是整个数组的字节数，除以单个元素字节数得到元素个数5。'
+            },
+            {
+                type: 'medium',
+                question: '这个函数检查什么？',
+                code: `int is_number(char *str) {
+    for (int i = 0; str[i] != '\\0'; i++) {
+        if (str[i] < '0' || str[i] > '9') {
+            return 0;
+        }
+    }
+    return 1;
+}`,
+                options: [
+                    '字符串长度',
+                    '是否为数字字符串',
+                    '是否为字母',
+                    '是否为空字符串'
+                ],
+                correct: 1,
+                explanation: '函数检查字符串中的每个字符是否都是数字字符(0-9)。'
+            },
+            {
+                type: 'medium',
+                question: '这段代码实现了什么排序算法？',
+                code: `void sort_array(int arr[], int n) {
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            if (arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}`,
+                options: [
+                    '选择排序',
+                    '插入排序',
+                    '冒泡排序',
+                    '快速排序'
+                ],
+                correct: 2,
+                explanation: '双重循环比较相邻元素并交换，这是冒泡排序的特征。'
+            },
+
+            // Hard Questions (10) - Interactive simulators
+            {
+                type: 'hard',
+                question: '命令行解析模拟：输入命令并观察argc和argv的解析结果',
+                interactive: true,
+                simulation: 'command_parsing',
+                sampleCommands: [
+                    './program file.txt',
+                    './calc 5 + 3',
+                    './grep -n "hello" data.txt'
+                ],
+                options: [
+                    'argc包含所有空格分隔的部分',
+                    'argc只包含文件名',
+                    'argc包含程序名和参数',
+                    'argc不包含程序名'
+                ],
+                correct: 2,
+                explanation: 'argc包含程序名在内的所有参数个数，每个空格分隔的部分都是一个参数。'
+            },
+            {
+                type: 'hard',
+                question: '文件操作模拟：观察文件读写操作的执行过程',
+                interactive: true,
+                simulation: 'file_operations',
+                operations: ['fopen', 'fread', 'fwrite', 'fclose'],
+                options: [
+                    '文件指针自动管理位置',
+                    '每次操作需要手动设置位置',
+                    '文件指针位置不会改变',
+                    '只有fseek能改变位置'
+                ],
+                correct: 0,
+                explanation: '文件指针会自动跟踪当前位置，读写操作会自动移动指针。'
+            },
+            {
+                type: 'hard',
+                question: '内存分配模拟：观察malloc和free的内存管理过程',
+                interactive: true,
+                simulation: 'memory_management',
+                operations: ['malloc', 'use_memory', 'free', 'access_after_free'],
+                options: [
+                    'free后内存立即被清零',
+                    'free后指针自动置NULL',
+                    'free后内存内容未定义',
+                    'free后可以继续安全使用'
+                ],
+                correct: 2,
+                explanation: 'free()只是标记内存可用，不清零内容，指针成为野指针，继续使用是危险的。'
+            },
+            {
+                type: 'hard',
+                question: '字符串处理模拟：观察字符串函数的执行过程',
+                interactive: true,
+                simulation: 'string_processing',
+                functions: ['strlen', 'strcpy', 'strcat', 'strcmp'],
+                options: [
+                    '字符串函数不检查边界',
+                    '字符串函数自动分配内存',
+                    '字符串函数处理Unicode',
+                    '字符串函数线程安全'
+                ],
+                correct: 0,
+                explanation: '大多数C字符串函数不检查边界，可能导致缓冲区溢出。'
+            },
+            {
+                type: 'hard',
+                question: '结构体操作模拟：观察结构体的创建和访问过程',
+                interactive: true,
+                simulation: 'struct_operations',
+                operations: ['create_struct', 'access_member', 'modify_member', 'copy_struct'],
+                options: [
+                    '结构体成员连续存储',
+                    '结构体成员可以乱序存储',
+                    '结构体大小等于成员大小之和',
+                    '结构体自动初始化'
+                ],
+                correct: 0,
+                explanation: '结构体成员在内存中连续存储，但可能有字节对齐填充。'
+            },
+            {
+                type: 'hard',
+                question: '数组操作模拟：观察数组索引和边界检查',
+                interactive: true,
+                simulation: 'array_operations',
+                operations: ['access_valid', 'access_boundary', 'access_overflow'],
+                options: [
+                    'C语言自动检查数组边界',
+                    '数组越界会立即报错',
+                    '数组越界是未定义行为',
+                    '数组越界总是安全的'
+                ],
+                correct: 2,
+                explanation: 'C语言不检查数组边界，越界访问是未定义行为，可能导致程序崩溃。'
+            },
+            {
+                type: 'hard',
+                question: '函数调用模拟：观察参数传递和返回值的过程',
+                interactive: true,
+                simulation: 'function_calls',
+                call_types: ['pass_by_value', 'pass_by_reference', 'return_value'],
+                options: [
+                    '所有参数都是传引用',
+                    'C语言默认传值调用',
+                    '数组总是传值',
+                    '结构体总是传引用'
+                ],
+                correct: 1,
+                explanation: 'C语言默认使用传值调用，要传引用需要显式使用指针。'
+            },
+            {
+                type: 'hard',
+                question: '错误处理模拟：观察不同错误的产生和处理',
+                interactive: true,
+                simulation: 'error_handling',
+                error_types: ['null_pointer', 'file_not_found', 'memory_leak', 'buffer_overflow'],
+                options: [
+                    'C语言有自动异常处理',
+                    '所有错误都会终止程序',
+                    '错误处理需要手动检查',
+                    '编译器会修复所有错误'
+                ],
+                correct: 2,
+                explanation: 'C语言没有异常机制，需要手动检查返回值和状态来处理错误。'
+            },
+            {
+                type: 'hard',
+                question: '递归调用模拟：观察递归函数的执行过程',
+                interactive: true,
+                simulation: 'recursion',
+                function: 'factorial',
+                input: 5,
+                options: [
+                    '递归深度无限制',
+                    '递归会导致栈溢出',
+                    '递归比循环更快',
+                    '递归自动优化为循环'
+                ],
+                correct: 1,
+                explanation: '递归调用会占用栈空间，深度过大可能导致栈溢出。'
+            },
+            {
+                type: 'hard',
+                question: '预处理模拟：观察宏定义和条件编译的过程',
+                interactive: true,
+                simulation: 'preprocessing',
+                directives: ['#define', '#ifdef', '#include'],
+                options: [
+                    '宏在运行时展开',
+                    '宏在编译时展开',
+                    '宏有类型检查',
+                    '宏支持递归定义'
+                ],
+                correct: 1,
+                explanation: '宏在预处理阶段（编译前）进行文本替换，没有类型检查。'
+            },
+
+            // Extreme Questions (5) - Programming with compilation simulation
+            {
+                type: 'extreme',
+                question: '实现命令行参数解析器：解析程序选项和参数',
+                template: `int parse_arguments(int argc, char *argv[], int *verbose, char **output_file) {
+    // 在这里写代码
+    /*
+     * 提示：
+     * 1. 遍历所有参数
+     * 2. 检查-v选项设置verbose
+     * 3. 检查-o选项设置output_file
+     * 4. 返回处理的参数个数
+     */
+    
+}`,
+                correctKeywords: ['for', 'strcmp', 'argv', 'verbose', 'output_file', 'return'],
+                testCases: [
+                    { input: 'parse_arguments(4, ["prog", "-v", "-o", "out.txt"])', expected: 'verbose=1, output_file="out.txt"' },
+                    { input: 'parse_arguments(2, ["prog", "-v"])', expected: 'verbose=1, output_file=NULL' }
+                ],
+                explanation: '命令行解析需要遍历参数，识别选项标志，并设置相应的变量。'
+            },
+            {
+                type: 'extreme',
+                question: '实现文件复制程序：完整的文件复制功能',
+                template: `int copy_file(char *source_path, char *dest_path) {
+    // 在这里写代码
+    /*
+     * 提示：
+     * 1. 打开源文件和目标文件
+     * 2. 检查文件是否成功打开
+     * 3. 逐字符或逐块复制
+     * 4. 关闭文件并返回状态
+     */
+    
+}`,
+                correctKeywords: ['fopen', 'fgetc', 'fputc', 'fclose', 'if', 'while', 'EOF'],
+                testCases: [
+                    { input: 'copy_file("input.txt", "output.txt")', expected: 'File copied successfully' },
+                    { input: 'copy_file("nonexistent.txt", "out.txt")', expected: 'Source file not found' }
+                ],
+                explanation: '文件复制需要正确处理文件打开、读写和关闭，以及错误检查。'
+            },
+            {
+                type: 'extreme',
+                question: '实现简单的文本统计工具：统计文件的行数、单词数和字符数',
+                template: `void count_file_stats(char *filename, int *lines, int *words, int *chars) {
+    // 在这里写代码
+    /*
+     * 提示：
+     * 1. 打开文件
+     * 2. 逐字符读取并计数
+     * 3. 识别换行符、空格和单词边界
+     * 4. 更新统计数据
+     */
+    
+}`,
+                correctKeywords: ['fopen', 'fgetc', 'lines', 'words', 'chars', 'isspace', 'while'],
+                testCases: [
+                    { input: 'count_file_stats("test.txt")', expected: 'lines=5, words=20, chars=100' },
+                    { input: 'count_file_stats("empty.txt")', expected: 'lines=0, words=0, chars=0' }
+                ],
+                explanation: '文本统计需要准确识别行、单词和字符的边界，正确计数。'
+            },
+            {
+                type: 'extreme',
+                question: '实现动态字符串数组：管理可变大小的字符串列表',
+                template: `typedef struct {
+    char **strings;
+    int count;
+    int capacity;
+} StringArray;
+
+int add_string(StringArray *arr, char *str) {
+    // 在这里写代码
+    /*
+     * 提示：
+     * 1. 检查是否需要扩展容量
+     * 2. 重新分配内存（如果需要）
+     * 3. 复制字符串到数组
+     * 4. 更新计数器
+     */
+    
+}`,
+                correctKeywords: ['malloc', 'realloc', 'strcpy', 'strings', 'count', 'capacity'],
+                testCases: [
+                    { input: 'add_string(&arr, "hello")', expected: 'String added, count=1' },
+                    { input: 'add_string(&arr, "world")', expected: 'String added, count=2' }
+                ],
+                explanation: '动态数组需要管理内存分配、容量扩展和字符串复制。'
+            },
+            {
+                type: 'extreme',
+                question: '实现简单的配置文件解析器：解析key=value格式的配置',
+                template: `typedef struct {
+    char key[100];
+    char value[200];
+} ConfigItem;
+
+int parse_config_line(char *line, ConfigItem *item) {
+    // 在这里写代码
+    /*
+     * 提示：
+     * 1. 查找等号位置
+     * 2. 分离key和value
+     * 3. 去除空白字符
+     * 4. 存储到结构体中
+     */
+    
+}`,
+                correctKeywords: ['strchr', 'strncpy', 'key', 'value', 'while', 'isspace'],
+                testCases: [
+                    { input: 'parse_config_line("debug=true")', expected: 'key="debug", value="true"' },
+                    { input: 'parse_config_line("port = 8080")', expected: 'key="port", value="8080"' }
+                ],
+                explanation: '配置解析需要正确分离键值对，处理空白字符和特殊情况。'
+            }
+        ];
+
+        function displayQuestion(index) {
+            const question = questions[index];
+            const container = document.getElementById('quizContainer');
+            
+            let difficultyClass = '';
+            let difficultyText = '';
+            
+            switch(question.type) {
+                case 'easy':
+                    difficultyClass = 'difficulty-easy';
+                    difficultyText = '简单';
+                    break;
+                case 'medium':
+                    difficultyClass = 'difficulty-medium';
+                    difficultyText = '普通';
+                    break;
+                case 'hard':
+                    difficultyClass = 'difficulty-hard';
+                    difficultyText = '困难';
+                    break;
+                case 'extreme':
+                    difficultyClass = 'difficulty-extreme';
+                    difficultyText = '超难';
+                    break;
+            }
+
+            let questionContent = '';
+            
+            if (question.type === 'extreme') {
+                questionContent = `
+                    <div class="question-card" id="question-${index}">
+                        <div class="difficulty-badge ${difficultyClass}">${difficultyText}</div>
+                        <h3 class="text-lg font-bold mb-3">问题 ${index + 1}: ${question.question}</h3>
+                        
+                        <div class="code-block">${question.template}</div>
+                        
+                        <textarea class="code-editor" id="code-${index}" placeholder="在这里编写您的代码..."></textarea>
+                        
+                        <button class="compile-button" onclick="simulateCompilation(${index})">
+                            🔨 模拟编译与运行
+                        </button>
+                        
+                        <div class="compile-output" id="output-${index}"></div>
+                        
+                        <div class="mt-4">
+                            ${question.options.map((option, i) => 
+                                `<button class="option-button" id="option-${index}-${i}" onclick="selectAnswer(${index}, ${i})">
+                                    ${String.fromCharCode(65 + i)}. ${option}
+                                </button>`
+                            ).join('')}
+                        </div>
+                        
+                        <div class="explanation" id="explanation-${index}">
+                            <strong>解释：</strong> ${question.explanation}
+                        </div>
+                    </div>
+                `;
+            } else if (question.interactive) {
+                questionContent = `
+                    <div class="question-card" id="question-${index}">
+                        <div class="difficulty-badge ${difficultyClass}">${difficultyText}</div>
+                        <h3 class="text-lg font-bold mb-3">问题 ${index + 1}: ${question.question}</h3>
+                        
+                        <div class="terminal-simulator" id="simulator-${index}">
+                            <div class="mb-4">
+                                <strong>$ </strong><span id="prompt-${index}">输入命令进行模拟</span>
+                                <input type="text" class="terminal-input" id="terminal-input-${index}" placeholder="例如: ./program arg1 arg2">
+                            </div>
+                            <button class="simulator-button" onclick="runTerminalSimulation(${index})">
+                                执行命令
+                            </button>
+                            <div id="terminal-output-${index}" class="mt-4"></div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            ${question.options.map((option, i) => 
+                                `<button class="option-button" id="option-${index}-${i}" onclick="selectAnswer(${index}, ${i})">
+                                    ${String.fromCharCode(65 + i)}. ${option}
+                                </button>`
+                            ).join('')}
+                        </div>
+                        
+                        <div class="explanation" id="explanation-${index}">
+                            <strong>解释：</strong> ${question.explanation}
+                        </div>
+                    </div>
+                `;
+            } else {
+                questionContent = `
+                    <div class="question-card" id="question-${index}">
+                        <div class="difficulty-badge ${difficultyClass}">${difficultyText}</div>
+                        <h3 class="text-lg font-bold mb-3">问题 ${index + 1}: ${question.question}</h3>
+                        
+                        ${question.code ? `<div class="code-block">${question.code}</div>` : ''}
+                        
+                        <div class="mt-4">
+                            ${question.options.map((option, i) => 
+                                `<button class="option-button" id="option-${index}-${i}" onclick="selectAnswer(${index}, ${i})">
+                                    ${String.fromCharCode(65 + i)}. ${option}
+                                </button>`
+                            ).join('')}
+                        </div>
+                        
+                        <div class="explanation" id="explanation-${index}">
+                            <strong>解释：</strong> ${question.explanation}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML += questionContent;
+        }
+
+        function runTerminalSimulation(index) {
+            const command = document.getElementById(`terminal-input-${index}`).value.trim();
+            const outputElement = document.getElementById(`terminal-output-${index}`);
+            
+            if (!command) {
+                outputElement.innerHTML = '<div style="color: #ef4444; padding: 0.5rem;">⚠️ 请输入命令</div>';
+                return;
+            }
+            
+            const args = command.split(/\s+/);
+            const argc = args.length;
+            
+            outputElement.innerHTML = `
+                <div style="margin-top: 1rem;">
+                    <div style="color: #22c55e; font-weight: bold; margin-bottom: 0.5rem;">✅ 命令解析完成:</div>
+                    <div class="arg-display">
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; background-color: #f3f4f6; border-radius: 0.25rem;">
+                            <strong style="color: #e07a5f;">argc = ${argc}</strong>
+                            <span style="color: #666; margin-left: 1rem;">(参数总数，包括程序名)</span>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            ${args.map((arg, i) => 
+                                `<div class="arg-box" style="background-color: ${i === 0 ? '#e0f2fe' : '#f0fdf4'};">
+                                    argv[${i}] = "${arg}"
+                                    ${i === 0 ? '<br><small style="color: #666;">(程序名)</small>' : `<br><small style="color: #666;">(参数${i})</small>`}
+                                </div>`
+                            ).join('')}
+                        </div>
+                        <div style="margin-top: 1rem; padding: 0.75rem; background-color: #fefce8; border-radius: 0.25rem; border-left: 4px solid #f59e0b;">
+                            <strong>💡 解析说明:</strong><br>
+                            • argc包含程序名在内的所有参数个数<br>
+                            • argv[0]总是程序名<br>
+                            • 空格分隔的每个部分都是一个独立的参数
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function simulateCompilation(index) {
+            const question = questions[index];
+            const code = document.getElementById(`code-${index}`).value;
+            const outputElement = document.getElementById(`output-${index}`);
+            
+            outputElement.classList.add('show');
+            outputElement.innerHTML = '';
+            
+            const steps = [
+                '> gcc student_code.c -o student_program',
+                '> Compiling...',
+                '> Syntax check...',
+                '> Linking...',
+                '> Running test cases...'
+            ];
+            
+            let stepIndex = 0;
+            const interval = setInterval(() => {
+                outputElement.innerHTML += steps[stepIndex] + '\n';
+                stepIndex++;
+                
+                if (stepIndex >= steps.length) {
+                    clearInterval(interval);
+                    
+                    const keywordCount = question.correctKeywords.filter(keyword => 
+                        code.toLowerCase().includes(keyword.toLowerCase())
+                    ).length;
+                    
+                    let result = '';
+                    if (keywordCount >= question.correctKeywords.length * 0.8) {
+                        result = '> 编译成功！\n> 所有测试用例通过！\n> 结果：完全正确 ✅';
+                    } else if (keywordCount >= question.correctKeywords.length * 0.5) {
+                        result = '> 编译成功！\n> 部分测试用例通过\n> 结果：部分正确 ⚠️';
+                    } else {
+                        result = '> 编译失败！\n> 语法错误或逻辑错误\n> 结果：编译失败 ❌';
+                    }
+                    
+                    setTimeout(() => {
+                        outputElement.innerHTML += '\n' + result;
+                    }, 1000);
+                }
+            }, 800);
+        }
+
+        function selectAnswer(questionIndex, selectedOption) {
+            const question = questions[questionIndex];
+            const questionCard = document.getElementById(`question-${questionIndex}`);
+            const explanation = document.getElementById(`explanation-${questionIndex}`);
+            
+            for (let i = 0; i < question.options.length; i++) {
+                const optionButton = document.getElementById(`option-${questionIndex}-${i}`);
+                optionButton.classList.add('disabled');
+                
+                if (i === question.correct) {
+                    optionButton.classList.add('correct');
+                }
+                if (i === selectedOption && i !== question.correct) {
+                    optionButton.classList.add('incorrect');
+                }
+            }
+            
+            explanation.classList.add('show');
+            
+            if (selectedOption === question.correct) {
+                questionCard.classList.add('answered-correct');
+                correctAnswers++;
+            } else {
+                questionCard.classList.add('answered-incorrect');
+                incorrectAnswers++;
+            }
+            
+            updateScore();
+            updateProgress();
+            currentQuestion++;
+        }
+
+        function updateScore() {
+            const totalAnswered = correctAnswers + incorrectAnswers;
+            document.getElementById('scoreDisplay').textContent = `${correctAnswers}/${totalAnswered}`;
+            document.getElementById('correctDisplay').textContent = correctAnswers;
+            document.getElementById('incorrectDisplay').textContent = incorrectAnswers;
+        }
+
+        function updateProgress() {
+            const totalAnswered = correctAnswers + incorrectAnswers;
+            const progressPercentage = (totalAnswered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            questions.forEach((_, index) => {
+                displayQuestion(index);
+            });
+            updateScore();
+        });
+    </script>
+</body>
+</html> 

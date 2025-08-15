@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1131 微积分实验考试2 (Maple) 测验 | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .question-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-card.answered-correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .question-card.answered-incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-button:hover:not(.disabled) {
+            border-color: #e07a5f;
+            transform: translateX(5px);
+        }
+        .option-button.correct {
+            border-color: #22c55e;
+            background-color: #dcfce7;
+        }
+        .option-button.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+        .option-button.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            border-radius: 0 0.375rem 0.375rem 0;
+            display: none;
+        }
+        .explanation.show {
+            display: block;
+        }
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .difficulty-easy {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .difficulty-medium {
+            background-color: #fed7aa;
+            color: #9a3412;
+        }
+        .difficulty-hard {
+            background-color: #ddd6fe;
+            color: #5b21b6;
+        }
+        .difficulty-extreme {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #e07a5f 0%, #f4a261 100%);
+            transition: width 0.3s ease;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .code-block {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .maple-syntax {
+            color: #10b981;
+        }
+        .maple-keyword {
+            color: #f59e0b;
+        }
+        .maple-comment {
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
+        
+        <!-- Back Button -->
+        <a href="./math1131_calculus_lab_test2_review.html" class="back-button">
+            <span>←</span>
+            <span>返回复习笔记</span>
+        </a>
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Maple 微积分实验考试2 测验</h1>
+            <p class="text-xl text-gray-600 mt-2">70道分级题目 · 全面检验学习成果</p>
+            <p class="text-sm text-gray-500 mt-1">15道简单 · 20道普通 · 15道困难 · 10道超难</p>
+        </header>
+
+        <!-- Progress and Stats -->
+        <div class="quiz-container">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-[#e07a5f]" id="scoreDisplay">0/0</div>
+                    <div class="text-sm text-gray-600">正确率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-green-600" id="correctDisplay">0</div>
+                    <div class="text-sm text-gray-600">正确</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-red-600" id="incorrectDisplay">0</div>
+                    <div class="text-sm text-gray-600">错误</div>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+            </div>
+            
+            <p class="text-center text-gray-600 mb-4">
+                <strong>测验说明：</strong> 选择答案后将立即显示正确答案和解析。建议先复习笔记再开始测验。
+            </p>
+        </div>
+
+        <!-- Quiz Questions Container -->
+        <div id="questionsContainer"></div>
+    </div>
+
+    <script>
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let currentQuestion = 0;
+
+        const questions = [
+            // 简单题目 (15道) - 基本语法和概念
+            {
+                type: 'easy',
+                question: '在Maple中，给变量赋值应该使用哪个符号？',
+                options: [
+                    ':=',
+                    '=',
+                    '==',
+                    '->'
+                ],
+                correct: 0,
+                explanation: ':= 是Maple中的赋值运算符，= 用于表示方程，== 用于比较，-> 用于定义函数。'
+            },
+            {
+                type: 'easy',
+                question: '下面哪个是正确的Maple函数定义语法？',
+                options: [
+                    'f(x) = x^2 + 1',
+                    'f := x -> x^2 + 1',
+                    'function f(x) { return x^2 + 1; }',
+                    'def f(x): return x^2 + 1'
+                ],
+                correct: 1,
+                explanation: 'Maple使用 := 和 -> 来定义函数，格式为：函数名 := 变量 -> 表达式。'
+            },
+            {
+                type: 'easy',
+                question: '在Maple中，求导运算符是什么？',
+                options: [
+                    'd()',
+                    'diff()',
+                    'D()',
+                    'derive()'
+                ],
+                correct: 2,
+                explanation: 'D() 是Maple的求导算子（大写D），可以计算函数的导数。'
+            },
+            {
+                type: 'easy',
+                question: 'fsolve()函数的主要用途是什么？',
+                options: [
+                    '计算定积分',
+                    '求解方程的数值解',
+                    '绘制函数图像',
+                    '计算极限'
+                ],
+                correct: 1,
+                explanation: 'fsolve() 用于求解方程的数值解（近似解），当无法获得精确符号解时特别有用。'
+            },
+            {
+                type: 'easy',
+                question: '控制Maple计算精度的全局变量是什么？',
+                options: [
+                    'precision',
+                    'digits',
+                    'Digits',
+                    'PRECISION'
+                ],
+                correct: 2,
+                explanation: 'Digits（首字母大写）是控制浮点数计算精度的全局变量。Maple严格区分大小写。'
+            },
+            {
+                type: 'easy',
+                question: '下面哪个表示圆周率π？',
+                options: [
+                    'pi',
+                    'PI',
+                    'Pi',
+                    'π'
+                ],
+                correct: 2,
+                explanation: 'Pi（首字母大写）是Maple中表示圆周率的正确写法。'
+            },
+            {
+                type: 'easy',
+                question: '下面哪个表示无穷大∞？',
+                options: [
+                    'inf',
+                    'infinity',
+                    'Infinity',
+                    'INF'
+                ],
+                correct: 1,
+                explanation: 'infinity（全小写）是Maple中表示无穷大的正确写法。'
+            },
+            {
+                type: 'easy',
+                question: 'evalf()函数的作用是什么？',
+                options: [
+                    '计算符号积分',
+                    '将符号表达式转换为数值',
+                    '求解方程',
+                    '定义函数'
+                ],
+                correct: 1,
+                explanation: 'evalf() 将符号表达式（如分数、根式）计算为浮点数值（小数）。'
+            },
+            {
+                type: 'easy',
+                question: '下面哪个是正确的Maple命令结尾？',
+                options: [
+                    '.',
+                    ';',
+                    ':',
+                    '没有特殊符号'
+                ],
+                correct: 1,
+                explanation: '分号 ; 表示执行命令并显示结果。冒号 : 表示执行但不显示结果。'
+            },
+            {
+                type: 'easy',
+                question: '要使用极坐标绘图功能，首先需要加载哪个包？',
+                options: [
+                    'graphics',
+                    'plots',
+                    'plotting',
+                    'graph'
+                ],
+                correct: 1,
+                explanation: '使用 with(plots); 加载绘图包，然后才能使用 polarplot() 等绘图函数。'
+            },
+            {
+                type: 'easy',
+                question: 'solve()和fsolve()的主要区别是什么？',
+                options: [
+                    '没有区别',
+                    'solve()给出精确解，fsolve()给出数值解',
+                    'solve()用于线性方程，fsolve()用于非线性方程',
+                    'solve()更快'
+                ],
+                correct: 1,
+                explanation: 'solve() 追求精确的符号解（如分数、根式），fsolve() 给出数值近似解（小数）。'
+            },
+            {
+                type: 'easy',
+                question: '在Maple中，如何表示自然对数的底e？',
+                options: [
+                    'e',
+                    'E',
+                    'exp(1)',
+                    'euler'
+                ],
+                correct: 2,
+                explanation: '自然对数的底e通过 exp(1) 表示，或者直接使用指数函数 exp(x)。'
+            },
+            {
+                type: 'easy',
+                question: '下面哪个是计算数值定积分的正确"黄金组合"？',
+                options: [
+                    'int(f, x)',
+                    'evalf(int(f, x = a..b))',
+                    'integral(f, a, b)',
+                    'numeric_integral(f, a, b)'
+                ],
+                correct: 1,
+                explanation: 'evalf(int(...)) 是计算数值定积分的标准组合：int建立积分表达式，evalf计算数值。'
+            },
+            {
+                type: 'easy',
+                question: 'limit()函数用于计算什么？',
+                options: [
+                    '导数',
+                    '积分',
+                    '极限',
+                    '方程解'
+                ],
+                correct: 2,
+                explanation: 'limit() 函数用于计算函数的极限，支持双边极限和单边极限。'
+            },
+            {
+                type: 'easy',
+                question: '二阶导数的正确写法是什么？',
+                options: [
+                    'D(D(f))',
+                    '(D@@2)(f)',
+                    'DD(f)',
+                    '以上都是'
+                ],
+                correct: 3,
+                explanation: 'D(D(f)) 和 (D@@2)(f) 都是计算二阶导数的正确方法。'
+            },
+
+            // 普通题目 (20道) - 单个命令应用
+            {
+                type: 'medium',
+                question: '已知 f := x -> x^3 - 2*x^2 + x - 1，求f(2)的值是多少？',
+                options: [
+                    '1',
+                    '3',
+                    '5',
+                    '7'
+                ],
+                correct: 0,
+                explanation: 'f(2) = 2³ - 2×2² + 2 - 1 = 8 - 8 + 2 - 1 = 1。'
+            },
+            {
+                type: 'medium',
+                question: '如果要在区间[1, 3]内求解方程 x^2 - 5 = 0，正确的命令是？',
+                options: [
+                    'fsolve(x^2 - 5 = 0, x)',
+                    'fsolve(x^2 - 5 = 0, x = 1..3)',
+                    'solve(x^2 - 5 = 0, x = 1..3)',
+                    'fsolve(x^2 - 5, x = 1..3)'
+                ],
+                correct: 1,
+                explanation: 'fsolve(方程, 变量 = 起点..终点) 是在指定区间内求数值解的正确语法。'
+            },
+            {
+                type: 'medium',
+                question: '设置计算精度为15位有效数字的正确命令是？',
+                options: [
+                    'digits := 15;',
+                    'Digits := 15;',
+                    'precision := 15;',
+                    'set_precision(15);'
+                ],
+                correct: 1,
+                explanation: 'Digits := 15; 是设置计算精度的正确命令，注意首字母必须大写。'
+            },
+            {
+                type: 'medium',
+                question: '计算积分 ∫₀^π sin(x) dx 的数值的正确命令是？',
+                code: '',
+                options: [
+                    'int(sin(x), x = 0..Pi)',
+                    'evalf(int(sin(x), x = 0..Pi))',
+                    'integral(sin(x), 0, Pi)',
+                    'numeric_int(sin(x), 0, Pi)'
+                ],
+                correct: 1,
+                explanation: 'evalf(int(sin(x), x = 0..Pi)) 使用int建立积分表达式，evalf计算数值结果。'
+            },
+            {
+                type: 'medium',
+                question: '要绘制极坐标函数 r = 2*cos(3*theta) 的图像，正确的命令序列是？',
+                options: [
+                    'plot(2*cos(3*theta), theta = 0..2*Pi)',
+                    'with(plots); polarplot(2*cos(3*theta), theta = 0..2*Pi)',
+                    'polarplot(2*cos(3*theta), theta = 0..2*Pi)',
+                    'with(graphics); polar_plot(2*cos(3*theta), 0, 2*Pi)'
+                ],
+                correct: 1,
+                explanation: '需要先用with(plots)加载绘图包，然后使用polarplot绘制极坐标图像。'
+            },
+            {
+                type: 'medium',
+                question: '计算极限 lim(x→0) sin(x)/x 的正确命令是？',
+                options: [
+                    'limit(sin(x)/x, x = 0)',
+                    'limit(sin(x)/x, x -> 0)',
+                    'lim(sin(x)/x, x, 0)',
+                    'limit(sin(x)/x, x=0)'
+                ],
+                correct: 3,
+                explanation: 'limit(表达式, 变量=趋近值) 是计算极限的正确语法。'
+            },
+            {
+                type: 'medium',
+                question: '求方程 x^2 + 2*x - 8 = 0 的精确解，正确的命令是？',
+                options: [
+                    'fsolve(x^2 + 2*x - 8 = 0, x)',
+                    'solve(x^2 + 2*x - 8 = 0, x)',
+                    'roots(x^2 + 2*x - 8, x)',
+                    'factor(x^2 + 2*x - 8)'
+                ],
+                correct: 1,
+                explanation: 'solve() 用于求精确的符号解，对于二次方程会给出准确的整数或根式解。'
+            },
+            {
+                type: 'medium',
+                question: '已知 g := x -> x^4 - 4*x^2，计算 g 的二阶导数在 x=1 处的值的命令是？',
+                options: [
+                    'D(D(g))(1)',
+                    '(D@@2)(g)(1)',
+                    'ddf := (D@@2)(g); ddf(1)',
+                    '以上都正确'
+                ],
+                correct: 3,
+                explanation: '这三种写法都能正确计算二阶导数在指定点的值。'
+            },
+            {
+                type: 'medium',
+                question: '要计算右极限 lim(x→0⁺) ln(x)，正确的命令是？',
+                options: [
+                    'limit(ln(x), x = 0, right)',
+                    'limit(ln(x), x = 0+)',
+                    'limit(ln(x), x -> 0+)',
+                    'rightlimit(ln(x), x = 0)'
+                ],
+                correct: 0,
+                explanation: 'limit(表达式, 变量=趋近值, right) 计算右极限，left计算左极限。'
+            },
+            {
+                type: 'medium',
+                question: '下面哪个命令会同时执行但不显示结果？',
+                options: [
+                    'f := x -> x^2;',
+                    'f := x -> x^2:',
+                    'f := x -> x^2',
+                    'f = x -> x^2;'
+                ],
+                correct: 1,
+                explanation: '冒号 : 结尾表示执行命令但不显示结果，分号 ; 执行并显示结果。'
+            },
+            {
+                type: 'medium',
+                question: '要计算函数 h := x -> abs(x^2 - 4) 在区间 [0,3] 上的最大值，第一步应该是？',
+                options: [
+                    '直接代入端点',
+                    '定义内层函数 g := x -> x^2 - 4',
+                    '计算导数',
+                    '绘制图像'
+                ],
+                correct: 1,
+                explanation: '对于绝对值函数，首先定义内层函数，然后分别找驻点和奇点（尖角点）。'
+            },
+            {
+                type: 'medium',
+                question: '函数 f := x -> exp(-x^2) 的导数表达式中包含哪个函数？',
+                options: [
+                    '只有指数函数',
+                    '指数函数和多项式函数',
+                    '指数函数和三角函数',
+                    '对数函数'
+                ],
+                correct: 1,
+                explanation: 'f的导数为 -2*x*exp(-x^2)，包含多项式函数(-2*x)和指数函数exp(-x^2)。'
+            },
+            {
+                type: 'medium',
+                question: '要验证洛必达法则是否适用于 lim(x→0) cos(x)/x，应该先检查什么？',
+                options: [
+                    '直接应用洛必达法则',
+                    '分别计算分子和分母的极限',
+                    '计算导数',
+                    '绘制图像'
+                ],
+                correct: 1,
+                explanation: '洛必达法则只适用于0/0或∞/∞型不定式，需要先验证分子分母的极限类型。'
+            },
+            {
+                type: 'medium',
+                question: '下面哪个积分需要使用evalf()来获得数值结果？',
+                options: [
+                    'int(x^2, x)',
+                    'int(x^2, x = 0..1)',
+                    'int(exp(-x^2), x = 0..infinity)',
+                    'int(1/x, x)'
+                ],
+                correct: 2,
+                explanation: 'int(exp(-x^2), x = 0..infinity) 无法用初等函数表示，需要evalf()计算数值。'
+            },
+            {
+                type: 'medium',
+                question: '已知函数在某点的左极限是3，右极限是3，函数值是5，该点的连续性如何？',
+                options: [
+                    '连续',
+                    '可去间断点',
+                    '跳跃间断点',
+                    '无法判断'
+                ],
+                correct: 1,
+                explanation: '左右极限相等但不等于函数值，这是可去间断点，可以通过重新定义函数值来修复。'
+            },
+            {
+                type: 'medium',
+                question: '极坐标函数 r = sin(2*theta) 绘制出来是什么图形？',
+                options: [
+                    '圆',
+                    '椭圆',
+                    '四叶玫瑰',
+                    '三叶玫瑰'
+                ],
+                correct: 2,
+                explanation: 'r = sin(n*θ) 当n为偶数时产生2n瓣花瓣，sin(2θ)产生4瓣花瓣的四叶玫瑰。'
+            },
+            {
+                type: 'medium',
+                question: '要在Maple中计算 √2 的高精度近似值，正确的命令是？',
+                options: [
+                    'sqrt(2)',
+                    'evalf(sqrt(2))',
+                    'float(sqrt(2))',
+                    'numeric(sqrt(2))'
+                ],
+                correct: 1,
+                explanation: 'sqrt(2)返回符号形式，evalf(sqrt(2))计算数值近似，精度由Digits控制。'
+            },
+            {
+                type: 'medium',
+                question: '下面哪个命令可以找到函数的驻点？',
+                options: [
+                    'solve(f(x) = 0, x)',
+                    'solve(D(f)(x) = 0, x)',
+                    'fsolve(f(x) = 0, x)',
+                    'critical_points(f, x)'
+                ],
+                correct: 1,
+                explanation: '驻点是导数为零的点，使用solve(D(f)(x) = 0, x)求解导数方程。'
+            },
+            {
+                type: 'medium',
+                question: '对于绝对值函数 f(x) = |g(x)|，奇点（尖角点）出现在哪里？',
+                options: [
+                    'g\'(x) = 0 的点',
+                    'g(x) = 0 的点',
+                    'f\'(x) = 0 的点',
+                    'f(x) = 0 的点'
+                ],
+                correct: 1,
+                explanation: '绝对值函数的奇点（导数不存在的点）出现在内层函数g(x)=0的地方。'
+            },
+            {
+                type: 'medium',
+                question: '计算积分 ∫₀^∞ e^(-x) dx 的正确命令是？',
+                options: [
+                    'int(exp(-x), x = 0..inf)',
+                    'evalf(int(exp(-x), x = 0..infinity))',
+                    'integral(exp(-x), 0, infinity)',
+                    'int(e^(-x), x = 0..infinity)'
+                ],
+                correct: 1,
+                explanation: 'evalf(int(exp(-x), x = 0..infinity)) 正确使用了exponential函数和无穷大符号。'
+            },
+
+            // 困难题目 (15道) - 命令组合应用和概念辨析
+            {
+                type: 'hard',
+                question: '对于函数 f(x) = |x³ - 6x² + 9x - 4| 在区间 [0,5] 上求极值，需要找到的候选点包括：',
+                code: `g := x -> x^3 - 6*x^2 + 9*x - 4;
+solve(D(g)(x) = 0, x);     # 驻点
+solve(g(x) = 0, x);        # 奇点`,
+                options: [
+                    '只需要驻点',
+                    '只需要端点',
+                    '驻点、奇点、端点',
+                    '只需要奇点'
+                ],
+                correct: 2,
+                explanation: '绝对值函数在闭区间上的极值候选点包括：内层函数的驻点、绝对值的奇点(尖角)、区间端点。'
+            },
+            {
+                type: 'hard',
+                question: '为什么 lim(x→0) (1-cos(x))/x² 可以使用洛必达法则，而 lim(x→0) sin(x)/x² 不能直接应用？',
+                options: [
+                    '第一个是0/0型，第二个不是',
+                    '第一个是∞/∞型，第二个是0/0型',
+                    '两个都可以直接应用',
+                    '两个都不能应用'
+                ],
+                correct: 0,
+                explanation: '第一个: cos(0)=1,1-cos(0)=0,极限是0/0型。第二个: sin(0)=0但分母x²也趋于0，是0/0型，但需要应用两次洛必达法则。'
+            },
+            {
+                type: 'hard',
+                question: '函数 f(x) = x³/(x²+1) 的水平渐近线可以通过以下哪个极限确定？',
+                options: [
+                    'limit(f(x), x = 0)',
+                    'limit(f(x), x = infinity)',
+                    'limit(D(f)(x), x = infinity)',
+                    '不存在水平渐近线'
+                ],
+                correct: 3,
+                explanation: 'limit(x³/(x²+1), x=∞) = limit(x, x=∞) = ∞，所以不存在水平渐近线。分子次数高于分母。'
+            },
+            {
+                type: 'hard',
+                question: '要绘制 r = 1 + 2*cos(theta) 的极坐标图像，这个函数会产生什么形状？',
+                options: [
+                    '内含环的利马孔',
+                    '心形线',
+                    '圆',
+                    '椭圆'
+                ],
+                correct: 0,
+                explanation: '当r = a + b*cos(θ)且|b/a| > 1时（这里b/a = 2 > 1），产生内含环的利马孔。'
+            },
+            {
+                type: 'hard',
+                question: '下面的代码序列中，哪一步是错误的？',
+                code: `f := x -> (x^2 - 4)/(x - 2);
+limit(f(x), x = 2);
+simplify(f(x));
+solve(f(x) = 6, x);`,
+                options: [
+                    '第1行：函数定义错误',
+                    '第2行：极限计算错误',
+                    '第3行：化简命令错误',
+                    '第4行：方程求解错误'
+                ],
+                correct: 2,
+                explanation: 'simplify()用于化简表达式，但对于这个有可去间断点的函数，应该用factor()或手动约分处理。'
+            },
+            {
+                type: 'hard',
+                question: '积分 ∫₋∞^∞ e^(-x²) dx 的值是什么？',
+                options: [
+                    '0',
+                    '1',
+                    '√π',
+                    '发散'
+                ],
+                correct: 2,
+                explanation: '这是著名的高斯积分，∫₋∞^∞ e^(-x²) dx = √π。可以用evalf(int(exp(-x^2), x = -infinity..infinity))验证。'
+            },
+            {
+                type: 'hard',
+                question: '对于函数 f(x) = x²e^(-x)，要找到其最大值，需要解哪个方程？',
+                options: [
+                    'x²e^(-x) = 0',
+                    '(2x - x²)e^(-x) = 0',
+                    'e^(-x) = 0',
+                    'x² = 0'
+                ],
+                correct: 1,
+                explanation: 'f\'(x) = 2xe^(-x) + x²(-e^(-x)) = (2x - x²)e^(-x)，令其为0得到驻点。'
+            },
+            {
+                type: 'hard',
+                question: '为什么在使用 fsolve(sin(x) = 0.5, x = 0..Pi) 时指定区间很重要？',
+                options: [
+                    '提高计算速度',
+                    '避免找到多个解',
+                    '确保找到特定区间内的解',
+                    '以上都是'
+                ],
+                correct: 3,
+                explanation: 'sin(x) = 0.5在实数域有无穷多解，指定区间可以找到特定范围内的解，提高效率，避免歧义。'
+            },
+            {
+                type: 'hard',
+                question: '下面哪个积分的计算需要使用分部积分法的思想？',
+                options: [
+                    'int(x*exp(x), x)',
+                    'int(x^2, x)',
+                    'int(sin(x), x)',
+                    'int(1/x, x)'
+                ],
+                correct: 0,
+                explanation: 'int(x*exp(x), x)需要分部积分：∫udv = uv - ∫vdu，其中u=x, dv=e^x dx。'
+            },
+            {
+                type: 'hard',
+                question: '函数 f(x) = (x² - 1)/(x + 1) 在 x = -1 处的极限是多少？',
+                options: [
+                    '不存在',
+                    '0',
+                    '-2',
+                    '∞'
+                ],
+                correct: 2,
+                explanation: 'factor(x²-1) = (x-1)(x+1)，约分后得到x-1，代入x=-1得到-2。'
+            },
+            {
+                type: 'hard',
+                question: '要验证函数 g(x) = x³ - 3x + 1 在区间 [0,2] 上至少有一个零点，应该使用哪个定理？',
+                options: [
+                    '罗尔定理',
+                    '拉格朗日中值定理',
+                    '介值定理',
+                    '极值定理'
+                ],
+                correct: 2,
+                explanation: '介值定理：如果g(0)和g(2)符号相反且函数连续，则存在零点。计算：g(0)=1>0, g(2)=3>0，需要检查其他点。'
+            },
+            {
+                type: 'hard',
+                question: '极坐标方程 r² = 4*cos(2*theta) 表示什么图形？',
+                options: [
+                    '双纽线',
+                    '玫瑰线',
+                    '心形线',
+                    '螺旋线'
+                ],
+                correct: 0,
+                explanation: 'r² = a²cos(2θ) 是双纽线的标准方程，这是一个8字形的封闭曲线。'
+            },
+            {
+                type: 'hard',
+                question: '下面哪个函数在 x = 0 处有跳跃间断点？',
+                options: [
+                    'f(x) = sin(x)/x',
+                    'f(x) = |x|/x',
+                    'f(x) = (x² - 1)/(x - 1)',
+                    'f(x) = exp(1/x)'
+                ],
+                correct: 1,
+                explanation: 'f(x) = |x|/x 在x=0处：左极限=-1，右极限=1，左右极限不相等，形成跳跃间断点。'
+            },
+            {
+                type: 'hard',
+                question: '积分 ∫₀^π/2 sin^n(x) dx 当 n 为大偶数时的渐近行为是什么？',
+                options: [
+                    '趋于0',
+                    '趋于π/2',
+                    '趋于1',
+                    '趋于∞'
+                ],
+                correct: 0,
+                explanation: '当n很大时，sin^n(x)在[0,π/2]上除了x接近π/2的小区域外都接近0，积分值趋于0。'
+            },
+            {
+                type: 'hard',
+                question: '要使函数 f(x) = (ax² + bx + c)/(x² + 1) 有水平渐近线 y = 2，需要满足什么条件？',
+                options: [
+                    'a = 2',
+                    'b = 2',
+                    'c = 2',
+                    'a + b + c = 2'
+                ],
+                correct: 0,
+                explanation: '水平渐近线由最高次项系数比确定：lim(x→∞) f(x) = a/1 = a = 2。'
+            },
+
+            // 超难题目 (10道) - 综合应用与问题排查
+            {
+                type: 'extreme',
+                question: '考虑微分方程 dy/dx = y²/(1+x²)，如果使用Maple求解，最可能需要哪些命令的组合？',
+                code: `dsolve({diff(y(x),x) = y(x)^2/(1+x^2), y(0) = 1}, y(x));`,
+                options: [
+                    '只需要 solve()',
+                    '需要 dsolve() 和 int()',
+                    '需要分离变量和 int()',
+                    '这是不可积的微分方程'
+                ],
+                correct: 2,
+                explanation: '这是可分离变量的微分方程：dy/y² = dx/(1+x²)，左边积分得-1/y，右边积分得arctan(x)。'
+            },
+            {
+                type: 'extreme',
+                question: '函数 f(x) = x*sin(1/x) 在 x = 0 处的行为如何？应该如何在Maple中正确处理？',
+                options: [
+                    '直接计算 limit(x*sin(1/x), x = 0)',
+                    '函数在 x = 0 处无定义，极限不存在',
+                    '需要先定义 f(0) = 0，然后计算极限',
+                    '使用洛必达法则'
+                ],
+                correct: 0,
+                explanation: '|x*sin(1/x)| ≤ |x|，由夹逼定理可得极限为0。Maple的limit命令可以正确计算这个极限。'
+            },
+            {
+                type: 'extreme',
+                question: '要分析函数 f(x) = (x² + 1)^(1/3) * (x - 1)^(2/3) 在 [0,2] 上的极值，主要困难在于什么？',
+                options: [
+                    '函数不连续',
+                    '导数在某些点不存在',
+                    '函数无界',
+                    '积分过于复杂'
+                ],
+                correct: 1,
+                explanation: '(x-1)^(2/3) 在 x=1 处导数不存在（尖角），这是需要特别考虑的奇点。'
+            },
+            {
+                type: 'extreme',
+                question: '极坐标积分 ∫∫_R r * e^(-r²) dr dθ 其中 R 是整个平面，这个积分的值是多少？',
+                options: [
+                    'π',
+                    '2π',
+                    'π/2',
+                    '发散'
+                ],
+                correct: 0,
+                explanation: '∫₀^{2π} dθ ∫₀^∞ r*e^(-r²) dr = 2π * (1/2) * ∫₀^∞ e^(-u) du = 2π * (1/2) * 1 = π。'
+            },
+            {
+                type: 'extreme',
+                question: '下面的Maple代码存在什么潜在问题？',
+                code: `f := x -> if x < 0 then -x else x;
+plot(f(x), x = -2..2);`,
+                options: [
+                    '语法错误',
+                    'if语句在函数定义中不适用',
+                    '应该使用 abs(x)',
+                    '没有问题'
+                ],
+                correct: 2,
+                explanation: '虽然if语句可以工作，但abs(x)是更标准和高效的绝对值表示方法。'
+            },
+            {
+                type: 'extreme',
+                question: '积分 ∫₋₁¹ 1/√(1-x²) dx 的值是什么，为什么这个积分是特殊的？',
+                options: [
+                    'π/2，这是反三角函数的积分',
+                    'π，这是半圆的面积',
+                    '2，这是简单的代数积分',
+                    '发散，因为被积函数在端点无界'
+                ],
+                correct: 1,
+                explanation: '这是 arcsin(x) 的导数的积分，结果是π。几何上表示半圆 y=√(1-x²) 下的面积。'
+            },
+            {
+                type: 'extreme',
+                question: '傅里叶级数的部分和 S_n(x) = Σ(k=1 to n) sin(kx)/k 在 x = π 处的行为是什么？',
+                options: [
+                    '收敛到 π/2',
+                    '收敛到 0',
+                    '发散',
+                    '振荡但有界'
+                ],
+                correct: 1,
+                explanation: 'sin(kπ) = 0 对所有正整数k，所以S_n(π) = 0 对所有n。'
+            },
+            {
+                type: 'extreme',
+                question: '要数值求解超越方程 x = cos(x)，以下哪种策略最有效？',
+                options: [
+                    'fsolve(x = cos(x), x)',
+                    'fsolve(x - cos(x) = 0, x = 0..1)',
+                    '使用牛顿法的迭代',
+                    '绘图找交点再用fsolve精确化'
+                ],
+                correct: 3,
+                explanation: '对于超越方程，先用图像了解解的大概位置，再用fsolve在合适区间内求精确解是最可靠的方法。'
+            },
+            {
+                type: 'extreme',
+                question: '函数 f(x,y) = x²y/(x² + y²) 在 (0,0) 处沿不同路径的极限行为如何？',
+                options: [
+                    '极限存在且为0',
+                    '极限不存在',
+                    '极限存在且为1',
+                    '需要更多信息'
+                ],
+                correct: 0,
+                explanation: '|x²y/(x²+y²)| ≤ |x|，当(x,y)→(0,0)时，|x|→0，所以极限为0。'
+            },
+            {
+                type: 'extreme',
+                question: '要研究递推关系 a_{n+1} = r*a_n*(1-a_n) 的长期行为，哪个工具最有用？',
+                options: [
+                    'solve()求不动点',
+                    'plot()绘制分岔图',
+                    'limit()求极限',
+                    'diff()求导数'
+                ],
+                correct: 1,
+                explanation: '这是著名的逻辑映射，研究其混沌行为需要绘制分岔图来观察随参数r变化的动力学行为。'
+            }
+        ];
+
+        function displayQuestion(index) {
+            const question = questions[index];
+            const container = document.getElementById('questionsContainer');
+            
+            let difficultyClass, difficultyText;
+            switch(question.type) {
+                case 'easy':
+                    difficultyClass = 'difficulty-easy';
+                    difficultyText = '简单';
+                    break;
+                case 'medium':
+                    difficultyClass = 'difficulty-medium';
+                    difficultyText = '普通';
+                    break;
+                case 'hard':
+                    difficultyClass = 'difficulty-hard';
+                    difficultyText = '困难';
+                    break;
+                case 'extreme':
+                    difficultyClass = 'difficulty-extreme';
+                    difficultyText = '超难';
+                    break;
+            }
+            
+            const questionContent = `
+                <div class="question-card" id="question-${index}">
+                    <div class="difficulty-badge ${difficultyClass}">${difficultyText}</div>
+                    <h3 class="text-lg font-bold mb-3">问题 ${index + 1}: ${question.question}</h3>
+                    
+                    ${question.code ? `<div class="code-block"><span class="maple-syntax">${question.code}</span></div>` : ''}
+                    
+                    <div class="mt-4">
+                        ${question.options.map((option, i) => 
+                            `<button class="option-button" id="option-${index}-${i}" onclick="selectAnswer(${index}, ${i})">
+                                ${String.fromCharCode(65 + i)}. ${option}
+                            </button>`
+                        ).join('')}
+                    </div>
+                    
+                    <div class="explanation" id="explanation-${index}">
+                        <strong>解释：</strong> ${question.explanation}
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML += questionContent;
+        }
+
+        function selectAnswer(questionIndex, selectedOption) {
+            const question = questions[questionIndex];
+            const questionCard = document.getElementById(`question-${questionIndex}`);
+            const explanation = document.getElementById(`explanation-${questionIndex}`);
+            
+            for (let i = 0; i < question.options.length; i++) {
+                const optionButton = document.getElementById(`option-${questionIndex}-${i}`);
+                optionButton.classList.add('disabled');
+                
+                if (i === question.correct) {
+                    optionButton.classList.add('correct');
+                }
+                if (i === selectedOption && i !== question.correct) {
+                    optionButton.classList.add('incorrect');
+                }
+            }
+            
+            explanation.classList.add('show');
+            
+            if (selectedOption === question.correct) {
+                questionCard.classList.add('answered-correct');
+                correctAnswers++;
+            } else {
+                questionCard.classList.add('answered-incorrect');
+                incorrectAnswers++;
+            }
+            
+            updateScore();
+            updateProgress();
+            currentQuestion++;
+        }
+
+        function updateScore() {
+            const totalAnswered = correctAnswers + incorrectAnswers;
+            const percentage = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `${percentage}% (${correctAnswers}/${totalAnswered})`;
+            document.getElementById('correctDisplay').textContent = correctAnswers;
+            document.getElementById('incorrectDisplay').textContent = incorrectAnswers;
+        }
+
+        function updateProgress() {
+            const totalAnswered = correctAnswers + incorrectAnswers;
+            const progressPercentage = (totalAnswered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            questions.forEach((_, index) => {
+                displayQuestion(index);
+            });
+            updateScore();
+        });
+    </script>
+</body>
+</html> 

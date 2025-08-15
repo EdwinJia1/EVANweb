@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATH1131 - Final Exam Quiz (90题完整版)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      background-color: #f8f7f2;
+      color: #2c2c2c;
+      line-height: 1.6;
+    }
+    .quiz-container {
+      background-color: #ffffff;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      margin-bottom: 2rem;
+    }
+    .question-card {
+      background-color: #f8f7f2;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .question-card.answered-correct {
+      border-color: #22c55e;
+      background-color: #f0fdf4;
+    }
+    .question-card.answered-incorrect {
+      border-color: #ef4444;
+      background-color: #fef2f2;
+    }
+    .option-button {
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0;
+      background-color: #ffffff;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .option-button:hover:not(.disabled) {
+      border-color: #e07a5f;
+      transform: translateX(5px);
+    }
+    .option-button.correct {
+      border-color: #22c55e;
+      background-color: #dcfce7;
+    }
+    .option-button.incorrect {
+      border-color: #ef4444;
+      background-color: #fee2e2;
+    }
+    .option-button.disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .explanation {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #e0f2fe;
+      border-left: 4px solid #0ea5e9;
+      border-radius: 0 0.375rem 0.375rem 0;
+      display: none;
+    }
+    .explanation.show {
+      display: block;
+    }
+    .difficulty-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .difficulty-easy {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+    .difficulty-medium {
+      background-color: #fed7aa;
+      color: #9a3412;
+    }
+    .difficulty-hard {
+      background-color: #fecaca;
+      color: #991b1b;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 1rem;
+      background-color: #e5e7eb;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #e07a5f 0%, #f4a261 100%);
+      transition: width 0.3s ease;
+    }
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background-color: #ffffff;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+    }
+    .back-button {
+      background-color: #f8f7f2;
+      color: #2c2c2c;
+      border: 2px solid #e07a5f;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .back-button:hover {
+      background-color: #e07a5f;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+    .notion-sync {
+      background: #e0f2fe;
+      border: 1px solid #0284c7;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: #0369a1;
+      margin-bottom: 2rem;
+    }
+    .filter-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .filter-select {
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.375rem;
+      background: white;
+      cursor: pointer;
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: #e07a5f;
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+    
+    <!-- Navigation -->
+    <a href="../math1131.html" class="back-button">
+      <span>←</span>
+      <span>返回 MATH1131</span>
+    </a>
+
+    <!-- Header -->
+    <header class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Final Exam 专项测验（90题完整版）</h1>
+      <div class="notion-sync">
+        <strong>📋 同步更新：</strong>基于 Notion 最新版本，重点强化第8-15题 | <strong>📅 版本：</strong>2025年8月13日 | <strong>🎯 分布：</strong>60基础 + 25中等 + 5困难
+      </div>
+    </header>
+
+    <!-- Filters -->
+    <div class="filter-container">
+      <select id="difficultyFilter" class="filter-select">
+        <option value="all">全部难度 (90题)</option>
+        <option value="easy">基础题 (60题)</option>
+        <option value="medium">中等题 (25题)</option>
+        <option value="hard">困难题 (5题)</option>
+      </select>
+      <button onclick="showAllAnswers()" class="back-button" style="margin: 0; border-color: #f59e0b;">
+        📋 显示所有答案
+      </button>
+      <button onclick="window.location.reload()" class="back-button" style="margin: 0; border-color: #22c55e;">
+        🔄 重新开始
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="text-2xl font-bold text-[#e07a5f]" id="scoreDisplay">0/90</div>
+        <div class="text-sm text-gray-600">已完成</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-2xl font-bold text-green-600" id="correctDisplay">0</div>
+        <div class="text-sm text-gray-600">正确</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-2xl font-bold text-red-600" id="incorrectDisplay">0</div>
+        <div class="text-sm text-gray-600">错误</div>
+      </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <div class="quiz-container" id="quizContainer">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <!-- Results Section -->
+    <div class="quiz-container" id="resultsSection" style="display: none;">
+      <h2 class="text-2xl font-bold text-center mb-4">测验完成！</h2>
+      <div class="text-center">
+        <p class="text-lg mb-2">最终得分: <span id="finalScore" class="font-bold text-[#e07a5f]"></span></p>
+        <p class="text-lg mb-4">正确率: <span id="accuracy" class="font-bold text-[#e07a5f]"></span></p>
+        <div class="flex justify-center gap-4">
+          <button onclick="restartQuiz()" class="back-button" style="margin: 0;">
+            重新开始
+          </button>
+          <button onclick="window.location.reload()" class="back-button" style="margin: 0; border-color: #22c55e;">
+            🔄 全新开始
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Complete 90-question quiz bank with detailed explanations
+    const questions = [
+      // ========== Easy Questions (60 questions) - Notion questions 1-15 + additional basic questions ==========
+      {
+        id: 1,
+        difficulty: "easy",
+        question: "已知矩阵 $A$ 第4行为 $[7,2,3,6,6]$，$B$ 第5列为 $[8,5,6,7,9]^T$，求 $C=AB$ 中 $C_{4,5}$ 的值。",
+        options: ["172", "178", "180", "186"],
+        correct: 2,
+        explanation: "<strong>考点：</strong>矩阵乘法的元素计算<br><strong>解法：</strong>$C_{4,5} = A$第4行与$B$第5列的点积<br>$C_{4,5} = 7×8 + 2×5 + 3×6 + 6×7 + 6×9 = 56+10+18+42+54 = 180$<br><strong>易错点：</strong>索引混淆或计算错误"
+      },
+      {
+        id: 2,
+        difficulty: "easy",
+        question: "若 $G(x)=\\int_1^x g(t)\\,dt$，则 $G'(x)$ 等于什么？",
+        options: ["$g'(x)$", "$g(x)$", "$\\int g(x)dx$", "无法确定"],
+        correct: 1,
+        explanation: "<strong>考点：</strong>微积分基本定理<br><strong>解法：</strong>根据微积分基本定理，若 $G(x)=\\int_a^x g(t)dt$，则 $G'(x)=g(x)$<br><strong>关键：</strong>这是FTC的直接应用<br><strong>易错点：</strong>混淆导数与积分的关系"
+      },
+      {
+        id: 3,
+        difficulty: "easy",
+        question: "$f(x)=e^{(3x+1)^2}+(3x+1)^2$，求 $f'(x)$ 的正确因式分解形式。",
+        options: ["$6(3x+1)[e^{(3x+1)^2}+1]$", "$6(3x+1)[e^{(3x+1)^2}-1]$", "$3(3x+1)e^{(3x+1)^2}$", "$6e^{(3x+1)^2}$"],
+        correct: 0,
+        explanation: "<strong>考点：</strong>复合函数求导、链式法则<br><strong>解法：</strong>令$u=3x+1$，则$f(x)=e^{u^2}+u^2$<br>$f'(x) = e^{u^2}·2u·3 + 2u·3 = 6u(e^{u^2}+1) = 6(3x+1)[e^{(3x+1)^2}+1]$<br><strong>易错点：</strong>链式法则应用错误"
+      },
+      {
+        id: 4,
+        difficulty: "easy",
+        question: "上述函数 $f(x)=e^{(3x+1)^2}+(3x+1)^2$ 在 $x=-\\frac{1}{3}$ 处的性质是？",
+        options: ["极大值", "极小值", "拐点", "无法判断"],
+        correct: 1,
+        explanation: "<strong>考点：</strong>极值判定<br><strong>解法：</strong>$f'(x)=6(3x+1)[e^{(3x+1)^2}+1]$<br>当$x=-\\frac{1}{3}$时，$3x+1=0$，故$f'(-\\frac{1}{3})=0$<br>$f'(x)$在$x=-\\frac{1}{3}$左侧为负，右侧为正，函数先减后增<br><strong>结论：</strong>极小值点<br><strong>易错点：</strong>符号判断错误"
+      },
+      {
+        id: 5,
+        difficulty: "easy",
+        question: "极坐标系中，点 $(r,\\theta)$ 到直角坐标系的转换公式是？",
+        options: ["$x=r\\sin\\theta,\\ y=r\\cos\\theta$", "$x=r\\cos\\theta,\\ y=r\\sin\\theta$", "$x=r/\\cos\\theta,\\ y=r/\\sin\\theta$", "$x=r\\tan\\theta,\\ y=r\\cot\\theta$"],
+        correct: 1,
+        explanation: "<strong>考点：</strong>极坐标与直角坐标转换<br><strong>解法：</strong>标准转换公式：$x=r\\cos\\theta$，$y=r\\sin\\theta$<br><strong>记忆：</strong>$x$对应$\\cos$，$y$对应$\\sin$<br><strong>易错点：</strong>$\\sin$和$\\cos$的对应关系搞反"
+      },
+      {
+        id: 6,
+        difficulty: "easy",
+        question: "若 $\\boldsymbol n=\\overrightarrow{AB}\\times\\overrightarrow{AC}$，则点 $P$ 在平面 $\\Pi(ABC)$ 上的充要条件是？",
+        options: ["$\\overrightarrow{AP}\\cdot\\boldsymbol n=0$", "$\\overrightarrow{AP}\\times\\boldsymbol n=0$", "$\\lVert\\overrightarrow{AP}\\rVert=0$", "$\\boldsymbol n=0$"],
+        correct: 0,
+        explanation: "<strong>考点：</strong>点在平面上的判定<br><strong>解法：</strong>$\\boldsymbol n$是平面的法向量，点$P$在平面上当且仅当$\\overrightarrow{AP}$与法向量垂直<br><strong>条件：</strong>$\\overrightarrow{AP}\\cdot\\boldsymbol n=0$<br><strong>易错点：</strong>混淆点积和叉积的几何意义"
+      },
+      {
+        id: 7,
+        difficulty: "easy",
+        question: "点到平面距离公式是？",
+        options: ["$d=\\dfrac{|\\overrightarrow{AP}\\cdot\\boldsymbol n|}{\\lVert\\boldsymbol n\\rVert}$", "$d=|\\overrightarrow{AP}\\cdot\\boldsymbol n|$", "$d=\\lVert\\boldsymbol n\\rVert$", "$d=\\lVert\\overrightarrow{AP}\\rVert$"],
+        correct: 0,
+        explanation: "<strong>考点：</strong>点到平面距离<br><strong>解法：</strong>距离等于向量$\\overrightarrow{AP}$在法向量方向上的投影长度<br><strong>公式：</strong>$d=\\frac{|\\overrightarrow{AP}\\cdot\\boldsymbol n|}{|\\boldsymbol n|}$<br><strong>易错点：</strong>忘记取绝对值或忘记除以法向量的模"
+      },
+      {
+        id: 8,
+        difficulty: "easy",
+        question: "若 $\\det(C)\\neq 0$，使 $AC$ 不可逆的充分必要条件是？",
+        options: ["$\\det(A)=0$", "$\\det(A)=1$", "$\\det(C)=0$", "$\\det(A)=\\det(C)$"],
+        correct: 0,
+        explanation: "<strong>考点：</strong>矩阵可逆性与行列式<br><strong>解法：</strong>$\\det(AC)=\\det(A)\\det(C)$<br>$AC$不可逆 $\\Leftrightarrow$ $\\det(AC)=0$ $\\Leftrightarrow$ $\\det(A)\\det(C)=0$<br>已知$\\det(C)\\neq 0$，故必须$\\det(A)=0$<br><strong>易错点：</strong>忽略已知条件$\\det(C)\\neq 0$"
+      },
+      {
+        id: 9,
+        difficulty: "easy",
+        question: "方程 $e^{(3x+1)^2}+(3x+1)^2=e+1$ 的解集是？",
+        options: ["$\\{0\\}$", "$\\{-\\frac{2}{3}\\}$", "$\\{0, -\\frac{2}{3}\\}$", "$\\{1, -1\\}$"],
+        correct: 2,
+        explanation: "<strong>考点：</strong>复合函数方程求解<br><strong>解法：</strong>令$u=(3x+1)^2$，方程变为$e^u+u=e^1+1$<br>设$f(u)=e^u+u$，则$f'(u)=e^u+1>0$，函数严格单调递增<br>$f(u)=f(1) \\Rightarrow u=1$，即$(3x+1)^2=1$<br>$3x+1=\\pm 1 \\Rightarrow x=0$ 或 $x=-\\frac{2}{3}$<br><strong>易错点：</strong>忘记考虑平方根的正负两种情况"
+      },
+      {
+        id: 10,
+        difficulty: "easy",
+        question: "在极坐标中，$r$ 的几何意义是？",
+        options: ["到 y 轴的距离", "到 x 轴的距离", "到原点的距离", "角度大小"],
+        correct: 2,
+        explanation: "<strong>考点：</strong>极坐标基本概念<br><strong>解法：</strong>在极坐标$(r,\\theta)$中，$r$直接表示点到原点的距离<br><strong>注意：</strong>$r$可以为负值，表示在相反方向<br><strong>易错点：</strong>混淆$r$与坐标轴距离的关系"
+      },
+      {id: 11, difficulty: "easy", question: "如何判断点 $P_1, P_3$ 是否在平面 $\\Pi$ 的同一侧？", options: ["比较到平面的距离", "比较点积符号", "比较叉积大小", "无法判断"], correct: 1, explanation: "<strong>考点：</strong>点相对平面的位置关系<br><strong>解法：</strong>计算$\\overrightarrow{AP_1}\\cdot\\boldsymbol n$和$\\overrightarrow{AP_3}\\cdot\\boldsymbol n$<br>若两个点积同号，则在同一侧；异号则在不同侧<br><strong>原理：</strong>点积符号反映向量与法向量夹角的性质<br><strong>易错点：</strong>误认为需要计算具体距离"},
+      {id: 12, difficulty: "easy", question: "高斯-若尔当消元法 (Gauss-Jordan) 的目标是得到什么矩阵？", options: ["行阶梯形 (REF)", "简化行阶梯形 (RREF)", "上三角矩阵", "对角矩阵"], correct: 1, explanation: "<strong>考点：</strong>矩阵标准形式<br><strong>解法：</strong>Gauss-Jordan消元的目标是RREF（简化行阶梯形）<br><strong>特征：</strong>主元为1，主元列其他元素为0<br><strong>区别：</strong>普通高斯消元只需REF，Gauss-Jordan需要进一步简化<br><strong>易错点：</strong>混淆REF和RREF的区别"},
+      {id: 13, difficulty: "easy", question: "矩阵 $(A^T)^{-1}$ 等于？", options: ["$(A^{-1})^T$", "$A^{-1}$", "$A^T$", "不存在"], correct: 0, explanation: "<strong>考点：</strong>矩阵运算性质<br><strong>解法：</strong>这是矩阵代数中的重要性质：$(A^T)^{-1}=(A^{-1})^T$<br><strong>证明：</strong>由$AA^{-1}=I$两边取转置得$(A^{-1})^T(A^T)=I$<br><strong>结论：</strong>\"逆的转置 = 转置的逆\"<br><strong>易错点：</strong>操作顺序混淆"},
+      {id: 14, difficulty: "easy", question: "线性方程组 $Ax=b$ 无解的充要条件是在其增广矩阵的行阶梯形中出现什么？", options: ["一行全零", "一行非零", "形如 $[0\\ \\dots\\ 0 \\mid c \\neq 0]$ 的行", "主元个数小于变量数"], correct: 2, explanation: "<strong>考点：</strong>线性系统一致性<br><strong>解法：</strong>矛盾行$[0\\;0\\;\\cdots\\;0\\mid c\\neq 0]$表示方程$0=c$<br><strong>含义：</strong>这样的方程显然无解<br><strong>判定：</strong>增广矩阵中出现此类行，系统必定无解<br><strong>易错点：</strong>忘记右侧常数项非零的条件"},
+      {id: 15, difficulty: "easy", question: "三维空间中，方程 $x+2y+4z=45$ 的几何解释是？", options: ["一个点", "一条直线", "一个平面", "一个球体"], correct: 2, explanation: "<strong>考点：</strong>线性方程的几何意义<br><strong>解法：</strong>形如$ax+by+cz=d$的线性方程在3D空间中表示平面<br><strong>法向量：</strong>$(1,2,4)$<br><strong>一般性：</strong>$n$维空间中，线性方程表示$(n-1)$维超平面<br><strong>易错点：</strong>混淆不同维度的几何对象"},
+      {id: 16, difficulty: "easy", question: "若一个线性系统主元数少于变量数，且系统一致，则它有多少解？", options: ["无解", "唯一解", "无穷多解", "两个解"], correct: 2, explanation: "<strong>考点：</strong>线性系统解的类型<br><strong>解法：</strong>主元数 < 变量数意味着存在自由变量<br><strong>结论：</strong>自由变量可以任意取值，导致无穷多解<br><strong>条件：</strong>系统必须一致（无矛盾行）<br><strong>易错点：</strong>忘记一致性条件"},
+      {id: 17, difficulty: "easy", question: "根据微积分基本定理，$G(-1)=\\int_1^{-1} g(t)\\,dt$ 的值是？", options: ["$-\\int_{-1}^1 g(t)dt$", "$\\int_{-1}^1 g(t)dt$", "$0$", "无法确定"], correct: 0, explanation: "<strong>考点：</strong>定积分方向性<br><strong>解法：</strong>$\\int_1^{-1} g(t)dt = -\\int_{-1}^1 g(t)dt$<br><strong>规律：</strong>交换积分上下限要变号<br><strong>易错点：</strong>忘记变号"},
+      {id: 18, difficulty: "easy", question: "若函数$f(x)$在某点的导数$f'(x_0) > 0$，说明什么？", options: ["函数在该点递增", "函数在该点递减", "函数在该点有极值", "函数在该点不连续"], correct: 0, explanation: "<strong>考点：</strong>导数的几何意义<br><strong>解法：</strong>导数为正表示函数在该点的切线斜率为正<br><strong>结论：</strong>函数在该点附近单调递增<br><strong>易错点：</strong>与函数值的正负混淆"},
+      {id: 19, difficulty: "easy", question: "极坐标方程$r = a\\sin\\theta$（$a > 0$）表示什么图形？", options: ["圆", "直线", "椭圆", "双曲线"], correct: 0, explanation: "<strong>考点：</strong>极坐标方程图形<br><strong>解法：</strong>转换为直角坐标：$x^2 + (y-\\frac{a}{2})^2 = (\\frac{a}{2})^2$<br><strong>结果：</strong>圆心在$(0, \\frac{a}{2})$，半径为$\\frac{a}{2}$的圆<br><strong>易错点：</strong>转换过程出错"},
+      {id: 20, difficulty: "easy", question: "向量$\\vec{a}$在向量$\\vec{b}$上的投影长度公式是？", options: ["$\\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|}$", "$\\frac{\\vec{a} \\times \\vec{b}}{|\\vec{b}|}$", "$\\vec{a} \\cdot \\vec{b}$", "$|\\vec{a}|\\cos\\theta$"], correct: 0, explanation: "<strong>考点：</strong>向量投影<br><strong>解法：</strong>投影长度等于两向量点积除以被投影向量的模<br><strong>公式：</strong>$\\text{proj}_{\\vec{b}}\\vec{a} = \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|}$<br><strong>易错点：</strong>与叉积公式混淆"},
+      {id: 21, difficulty: "easy", question: "什么是单位矩阵？", options: ["主对角线为1，其他为0", "所有元素为1", "所有元素为0", "行列式为1的任意矩阵"], correct: 0, explanation: "<strong>考点：</strong>特殊矩阵<br><strong>解法：</strong>单位矩阵主对角线元素为1，其余为0<br><strong>性质：</strong>与任何矩阵相乘等于原矩阵<br><strong>易错点：</strong>与对角矩阵混淆"},
+      {id: 22, difficulty: "easy", question: "矩阵乘法 $AB$ 的条件是？", options: ["A的列数等于B的行数", "A的行数等于B的列数", "A和B同型", "A和B都是方阵"], correct: 0, explanation: "<strong>考点：</strong>矩阵乘法条件<br><strong>解法：</strong>A是m×n，B必须是n×p才能相乘<br><strong>结果：</strong>AB是m×p矩阵<br><strong>易错点：</strong>行列匹配条件搞错"},
+      {id: 23, difficulty: "easy", question: "2×2矩阵 $\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ 的行列式是？", options: ["$ad - bc$", "$ac - bd$", "$ab - cd$", "$a + d - b - c$"], correct: 0, explanation: "<strong>考点：</strong>2×2行列式公式<br><strong>解法：</strong>主对角线乘积减副对角线乘积<br><strong>记忆：</strong>$ad - bc$<br><strong>易错点：</strong>符号搞错"},
+      {id: 24, difficulty: "easy", question: "行列式为0意味着什么？", options: ["矩阵奇异（不可逆）", "矩阵是零矩阵", "矩阵是单位矩阵", "矩阵是对角矩阵"], correct: 0, explanation: "<strong>考点：</strong>奇异矩阵<br><strong>解法：</strong>$\\det(A)=0$表示矩阵不可逆<br><strong>几何：</strong>向量线性相关<br><strong>易错点：</strong>与零矩阵混淆"},
+      {id: 25, difficulty: "easy", question: "什么是对称矩阵？", options: ["$A^T = A$", "$A^T = -A$", "$A^T = A^{-1}$", "$A^T = I$"], correct: 0, explanation: "<strong>考点：</strong>对称矩阵<br><strong>解法：</strong>矩阵等于其转置<br><strong>性质：</strong>关于主对角线对称<br><strong>易错点：</strong>与反对称矩阵混淆"},
+      {id: 26, difficulty: "easy", question: "矩阵的转置 $(A^T)^T$ 等于什么？", options: ["$A$", "$A^T$", "$A^{-1}$", "$0$"], correct: 0, explanation: "<strong>考点：</strong>转置运算性质<br><strong>解法：</strong>转置的转置等于原矩阵<br><strong>性质：</strong>$(A^T)^T = A$<br><strong>易错点：</strong>认为等于$A^T$"},
+      {id: 27, difficulty: "easy", question: "两个矩阵相乘 $AB$ 和 $BA$ 的结果？", options: ["一般不相等", "总是相等", "只有方阵时相等", "只有可逆时相等"], correct: 0, explanation: "<strong>考点：</strong>矩阵乘法交换律<br><strong>解法：</strong>矩阵乘法一般不满足交换律<br><strong>例外：</strong>与单位矩阵或零矩阵相乘<br><strong>易错点：</strong>认为总是相等"},
+      {id: 28, difficulty: "easy", question: "零矩阵与任何矩阵相加的结果是？", options: ["原矩阵", "零矩阵", "单位矩阵", "无法确定"], correct: 0, explanation: "<strong>考点：</strong>零矩阵性质<br><strong>解法：</strong>零矩阵是加法单位元<br><strong>性质：</strong>$A + O = A$<br><strong>易错点：</strong>与乘法单位元混淆"},
+      {id: 29, difficulty: "easy", question: "单位矩阵与任何矩阵相乘的结果是？", options: ["原矩阵", "单位矩阵", "零矩阵", "无法确定"], correct: 0, explanation: "<strong>考点：</strong>单位矩阵性质<br><strong>解法：</strong>单位矩阵是乘法单位元<br><strong>性质：</strong>$AI = IA = A$<br><strong>易错点：</strong>与加法单位元混淆"},
+      {id: 30, difficulty: "easy", question: "矩阵 $A$ 可逆的充要条件是？", options: ["$\\det(A) \\neq 0$", "$\\det(A) = 1$", "$A = A^T$", "$A$ 是方阵"], correct: 0, explanation: "<strong>考点：</strong>可逆矩阵判定<br><strong>解法：</strong>方阵可逆当且仅当行列式非零<br><strong>等价：</strong>行满秩、列满秩<br><strong>易错点：</strong>忘记方阵条件"},
+      {id: 31, difficulty: "easy", question: "对角矩阵的行列式等于？", options: ["对角元素的乘积", "对角元素的和", "对角元素的平方和", "主元个数"], correct: 0, explanation: "<strong>考点：</strong>对角矩阵行列式<br><strong>解法：</strong>对角矩阵行列式等于对角元素乘积<br><strong>推广：</strong>三角矩阵同样成立<br><strong>易错点：</strong>与矩阵的迹混淆"},
+      {id: 32, difficulty: "easy", question: "上三角矩阵的行列式等于？", options: ["主对角线元素的乘积", "上三角元素的和", "所有元素的乘积", "主元个数"], correct: 0, explanation: "<strong>考点：</strong>三角矩阵行列式<br><strong>解法：</strong>三角矩阵行列式等于主对角线元素乘积<br><strong>包括：</strong>上三角、下三角、对角矩阵<br><strong>易错点：</strong>只考虑非零元素"},
+      {id: 33, difficulty: "easy", question: "矩阵的迹 $\\text{tr}(A)$ 是什么？", options: ["主对角线元素的和", "主对角线元素的乘积", "所有元素的和", "行列式的值"], correct: 0, explanation: "<strong>考点：</strong>矩阵的迹<br><strong>解法：</strong>迹是主对角线元素之和<br><strong>性质：</strong>$\\text{tr}(A+B) = \\text{tr}(A) + \\text{tr}(B)$<br><strong>易错点：</strong>与行列式混淆"},
+      {id: 34, difficulty: "easy", question: "如果 $A$ 是 $n \\times n$ 矩阵，$\\text{tr}(kA)$ 等于？", options: ["$k \\cdot \\text{tr}(A)$", "$k^n \\cdot \\text{tr}(A)$", "$\\text{tr}(A)$", "$k + \\text{tr}(A)$"], correct: 0, explanation: "<strong>考点：</strong>迹的线性性<br><strong>解法：</strong>迹运算满足线性性质<br><strong>性质：</strong>$\\text{tr}(kA) = k\\text{tr}(A)$<br><strong>易错点：</strong>与行列式的幂次性质混淆"},
+      {id: 35, difficulty: "easy", question: "线性系统 $Ax = 0$ 总有什么解？", options: ["零解", "唯一解", "无穷多解", "无解"], correct: 0, explanation: "<strong>考点：</strong>齐次线性系统<br><strong>解法：</strong>齐次系统总有零解 $x = 0$<br><strong>非平凡解：</strong>当$\\det(A) = 0$时有无穷多解<br><strong>易错点：</strong>忘记零解的存在"},
+      {id: 36, difficulty: "easy", question: "线性系统 $Ax = b$ ($b \\neq 0$) 的解的情况？", options: ["无解、唯一解或无穷多解", "总有唯一解", "总有无穷多解", "总是无解"], correct: 0, explanation: "<strong>考点：</strong>非齐次线性系统<br><strong>解法：</strong>根据系数矩阵和增广矩阵的秩确定<br><strong>三种情况：</strong>无解、唯一解、无穷多解<br><strong>易错点：</strong>认为总有解"},
+      {id: 37, difficulty: "easy", question: "向量 $(1, 2, 3)$ 的长度是？", options: ["$\\sqrt{14}$", "$6$", "$14$", "$\\sqrt{6}$"], correct: 0, explanation: "<strong>考点：</strong>向量长度计算<br><strong>解法：</strong>$\\|v\\| = \\sqrt{1^2 + 2^2 + 3^2} = \\sqrt{14}$<br><strong>公式：</strong>$\\|v\\| = \\sqrt{\\sum v_i^2}$<br><strong>易错点：</strong>忘记开平方根"},
+      {id: 38, difficulty: "easy", question: "两个向量垂直的条件是？", options: ["点积为0", "叉积为0", "长度相等", "方向相同"], correct: 0, explanation: "<strong>考点：</strong>向量垂直判定<br><strong>解法：</strong>两向量垂直当且仅当点积为0<br><strong>几何：</strong>$\\vec{a} \\perp \\vec{b} \\Leftrightarrow \\vec{a} \\cdot \\vec{b} = 0$<br><strong>易错点：</strong>与平行条件混淆"},
+      {id: 39, difficulty: "easy", question: "两个向量平行的条件是？", options: ["叉积为零向量", "点积为0", "长度相等", "夹角为90°"], correct: 0, explanation: "<strong>考点：</strong>向量平行判定<br><strong>解法：</strong>两向量平行当且仅当叉积为零向量<br><strong>等价：</strong>$\\vec{a} \\parallel \\vec{b} \\Leftrightarrow \\vec{a} \\times \\vec{b} = \\vec{0}$<br><strong>易错点：</strong>与垂直条件混淆"},
+      {id: 40, difficulty: "easy", question: "向量 $\\vec{a} = (3, 4)$ 的单位向量是？", options: ["$(\\frac{3}{5}, \\frac{4}{5})$", "$(3, 4)$", "$(1, 1)$", "$(-\\frac{3}{5}, -\\frac{4}{5})$"], correct: 0, explanation: "<strong>考点：</strong>单位向量计算<br><strong>解法：</strong>$\\hat{a} = \\frac{\\vec{a}}{\\|\\vec{a}\\|}$，其中$\\|\\vec{a}\\| = 5$<br><strong>结果：</strong>$(\\frac{3}{5}, \\frac{4}{5})$<br><strong>易错点：</strong>忘记除以向量长度"},
+      {id: 41, difficulty: "easy", question: "点 $(2, 1)$ 到直线 $3x + 4y - 5 = 0$ 的距离是？", options: ["$\\frac{5}{5} = 1$", "$2$", "$\\frac{1}{5}$", "$5$"], correct: 0, explanation: "<strong>考点：</strong>点到直线距离<br><strong>解法：</strong>$d = \\frac{|3 \\cdot 2 + 4 \\cdot 1 - 5|}{\\sqrt{3^2 + 4^2}} = \\frac{5}{5} = 1$<br><strong>公式：</strong>$d = \\frac{|ax_0 + by_0 + c|}{\\sqrt{a^2 + b^2}}$<br><strong>易错点：</strong>忘记分母的平方根"},
+      {id: 42, difficulty: "easy", question: "直线 $2x + 3y - 6 = 0$ 的法向量是？", options: ["$(2, 3)$", "$(3, -2)$", "$(-3, 2)$", "$(6, 0)$"], correct: 0, explanation: "<strong>考点：</strong>直线的法向量<br><strong>解法：</strong>直线$ax + by + c = 0$的法向量是$(a, b)$<br><strong>应用：</strong>用于计算距离和垂直关系<br><strong>易错点：</strong>符号或顺序错误"},
+      {id: 43, difficulty: "easy", question: "函数 $f(x) = x^3$ 在 $x = 2$ 处的导数是？", options: ["$12$", "$8$", "$6$", "$3$"], correct: 0, explanation: "<strong>考点：</strong>幂函数求导<br><strong>解法：</strong>$f'(x) = 3x^2$，故$f'(2) = 3 \\cdot 4 = 12$<br><strong>公式：</strong>$(x^n)' = nx^{n-1}$<br><strong>易错点：</strong>忘记乘以幂指数"},
+      {id: 44, difficulty: "easy", question: "函数 $f(x) = e^x$ 的导数是？", options: ["$e^x$", "$xe^{x-1}$", "$\\ln x$", "$1$"], correct: 0, explanation: "<strong>考点：</strong>指数函数求导<br><strong>解法：</strong>$e^x$的导数就是它本身<br><strong>特殊性：</strong>唯一满足$f'(x) = f(x)$的初等函数<br><strong>易错点：</strong>与其他指数函数混淆"},
+      {id: 45, difficulty: "easy", question: "函数 $f(x) = \\ln x$ 的导数是？", options: ["$\\frac{1}{x}$", "$\\frac{1}{\\ln x}$", "$x$", "$e^x$"], correct: 0, explanation: "<strong>考点：</strong>对数函数求导<br><strong>解法：</strong>自然对数的导数是$\\frac{1}{x}$<br><strong>定义域：</strong>$x > 0$<br><strong>易错点：</strong>忘记定义域限制"},
+      {id: 46, difficulty: "easy", question: "复合函数 $f(g(x))$ 的求导法则是？", options: ["$f'(g(x)) \\cdot g'(x)$", "$f'(x) \\cdot g'(x)$", "$f(g'(x))$", "$f'(x) + g'(x)$"], correct: 0, explanation: "<strong>考点：</strong>链式法则<br><strong>解法：</strong>复合函数的导数等于外函数导数乘以内函数导数<br><strong>记忆：</strong>\"外导乘内导\"<br><strong>易错点：</strong>忘记内函数的导数"},
+      {id: 47, difficulty: "easy", question: "函数乘积 $(fg)'$ 的求导法则是？", options: ["$f'g + fg'$", "$f'g'$", "$(f'g)'$", "$f' + g'$"], correct: 0, explanation: "<strong>考点：</strong>乘积法则<br><strong>解法：</strong>$(fg)' = f'g + fg'$<br><strong>记忆：</strong>\"前导后不导，前不导后导\"<br><strong>易错点：</strong>只求一个函数的导数"},
+      {id: 48, difficulty: "easy", question: "函数商 $(\\frac{f}{g})'$ 的求导法则是？", options: ["$\\frac{f'g - fg'}{g^2}$", "$\\frac{f'g + fg'}{g^2}$", "$\\frac{f'}{g'}$", "$\\frac{f'g}{fg'}$"], correct: 0, explanation: "<strong>考点：</strong>商法则<br><strong>解法：</strong>$(\\frac{f}{g})' = \\frac{f'g - fg'}{g^2}$<br><strong>记忆：</strong>\"下导上，上导下，全在下方平方下\"<br><strong>易错点：</strong>符号和分母搞错"},
+      {id: 49, difficulty: "easy", question: "函数 $f(x) = \\sin x$ 的导数是？", options: ["$\\cos x$", "$-\\cos x$", "$\\sin x$", "$-\\sin x$"], correct: 0, explanation: "<strong>考点：</strong>三角函数求导<br><strong>解法：</strong>正弦函数的导数是余弦函数<br><strong>记忆：</strong>$\\sin' = \\cos$<br><strong>易错点：</strong>符号搞错"},
+      {id: 50, difficulty: "easy", question: "函数 $f(x) = \\cos x$ 的导数是？", options: ["$-\\sin x$", "$\\sin x$", "$\\cos x$", "$-\\cos x$"], correct: 0, explanation: "<strong>考点：</strong>三角函数求导<br><strong>解法：</strong>余弦函数的导数是负正弦函数<br><strong>记忆：</strong>$\\cos' = -\\sin$<br><strong>易错点：</strong>忘记负号"},
+      {id: 51, difficulty: "easy", question: "导数 $f'(x) = 0$ 的点称为？", options: ["临界点", "拐点", "间断点", "最值点"], correct: 0, explanation: "<strong>考点：</strong>临界点定义<br><strong>解法：</strong>导数为零的点称为临界点或驻点<br><strong>应用：</strong>寻找极值的候选点<br><strong>易错点：</strong>与拐点概念混淆"},
+      {id: 52, difficulty: "easy", question: "函数在某点可导的必要条件是？", options: ["在该点连续", "在该点有定义", "左右导数存在", "导数连续"], correct: 0, explanation: "<strong>考点：</strong>可导与连续关系<br><strong>解法：</strong>可导必连续，但连续不一定可导<br><strong>逻辑：</strong>可导⇒连续<br><strong>易错点：</strong>认为连续就可导"},
+      {id: 53, difficulty: "easy", question: "定积分 $\\int_a^a f(x)dx$ 的值是？", options: ["$0$", "$f(a)$", "$1$", "无法确定"], correct: 0, explanation: "<strong>考点：</strong>定积分性质<br><strong>解法：</strong>积分区间长度为0，积分值为0<br><strong>几何：</strong>面积为零<br><strong>易错点：</strong>认为等于$f(a)$"},
+      {id: 54, difficulty: "easy", question: "定积分 $\\int_a^b f(x)dx = -\\int_b^a f(x)dx$ 体现了什么性质？", options: ["积分区间的方向性", "函数的奇偶性", "积分的线性性", "换元积分"], correct: 0, explanation: "<strong>考点：</strong>定积分的方向性<br><strong>解法：</strong>交换积分上下限要变号<br><strong>几何：</strong>积分方向影响符号<br><strong>易错点：</strong>忘记变号"},
+      {id: 55, difficulty: "easy", question: "微积分基本定理说明了什么关系？", options: ["导数与积分互为逆运算", "连续与可导的关系", "极限与导数的关系", "函数与反函数的关系"], correct: 0, explanation: "<strong>考点：</strong>微积分基本定理<br><strong>解法：</strong>FTC建立了导数与积分的逆运算关系<br><strong>意义：</strong>连接微分学与积分学<br><strong>易错点：</strong>理解不够深刻"},
+      {id: 56, difficulty: "easy", question: "函数 $f(x) = |x|$ 在 $x = 0$ 处是否可导？", options: ["不可导", "可导", "左可导", "右可导"], correct: 0, explanation: "<strong>考点：</strong>绝对值函数的可导性<br><strong>解法：</strong>在$x=0$处左导数$-1$，右导数$1$，不相等<br><strong>结论：</strong>连续但不可导<br><strong>易错点：</strong>认为连续就可导"},
+      {id: 57, difficulty: "easy", question: "极坐标方程 $r = 2\\cos\\theta$ 表示什么图形？", options: ["圆", "直线", "椭圆", "抛物线"], correct: 0, explanation: "<strong>考点：</strong>极坐标方程识别<br><strong>解法：</strong>$r = 2\\cos\\theta$可化为$(x-1)^2 + y^2 = 1$，是圆<br><strong>中心：</strong>$(1, 0)$，半径$1$<br><strong>易错点：</strong>不会转换为直角坐标"},
+      {id: 58, difficulty: "easy", question: "极坐标中点 $(2, \\frac{\\pi}{4})$ 对应的直角坐标是？", options: ["$(\\sqrt{2}, \\sqrt{2})$", "$(2, \\frac{\\pi}{4})$", "$(\\sqrt{2}, 2)$", "$(2, \\sqrt{2})$"], correct: 0, explanation: "<strong>考点：</strong>极坐标转换<br><strong>解法：</strong>$x = 2\\cos\\frac{\\pi}{4} = \\sqrt{2}$，$y = 2\\sin\\frac{\\pi}{4} = \\sqrt{2}$<br><strong>公式：</strong>$x = r\\cos\\theta$，$y = r\\sin\\theta$<br><strong>易错点：</strong>三角函数值计算错误"},
+      {id: 59, difficulty: "easy", question: "向量 $\\vec{a} = (1, 2, 3)$ 和 $\\vec{b} = (4, 5, 6)$ 的点积是？", options: ["$32$", "$18$", "$(4, 10, 18)$", "$\\sqrt{32}$"], correct: 0, explanation: "<strong>考点：</strong>向量点积计算<br><strong>解法：</strong>$\\vec{a} \\cdot \\vec{b} = 1 \\cdot 4 + 2 \\cdot 5 + 3 \\cdot 6 = 32$<br><strong>公式：</strong>$\\vec{a} \\cdot \\vec{b} = \\sum a_i b_i$<br><strong>易错点：</strong>与叉积混淆"},
+      {id: 60, difficulty: "easy", question: "平面方程 $2x + 3y + z = 6$ 在坐标轴上的截距分别是？", options: ["$x$轴：$3$，$y$轴：$2$，$z$轴：$6$", "$x$轴：$2$，$y$轴：$3$，$z$轴：$6$", "$x$轴：$6$，$y$轴：$6$，$z$轴：$6$", "$x$轴：$1$，$y$轴：$1$，$z$轴：$1$"], correct: 0, explanation: "<strong>考点：</strong>平面截距<br><strong>解法：</strong>令两个变量为0求第三个变量：$(3,0,0)$，$(0,2,0)$，$(0,0,6)$<br><strong>截距：</strong>$x$轴$3$，$y$轴$2$，$z$轴$6$<br><strong>易错点：</strong>系数与截距搞混"},
+      
+      // ========== Medium Questions (25 questions) ==========
+      {id: 61, difficulty: "medium", question: "计算 $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} \\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix}$", options: ["$\\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}$", "$\\begin{bmatrix} 6 & 8 \\\\ 10 & 12 \\end{bmatrix}$", "$\\begin{bmatrix} 5 & 12 \\\\ 21 & 32 \\end{bmatrix}$", "$\\begin{bmatrix} 17 & 20 \\\\ 39 & 44 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>矩阵乘法<br><strong>解法：</strong>$(AB)_{11} = 1×5 + 2×7 = 19$，$(AB)_{12} = 1×6 + 2×8 = 22$<br>$(AB)_{21} = 3×5 + 4×7 = 43$，$(AB)_{22} = 3×6 + 4×8 = 50$<br><strong>易错点：</strong>元素对应关系错误"},
+      {id: 62, difficulty: "medium", question: "求 $\\begin{bmatrix} 2 & 3 \\\\ 1 & 4 \\end{bmatrix}$ 的行列式", options: ["5", "11", "8", "14"], correct: 0, explanation: "<strong>考点：</strong>2×2行列式计算<br><strong>解法：</strong>$\\det = 2×4 - 3×1 = 8 - 3 = 5$<br><strong>易错点：</strong>计算错误"},
+      {id: 63, difficulty: "medium", question: "矩阵乘法$(AB)_{ij}$等于A的第i行与B的第j列的？", options: ["点积", "叉积", "和", "差"], correct: 0, explanation: "<strong>考点：</strong>矩阵乘法定义<br><strong>解法：</strong>矩阵乘法是行向量与列向量的点积<br><strong>公式：</strong>$(AB)_{ij} = \\sum_k A_{ik}B_{kj}$<br><strong>易错点：</strong>与叉积混淆"},
+      {id: 64, difficulty: "medium", question: "求解线性系统的增广矩阵有什么作用？", options: ["同时处理系数和常数项", "只处理系数", "只处理常数项", "简化计算"], correct: 0, explanation: "<strong>考点：</strong>增广矩阵<br><strong>解法：</strong>增广矩阵$[A|b]$将系数矩阵和常数向量合并<br><strong>优势：</strong>行变换同时作用于两部分<br><strong>应用：</strong>高斯消元法的标准形式"},
+      {id: 65, difficulty: "medium", question: "求$\\begin{bmatrix} 2 & 1 \\\\ 3 & 2 \\end{bmatrix}$的逆矩阵", options: ["$\\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & -1 \\\\ -2 & 2 \\end{bmatrix}$", "$\\begin{bmatrix} 2 & 1 \\\\ 3 & 2 \\end{bmatrix}$", "$\\begin{bmatrix} -2 & 1 \\\\ 3 & -2 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>2×2逆矩阵<br><strong>解法：</strong>先求行列式$\\det = 1$，再用公式求逆<br><strong>结果：</strong>$A^{-1} = \\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix}$<br><strong>易错点：</strong>符号和位置错误"},
+      {id: 66, difficulty: "medium", question: "计算$\\begin{bmatrix} 1 & 2 & 3 \\\\ 0 & 1 & 4 \\\\ 5 & 6 & 0 \\end{bmatrix}$的行列式", options: ["1", "0", "5", "-1"], correct: 0, explanation: "<strong>考点：</strong>3×3行列式<br><strong>解法：</strong>按第一行展开计算<br><strong>计算：</strong>$1(0-24) - 2(0-20) + 3(0-5) = -24+40-15 = 1$<br><strong>易错点：</strong>展开时符号错误"},
+      {id: 67, difficulty: "medium", question: "解线性系统：$\\begin{cases} 2x + y = 5 \\\\ x + 3y = 8 \\end{cases}$", options: ["$x = 1, y = 3$", "$x = 2, y = 1$", "$x = 3, y = 2$", "$x = 0, y = 5$"], correct: 0, explanation: "<strong>考点：</strong>线性系统求解<br><strong>解法：</strong>消元法或矩阵方法<br><strong>验证：</strong>代入原方程检验答案<br><strong>易错点：</strong>计算错误"},
+      {id: 68, difficulty: "medium", question: "矩阵$\\begin{bmatrix} 1 & 2 & 3 \\\\ 2 & 4 & 6 \\\\ 3 & 6 & 9 \\end{bmatrix}$的秩是？", options: ["1", "2", "3", "0"], correct: 0, explanation: "<strong>考点：</strong>矩阵的秩<br><strong>解法：</strong>所有行都是第一行的倍数<br><strong>结论：</strong>只有一个线性无关的行<br><strong>易错点：</strong>没有完全化简"},
+      {id: 69, difficulty: "medium", question: "求$\\begin{bmatrix} 3 & 1 & 2 \\\\ 0 & 5 & 4 \\\\ 1 & 2 & 7 \\end{bmatrix}$的迹", options: ["15", "12", "10", "18"], correct: 0, explanation: "<strong>考点：</strong>矩阵的迹<br><strong>解法：</strong>主对角线元素之和：$3 + 5 + 7 = 15$<br><strong>定义：</strong>$\\text{tr}(A) = \\sum a_{ii}$<br><strong>易错点：</strong>加错元素"},
+      {id: 70, difficulty: "medium", question: "若A是3×3矩阵且$\\det(A) = 4$，则$\\det(2A) = ?$", options: ["32", "8", "4", "16"], correct: 0, explanation: "<strong>考点：</strong>行列式性质<br><strong>解法：</strong>$\\det(kA) = k^n\\det(A) = 2^3 \\cdot 4 = 32$<br><strong>公式：</strong>对n×n矩阵有$\\det(kA) = k^n\\det(A)$<br><strong>易错点：</strong>幂次计算错误"},
+      {id: 71, difficulty: "medium", question: "对角矩阵$\\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{bmatrix}$的行列式是？", options: ["6", "5", "1", "0"], correct: 0, explanation: "<strong>考点：</strong>对角矩阵行列式<br><strong>解法：</strong>对角元素的乘积：$1 × 2 × 3 = 6$<br><strong>性质：</strong>对角矩阵和三角矩阵的行列式都等于对角元素乘积<br><strong>易错点：</strong>求和而不是求积"},
+      {id: 72, difficulty: "medium", question: "求$(A^T)^{-1}$，其中$A = \\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$", options: ["$\\begin{bmatrix} 1 & 0 \\\\ -2 & 1 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & -2 \\\\ 0 & 1 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$", "$\\begin{bmatrix} 0 & 1 \\\\ 1 & 2 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>转置与逆的关系<br><strong>解法：</strong>$(A^T)^{-1} = (A^{-1})^T$<br><strong>性质：</strong>逆的转置等于转置的逆<br><strong>易错点：</strong>运算顺序错误"},
+      {id: 73, difficulty: "medium", question: "若$\\begin{bmatrix} 1 & 2 \\\\ 3 & x \\end{bmatrix}$是奇异矩阵，求$x$", options: ["6", "2", "3", "1"], correct: 0, explanation: "<strong>考点：</strong>奇异矩阵<br><strong>解法：</strong>奇异矩阵行列式为0：$1×x - 2×3 = 0$，所以$x = 6$<br><strong>定义：</strong>奇异矩阵即不可逆矩阵<br><strong>易错点：</strong>计算行列式错误"},
+      {id: 74, difficulty: "medium", question: "计算$\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$", options: ["$\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$", "$\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$", "$\\begin{bmatrix} a & 0 \\\\ 0 & d \\end{bmatrix}$", "$\\begin{bmatrix} 0 & b \\\\ c & 0 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>单位矩阵性质<br><strong>解法：</strong>单位矩阵与任何矩阵相乘都等于原矩阵<br><strong>性质：</strong>$IA = AI = A$<br><strong>几何：</strong>单位矩阵代表恒等变换"},
+      {id: 75, difficulty: "medium", question: "求矩阵$\\begin{bmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\\\ 7 & 8 & 9 \\end{bmatrix}$中$a_{11}$的代数余子式", options: ["-3", "3", "-6", "6"], correct: 0, explanation: "<strong>考点：</strong>代数余子式<br><strong>解法：</strong>$A_{11} = (-1)^{1+1}M_{11} = M_{11} = \\begin{vmatrix} 5 & 6 \\\\ 8 & 9 \\end{vmatrix} = 45-48 = -3$<br><strong>公式：</strong>$A_{ij} = (-1)^{i+j}M_{ij}$<br><strong>易错点：</strong>符号或余子式计算错误"},
+      {id: 76, difficulty: "medium", question: "单位矩阵的100次幂是？", options: ["单位矩阵", "$\\begin{bmatrix} 100 & 0 \\\\ 0 & 100 \\end{bmatrix}$", "零矩阵", "无法计算"], correct: 0, explanation: "<strong>考点：</strong>单位矩阵幂次<br><strong>解法：</strong>$I^n = I$对任意正整数$n$成立<br><strong>性质：</strong>单位矩阵是乘法运算的幂等元<br><strong>易错点：</strong>与标量幂次混淆"},
+      {id: 77, difficulty: "medium", question: "计算$\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}^2$", options: ["$\\begin{bmatrix} 2 & 2 \\\\ 2 & 2 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & 2 \\\\ 2 & 1 \\end{bmatrix}$", "$\\begin{bmatrix} 4 & 4 \\\\ 4 & 4 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>矩阵乘幂<br><strong>解法：</strong>矩阵自乘一次<br><strong>计算：</strong>逐个元素相乘求和<br><strong>易错点：</strong>元素对应错误"},
+      {id: 78, difficulty: "medium", question: "若A和B都是2×2矩阵，$\\det(A) = 3$，$\\det(B) = 4$，则$\\det(AB) = ?$", options: ["12", "7", "1", "0"], correct: 0, explanation: "<strong>考点：</strong>行列式乘积性质<br><strong>解法：</strong>$\\det(AB) = \\det(A) × \\det(B) = 3 × 4 = 12$<br><strong>性质：</strong>行列式关于矩阵乘法是乘性的<br><strong>易错点：</strong>认为是加法关系"},
+      {id: 79, difficulty: "medium", question: "矩阵$\\begin{bmatrix} 1 & 2 \\\\ 2 & 4 \\end{bmatrix}$的零空间是？", options: ["$\\text{span}\\{\\begin{bmatrix} -2 \\\\ 1 \\end{bmatrix}\\}$", "$\\text{span}\\{\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}\\}$", "$\\text{span}\\{\\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}\\}$", "只有零向量"], correct: 0, explanation: "<strong>考点：</strong>零空间<br><strong>解法：</strong>求解$Ax = 0$，得到基础解系<br><strong>计算：</strong>$x_1 + 2x_2 = 0$，所以$x_1 = -2x_2$<br><strong>结果：</strong>$\\text{span}\\{(-2, 1)^T\\}$"},
+      {id: 80, difficulty: "medium", question: "上三角矩阵$\\begin{bmatrix} 3 & 1 \\\\ 0 & 2 \\end{bmatrix}$的特征值是？", options: ["3和2", "1和2", "3和1", "2和5"], correct: 0, explanation: "<strong>考点：</strong>三角矩阵特征值<br><strong>解法：</strong>三角矩阵的特征值就是主对角线元素<br><strong>性质：</strong>对角矩阵和三角矩阵都有此性质<br><strong>易错点：</strong>计算特征多项式"},
+      {id: 81, difficulty: "medium", question: "矩阵$\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 0 & 0 \\end{bmatrix}$的列空间是？", options: ["$\\text{span}\\{\\begin{bmatrix} 1 \\\\ 0 \\\\ 0 \\end{bmatrix}, \\begin{bmatrix} 0 \\\\ 1 \\\\ 0 \\end{bmatrix}\\}$", "整个$\\mathbb{R}^3$", "只有零向量", "$\\text{span}\\{\\begin{bmatrix} 1 \\\\ 1 \\\\ 0 \\end{bmatrix}\\}$"], correct: 0, explanation: "<strong>考点：</strong>列空间<br><strong>解法：</strong>列空间由所有列向量张成<br><strong>结果：</strong>前两列线性无关，张成2维子空间<br><strong>几何：</strong>$xy$平面在$\\mathbb{R}^3$中"},
+      {id: 82, difficulty: "medium", question: "系统$Ax = b$有唯一解的条件是？", options: ["A是方阵且可逆", "A有更多行", "A有更多列", "b是零向量"], correct: 0, explanation: "<strong>考点：</strong>线性系统解的存在唯一性<br><strong>解法：</strong>唯一解需要A可逆，即方阵且$\\det(A) \\neq 0$<br><strong>理论：</strong>可逆矩阵对应一一映射<br><strong>易错点：</strong>忘记方阵条件"},
+      {id: 83, difficulty: "medium", question: "计算$(A^{-1})^T$，其中$A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$", options: ["$\\begin{bmatrix} 1/2 & 0 \\\\ 0 & 1/3 \\end{bmatrix}$", "$\\begin{bmatrix} 1/3 & 0 \\\\ 0 & 1/2 \\end{bmatrix}$", "$\\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$", "$\\begin{bmatrix} 3 & 0 \\\\ 0 & 2 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>对角矩阵的逆与转置<br><strong>解法：</strong>对角矩阵$(A^{-1})^T = (A^T)^{-1} = A^{-1}$<br><strong>结果：</strong>对角元素取倒数<br><strong>性质：</strong>对角矩阵转置等于自身"},
+      {id: 84, difficulty: "medium", question: "解方程组：$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} x \\\\ y \\end{bmatrix} = \\begin{bmatrix} 5 \\\\ 11 \\end{bmatrix}$，求$x + y$", options: ["3", "4", "5", "6"], correct: 0, explanation: "<strong>考点：</strong>线性方程组<br><strong>解法：</strong>$x + 2y = 5$，$3x + 4y = 11$<br><strong>求解：</strong>$x = 1, y = 2$，所以$x + y = 3$<br><strong>验证：</strong>代入原方程检验"},
+      {id: 85, difficulty: "medium", question: "线性变换保持什么性质不变？", options: ["线性组合", "距离", "角度", "面积"], correct: 0, explanation: "<strong>考点：</strong>线性变换性质<br><strong>解法：</strong>线性变换保持向量的线性组合关系<br><strong>定义：</strong>$T(ax+by) = aT(x) + bT(y)$<br><strong>注意：</strong>一般不保持距离和角度"},
+      
+      // ========== Hard Questions (5 questions) ==========
+      {id: 86, difficulty: "hard", question: "验证 $(AB)^{-1} = B^{-1}A^{-1}$。若 $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$，$B = \\begin{bmatrix} 2 & 0 \\\\ 1 & 3 \\end{bmatrix}$，求 $(AB)^{-1}$", options: ["$\\begin{bmatrix} 3/10 & -1/5 \\\\ -1/10 & 1/10 \\end{bmatrix}$", "$\\begin{bmatrix} 1/10 & 1/5 \\\\ 3/10 & -1/10 \\end{bmatrix}$", "$\\begin{bmatrix} -1/10 & 1/5 \\\\ 3/10 & -3/10 \\end{bmatrix}$", "$\\begin{bmatrix} 2 & -1 \\\\ -3 & 2 \\end{bmatrix}$"], correct: 0, explanation: "<strong>考点：</strong>逆矩阵运算规律<br><strong>解法：</strong>先计算$AB$，再求逆，验证与$B^{-1}A^{-1}$相等<br><strong>性质：</strong>$(AB)^{-1} = B^{-1}A^{-1}$（顺序相反）<br><strong>易错点：</strong>逆序相乘的顺序"},
+      {id: 87, difficulty: "hard", question: "用高斯消元法解三元线性方程组的关键步骤是什么？", options: ["化为行阶梯形矩阵", "计算行列式", "求特征值", "矩阵分解"], correct: 0, explanation: "<strong>考点：</strong>高斯消元法<br><strong>解法：</strong>通过行变换将增广矩阵化为行阶梯形<br><strong>目标：</strong>便于回代求解<br><strong>应用：</strong>求解线性方程组的标准方法"},
+      {id: 88, difficulty: "hard", question: "正交矩阵具有什么重要性质？", options: ["保持长度和角度不变", "行列式为1", "对称", "可对角化"], correct: 0, explanation: "<strong>考点：</strong>正交矩阵性质<br><strong>解法：</strong>正交变换是等距变换，保持几何性质<br><strong>条件：</strong>$Q^TQ = I$且$\\det(Q) = ±1$<br><strong>应用：</strong>旋转和反射变换"},
+      {id: 89, difficulty: "hard", question: "特征值与矩阵行列式有什么关系？", options: ["行列式等于所有特征值的乘积", "行列式等于特征值的和", "行列式等于最大特征值", "没有关系"], correct: 0, explanation: "<strong>考点：</strong>特征值理论<br><strong>解法：</strong>矩阵的行列式等于所有特征值的乘积<br><strong>推广：</strong>矩阵的迹等于所有特征值的和<br><strong>应用：</strong>不求特征值也能得到相关信息"},
+      {id: 90, difficulty: "hard", question: "复合线性变换的矩阵表示如何计算？", options: ["从右到左依次相乘变换矩阵", "从左到右依次相乘", "变换矩阵相加", "取变换矩阵的平均"], correct: 0, explanation: "<strong>考点：</strong>复合变换<br><strong>解法：</strong>变换的复合对应矩阵从右到左相乘<br><strong>原理：</strong>函数复合$(f \\circ g)(x) = f(g(x))$对应$T_f T_g$<br><strong>易错点：</strong>变换顺序与矩阵乘法顺序相反"}
+    ];
+
+    // Quiz State
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answeredQuestions = 0;
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let filteredQuestions = questions.slice();
+
+    // Initialize Quiz
+    function initQuiz() {
+      renderAllQuestions();
+      updateStats();
+      updateProgress();
+      setupFilters();
+      // Render MathJax after questions are loaded
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // Setup difficulty filter
+    function setupFilters() {
+      const difficultyFilter = document.getElementById('difficultyFilter');
+      difficultyFilter.addEventListener('change', function() {
+        const difficulty = this.value;
+        if (difficulty === 'all') {
+          filteredQuestions = questions.slice();
+        } else {
+          filteredQuestions = questions.filter(q => q.difficulty === difficulty);
+        }
+        resetQuizState();
+        renderAllQuestions();
+        updateStats();
+        updateProgress();
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    }
+
+    // Reset quiz state
+    function resetQuizState() {
+      currentQuestionIndex = 0;
+      score = 0;
+      answeredQuestions = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      userAnswers = new Array(filteredQuestions.length).fill(null);
+      document.getElementById('resultsSection').style.display = 'none';
+    }
+
+    // Render all questions
+    function renderAllQuestions() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = filteredQuestions.map((q, index) => `
+        <div class="question-card" id="question-${index}">
+          <span class="difficulty-badge difficulty-${q.difficulty}">
+            ${q.difficulty === 'easy' ? '基础' : q.difficulty === 'medium' ? '中等' : '困难'}
+          </span>
+          <h3 class="text-lg font-semibold mb-3">题目 ${q.id}: ${q.question}</h3>
+          <div class="options-container">
+            ${q.options.map((option, optIndex) => `
+              <button class="option-button" onclick="selectAnswer(${index}, ${optIndex})">
+                ${String.fromCharCode(65 + optIndex)}. ${option}
+              </button>
+            `).join('')}
+          </div>
+          <div class="explanation" id="explanation-${index}">
+            ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Handle answer selection
+    function selectAnswer(questionIndex, selectedOption) {
+      if (userAnswers[questionIndex] !== null) return; // Already answered
+
+      const question = filteredQuestions[questionIndex];
+      const isCorrect = selectedOption === question.correct;
+      userAnswers[questionIndex] = selectedOption;
+
+      // Update question card
+      const questionCard = document.getElementById(`question-${questionIndex}`);
+      questionCard.classList.add(isCorrect ? 'answered-correct' : 'answered-incorrect');
+
+      // Update option buttons
+      const options = questionCard.querySelectorAll('.option-button');
+      options.forEach((btn, index) => {
+        btn.classList.add('disabled');
+        if (index === question.correct) {
+          btn.classList.add('correct');
+        } else if (index === selectedOption && !isCorrect) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      // Show explanation
+      document.getElementById(`explanation-${questionIndex}`).classList.add('show');
+
+      // Update stats
+      answeredQuestions++;
+      if (isCorrect) {
+        score++;
+        correctAnswers++;
+      } else {
+        incorrectAnswers++;
+      }
+
+      updateStats();
+      updateProgress();
+
+      // Re-render MathJax for the explanation
+      if (window.MathJax) {
+        MathJax.typesetPromise([document.getElementById(`explanation-${questionIndex}`)]);
+      }
+
+      // Check if quiz is complete
+      if (answeredQuestions === filteredQuestions.length) {
+        showResults();
+      }
+    }
+
+    // Update statistics
+    function updateStats() {
+      document.getElementById('scoreDisplay').textContent = `${answeredQuestions}/${filteredQuestions.length}`;
+      document.getElementById('correctDisplay').textContent = correctAnswers;
+      document.getElementById('incorrectDisplay').textContent = incorrectAnswers;
+    }
+
+    // Update progress bar
+    function updateProgress() {
+      const progress = filteredQuestions.length > 0 ? (answeredQuestions / filteredQuestions.length) * 100 : 0;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+
+    // Show all answers
+    function showAllAnswers() {
+      filteredQuestions.forEach((question, index) => {
+        const questionCard = document.getElementById(`question-${index}`);
+        if (!questionCard.classList.contains('answered-correct') && !questionCard.classList.contains('answered-incorrect')) {
+          const options = questionCard.querySelectorAll('.option-button');
+          options.forEach((btn, optIndex) => {
+            btn.classList.add('disabled');
+            if (optIndex === question.correct) {
+              btn.classList.add('correct');
+            }
+          });
+          questionCard.classList.add('answered-correct');
+        }
+        document.getElementById(`explanation-${index}`).classList.add('show');
+      });
+      
+      // Re-render MathJax for all explanations
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // Show results
+    function showResults() {
+      const accuracy = filteredQuestions.length > 0 ? ((score / filteredQuestions.length) * 100).toFixed(1) : 0;
+      document.getElementById('finalScore').textContent = `${score}/${filteredQuestions.length}`;
+      document.getElementById('accuracy').textContent = `${accuracy}%`;
+      document.getElementById('resultsSection').style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Restart quiz
+    function restartQuiz() {
+      resetQuizState();
+      document.getElementById('difficultyFilter').value = 'all';
+      filteredQuestions = questions.slice();
+      renderAllQuestions();
+      updateStats();
+      updateProgress();
+      window.scrollTo(0, 0);
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initQuiz);
+  </script>
+</body>
+</html>

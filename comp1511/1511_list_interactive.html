@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Linked Lists Course | COMP1511</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+        .interactive-button {
+            background-color: #e07a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0.5rem;
+        }
+        .interactive-button:hover {
+            background-color: #d06850;
+            transform: translateY(-2px);
+        }
+        .interactive-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .node-visual {
+            display: inline-flex;
+            border: 2px solid #e07a5f;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin: 0.5rem;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .node-visual.highlighted {
+            border-color: #f4a261;
+            box-shadow: 0 0 15px rgba(244, 162, 97, 0.5);
+        }
+        .node-data {
+            padding: 0.75rem 1rem;
+            background-color: #e07a5f;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #e07a5f;
+            min-width: 3rem;
+            text-align: center;
+        }
+        .node-pointer {
+            padding: 0.75rem;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            min-width: 4rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .pointer-highlight {
+            background-color: #f4a261 !important;
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+        .canvas-container {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 2rem;
+            margin: 1rem 0;
+            min-height: 200px;
+            border: 2px dashed #e07a5f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .code-display {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .code-highlight {
+            background-color: #f4a261;
+            color: #2c2c2c;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .input-field {
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #e07a5f;
+        }
+        .select-field {
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            background-color: #ffffff;
+            font-size: 1rem;
+        }
+        .arrow {
+            font-size: 1.5rem;
+            color: #e07a5f;
+            margin: 0 0.5rem;
+        }
+        .animation-step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .animation-step.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .pointer-indicator {
+            background-color: #f4a261;
+            color: #ffffff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .node-container {
+            position: relative;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <a href="../comp1511.html" class="back-button">← Back to COMP1511</a>
+            <h1 class="chapter-title">Interactive Linked Lists Course</h1>
+            <div class="w-24"></div> <!-- Spacer for centering -->
+        </header>
+
+        <!-- Course Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">互动式链表学习</h2>
+            <p class="text-lg leading-relaxed">
+                通过可视化动画和分步演示，亲手操作节点的创建、遍历和插入。
+                本互动课程将帮助您直观地理解链表的工作原理和C语言实现。
+            </p>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <strong>模块一:</strong>
+                    <ul class="mt-1">
+                        <li>• 节点可视化创建</li>
+                        <li>• 动态内存分配演示</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>模块二:</strong>
+                    <ul class="mt-1">
+                        <li>• 逐步遍历演示</li>
+                        <li>• 指针移动可视化</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>模块三:</strong>
+                    <ul class="mt-1">
+                        <li>• 动画插入演示</li>
+                        <li>• 多种插入位置</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 1: Node Visualization -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">模块一：节点可视化 (Visual Node)</h3>
+            <p class="text-gray-600 mb-4">
+                输入数据值，观察节点的创建过程。理解节点结构中的数据域和指针域。
+            </p>
+
+            <div class="input-group">
+                <label for="nodeValue" class="font-semibold">节点数据:</label>
+                <input type="number" id="nodeValue" class="input-field" placeholder="输入整数值" value="42">
+                <button onclick="createVisualNode()" class="interactive-button">创建节点</button>
+                <button onclick="clearNodes()" class="interactive-button" style="background-color: #8b8589;">清空</button>
+            </div>
+
+            <div class="canvas-container" id="nodeCanvas">
+                <p class="text-gray-500">点击"创建节点"来生成可视化节点</p>
+            </div>
+
+            <div class="code-display" id="nodeCode">
+                <span class="text-gray-400">// C代码演示</span><br>
+                <span class="text-green-400">struct node</span> *new_node = <span class="text-blue-400">malloc</span>(<span class="text-blue-400">sizeof</span>(<span class="text-green-400">struct node</span>));<br>
+                new_node-><span class="text-yellow-400">data</span> = <span id="codeValue">value</span>;<br>
+                new_node-><span class="text-yellow-400">next</span> = <span class="text-red-400">NULL</span>;
+            </div>
+        </div>
+
+        <!-- Module 2: Step-by-Step Traversal -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">模块二：逐步遍历 (Step-by-Step Traversal)</h3>
+            <p class="text-gray-600 mb-4">
+                观察指针如何从一个节点移动到下一个节点，理解链表遍历的原理。
+            </p>
+
+            <div class="input-group">
+                <button onclick="initializeTraversal()" class="interactive-button">初始化链表</button>
+                <button onclick="nextStep()" class="interactive-button" id="nextBtn" disabled>下一步</button>
+                <button onclick="resetTraversal()" class="interactive-button" style="background-color: #8b8589;">重置</button>
+                <span id="stepInfo" class="font-semibold text-[#e07a5f]"></span>
+            </div>
+
+            <div class="canvas-container" id="traversalCanvas">
+                <p class="text-gray-500">点击"初始化链表"开始遍历演示</p>
+            </div>
+
+            <div class="code-display" id="traversalCode">
+                <span class="text-gray-400">// 链表遍历代码</span><br>
+                <span class="text-green-400">struct node</span> *current = head;<br>
+                <span class="text-purple-400">while</span> (current != <span class="text-red-400">NULL</span>) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">printf</span>(<span class="text-yellow-400">"%d "</span>, current-><span class="text-yellow-400">data</span>);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span id="traversalHighlight">current = current->next;</span><br>
+                }
+            </div>
+        </div>
+
+        <!-- Module 3: Animated Insertion -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">模块三：动画插入 (Animated Insertion)</h3>
+            <p class="text-gray-600 mb-4">
+                选择插入位置和数据值，观看完整的节点插入动画过程。
+            </p>
+
+            <div class="input-group">
+                <label for="insertValue" class="font-semibold">插入数据:</label>
+                <input type="number" id="insertValue" class="input-field" placeholder="输入整数值" value="25">
+                
+                <label for="insertPosition" class="font-semibold">插入位置:</label>
+                <select id="insertPosition" class="select-field">
+                    <option value="head">头部 (Head)</option>
+                    <option value="middle">中间 (Middle)</option>
+                    <option value="tail">尾部 (Tail)</option>
+                </select>
+                
+                <button onclick="startInsertion()" class="interactive-button" id="insertBtn">执行插入</button>
+                <button onclick="resetInsertion()" class="interactive-button" style="background-color: #8b8589;">重置</button>
+            </div>
+
+            <div class="canvas-container" id="insertionCanvas">
+                <div class="node-container">
+                    <div class="node-visual">
+                        <div class="node-data">10</div>
+                        <div class="node-pointer">→</div>
+                    </div>
+                </div>
+                <div class="node-container">
+                    <div class="node-visual">
+                        <div class="node-data">20</div>
+                        <div class="node-pointer">→</div>
+                    </div>
+                </div>
+                <div class="node-container">
+                    <div class="node-visual">
+                        <div class="node-data">30</div>
+                        <div class="node-pointer">NULL</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-display" id="insertionCode">
+                <span class="text-gray-400">// 插入代码将在动画过程中高亮显示</span><br>
+                <span class="text-green-400">struct node</span> *new_node = <span class="text-blue-400">malloc</span>(<span class="text-blue-400">sizeof</span>(<span class="text-green-400">struct node</span>));<br>
+                new_node-><span class="text-yellow-400">data</span> = value;<br>
+                new_node-><span class="text-yellow-400">next</span> = ...;<br>
+                <span class="text-gray-400">// 根据插入位置执行不同的连接操作</span>
+            </div>
+
+            <div id="insertionSteps" class="mt-4" style="display: none;">
+                <h4 class="font-bold text-[#e07a5f] mb-2">插入步骤:</h4>
+                <ol id="stepsList" class="list-decimal ml-4 space-y-1">
+                </ol>
+            </div>
+        </div>
+
+        <!-- Practice Section -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">练习与挑战</h3>
+            <p class="text-gray-600 mb-4">
+                测试您对链表操作的理解程度。
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h4 class="font-bold text-blue-800 mb-2">🎯 练习题1</h4>
+                    <p class="text-blue-700 text-sm">尝试手动插入节点，预测最终的链表结构。</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h4 class="font-bold text-green-800 mb-2">🎯 练习题2</h4>
+                    <p class="text-green-700 text-sm">观察遍历过程，理解current指针的移动规律。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let nodeCounter = 0;
+        let traversalNodes = [];
+        let currentStep = 0;
+        let insertionInProgress = false;
+
+        // Module 1: Node Visualization
+        function createVisualNode() {
+            const value = document.getElementById('nodeValue').value || '42';
+            const canvas = document.getElementById('nodeCanvas');
+            const codeValue = document.getElementById('codeValue');
+
+            // Clear previous content
+            if (nodeCounter === 0) {
+                canvas.innerHTML = '';
+            }
+
+            // Create new node
+            const nodeContainer = document.createElement('div');
+            nodeContainer.className = 'node-container animation-step';
+            
+            const nodeVisual = document.createElement('div');
+            nodeVisual.className = 'node-visual';
+            
+            const nodeData = document.createElement('div');
+            nodeData.className = 'node-data';
+            nodeData.textContent = value;
+            
+            const nodePointer = document.createElement('div');
+            nodePointer.className = 'node-pointer';
+            nodePointer.textContent = 'NULL';
+            
+            nodeVisual.appendChild(nodeData);
+            nodeVisual.appendChild(nodePointer);
+            nodeContainer.appendChild(nodeVisual);
+            canvas.appendChild(nodeContainer);
+
+            // Update code display
+            codeValue.textContent = value;
+            codeValue.className = 'code-highlight';
+
+            // Animate appearance
+            setTimeout(() => {
+                nodeContainer.classList.add('show');
+            }, 100);
+
+            // Reset highlight after animation
+            setTimeout(() => {
+                codeValue.className = '';
+            }, 1500);
+
+            nodeCounter++;
+        }
+
+        function clearNodes() {
+            const canvas = document.getElementById('nodeCanvas');
+            canvas.innerHTML = '<p class="text-gray-500">点击"创建节点"来生成可视化节点</p>';
+            nodeCounter = 0;
+            document.getElementById('codeValue').className = '';
+        }
+
+        // Module 2: Step-by-Step Traversal
+        function initializeTraversal() {
+            const canvas = document.getElementById('traversalCanvas');
+            canvas.innerHTML = '';
+
+            // Create sample linked list
+            const listData = [10, 20, 30];
+            traversalNodes = [];
+
+            listData.forEach((value, index) => {
+                const nodeContainer = document.createElement('div');
+                nodeContainer.className = 'node-container';
+                
+                const nodeVisual = document.createElement('div');
+                nodeVisual.className = 'node-visual';
+                nodeVisual.id = `traverse-node-${index}`;
+                
+                const nodeData = document.createElement('div');
+                nodeData.className = 'node-data';
+                nodeData.textContent = value;
+                
+                const nodePointer = document.createElement('div');
+                nodePointer.className = 'node-pointer';
+                nodePointer.textContent = index === listData.length - 1 ? 'NULL' : '→';
+                
+                nodeVisual.appendChild(nodeData);
+                nodeVisual.appendChild(nodePointer);
+                nodeContainer.appendChild(nodeVisual);
+                canvas.appendChild(nodeContainer);
+
+                traversalNodes.push(nodeVisual);
+            });
+
+            // Add current pointer indicator
+            const pointerIndicator = document.createElement('div');
+            pointerIndicator.className = 'pointer-indicator';
+            pointerIndicator.id = 'currentPointer';
+            pointerIndicator.textContent = 'current';
+            traversalNodes[0].parentNode.appendChild(pointerIndicator);
+
+            // Highlight first node
+            traversalNodes[0].classList.add('highlighted');
+
+            currentStep = 0;
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('stepInfo').textContent = `Step ${currentStep + 1}: current指向节点${traversalNodes[currentStep].querySelector('.node-data').textContent}`;
+            
+            // Highlight traversal code
+            document.getElementById('traversalHighlight').innerHTML = '<span class="code-highlight">current = current->next;</span>';
+        }
+
+        function nextStep() {
+            if (currentStep < traversalNodes.length - 1) {
+                // Remove highlight from current node
+                traversalNodes[currentStep].classList.remove('highlighted');
+
+                currentStep++;
+
+                // Add highlight to next node
+                traversalNodes[currentStep].classList.add('highlighted');
+
+                // Move pointer indicator
+                const pointer = document.getElementById('currentPointer');
+                traversalNodes[currentStep].parentNode.appendChild(pointer);
+
+                document.getElementById('stepInfo').textContent = `Step ${currentStep + 1}: current指向节点${traversalNodes[currentStep].querySelector('.node-data').textContent}`;
+            } else {
+                // End of list
+                traversalNodes[currentStep].classList.remove('highlighted');
+                const pointer = document.getElementById('currentPointer');
+                pointer.textContent = 'NULL';
+                pointer.style.background = '#8b8589';
+                document.getElementById('stepInfo').textContent = 'Step ' + (currentStep + 2) + ': current为NULL，遍历结束';
+                document.getElementById('nextBtn').disabled = true;
+            }
+        }
+
+        function resetTraversal() {
+            const canvas = document.getElementById('traversalCanvas');
+            canvas.innerHTML = '<p class="text-gray-500">点击"初始化链表"开始遍历演示</p>';
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('stepInfo').textContent = '';
+            document.getElementById('traversalHighlight').innerHTML = 'current = current->next;';
+            currentStep = 0;
+            traversalNodes = [];
+        }
+
+        // Module 3: Animated Insertion
+        function startInsertion() {
+            if (insertionInProgress) return;
+
+            insertionInProgress = true;
+            const value = document.getElementById('insertValue').value || '25';
+            const position = document.getElementById('insertPosition').value;
+            
+            document.getElementById('insertBtn').disabled = true;
+            document.getElementById('insertionSteps').style.display = 'block';
+            const stepsList = document.getElementById('stepsList');
+            stepsList.innerHTML = '';
+
+            switch(position) {
+                case 'head':
+                    insertAtHead(value, stepsList);
+                    break;
+                case 'middle':
+                    insertAtMiddle(value, stepsList);
+                    break;
+                case 'tail':
+                    insertAtTail(value, stepsList);
+                    break;
+            }
+        }
+
+        function insertAtHead(value, stepsList) {
+            const steps = [
+                `1. malloc创建新节点，分配内存`,
+                `2. 设置new_node->data = ${value}`,
+                `3. 设置new_node->next = head (指向原头节点)`,
+                `4. 更新head指向新节点`
+            ];
+
+            animateSteps(steps, stepsList, () => {
+                // Create and insert new node at head
+                const canvas = document.getElementById('insertionCanvas');
+                const newNodeContainer = document.createElement('div');
+                newNodeContainer.className = 'node-container';
+                
+                const newNode = document.createElement('div');
+                newNode.className = 'node-visual';
+                newNode.style.opacity = '0';
+                
+                const nodeData = document.createElement('div');
+                nodeData.className = 'node-data';
+                nodeData.textContent = value;
+                
+                const nodePointer = document.createElement('div');
+                nodePointer.className = 'node-pointer';
+                nodePointer.textContent = '→';
+                
+                newNode.appendChild(nodeData);
+                newNode.appendChild(nodePointer);
+                newNodeContainer.appendChild(newNode);
+                canvas.insertBefore(newNodeContainer, canvas.firstChild);
+
+                // Animate appearance
+                setTimeout(() => {
+                    newNode.style.opacity = '1';
+                    newNode.style.transition = 'opacity 0.5s ease';
+                }, 500);
+            });
+        }
+
+        function insertAtMiddle(value, stepsList) {
+            const steps = [
+                `1. malloc创建新节点`,
+                `2. 设置new_node->data = ${value}`,
+                `3. 找到插入位置的前一个节点`,
+                `4. 设置new_node->next = previous->next`,
+                `5. 设置previous->next = new_node`
+            ];
+
+            animateSteps(steps, stepsList, () => {
+                // Insert after first node
+                const canvas = document.getElementById('insertionCanvas');
+                const nodes = canvas.querySelectorAll('.node-container');
+                
+                const newNodeContainer = document.createElement('div');
+                newNodeContainer.className = 'node-container';
+                
+                const newNode = document.createElement('div');
+                newNode.className = 'node-visual';
+                newNode.style.opacity = '0';
+                
+                const nodeData = document.createElement('div');
+                nodeData.className = 'node-data';
+                nodeData.textContent = value;
+                
+                const nodePointer = document.createElement('div');
+                nodePointer.className = 'node-pointer';
+                nodePointer.textContent = '→';
+                
+                newNode.appendChild(nodeData);
+                newNode.appendChild(nodePointer);
+                newNodeContainer.appendChild(newNode);
+                
+                // Insert after first node
+                canvas.insertBefore(newNodeContainer, nodes[1]);
+
+                setTimeout(() => {
+                    newNode.style.opacity = '1';
+                    newNode.style.transition = 'opacity 0.5s ease';
+                }, 500);
+            });
+        }
+
+        function insertAtTail(value, stepsList) {
+            const steps = [
+                `1. malloc创建新节点`,
+                `2. 设置new_node->data = ${value}`,
+                `3. 设置new_node->next = NULL`,
+                `4. 找到最后一个节点`,
+                `5. 设置last->next = new_node`
+            ];
+
+            animateSteps(steps, stepsList, () => {
+                const canvas = document.getElementById('insertionCanvas');
+                
+                const newNodeContainer = document.createElement('div');
+                newNodeContainer.className = 'node-container';
+                
+                const newNode = document.createElement('div');
+                newNode.className = 'node-visual';
+                newNode.style.opacity = '0';
+                
+                const nodeData = document.createElement('div');
+                nodeData.className = 'node-data';
+                nodeData.textContent = value;
+                
+                const nodePointer = document.createElement('div');
+                nodePointer.className = 'node-pointer';
+                nodePointer.textContent = 'NULL';
+                
+                newNode.appendChild(nodeData);
+                newNode.appendChild(nodePointer);
+                newNodeContainer.appendChild(newNode);
+                canvas.appendChild(newNodeContainer);
+
+                // Update the previous last node's pointer
+                const nodes = canvas.querySelectorAll('.node-visual');
+                const previousLast = nodes[nodes.length - 2];
+                if (previousLast) {
+                    previousLast.querySelector('.node-pointer').textContent = '→';
+                }
+
+                setTimeout(() => {
+                    newNode.style.opacity = '1';
+                    newNode.style.transition = 'opacity 0.5s ease';
+                }, 500);
+            });
+        }
+
+        function animateSteps(steps, stepsList, callback) {
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    const li = document.createElement('li');
+                    li.textContent = step;
+                    li.className = 'animation-step';
+                    stepsList.appendChild(li);
+                    
+                    setTimeout(() => {
+                        li.classList.add('show');
+                    }, 100);
+
+                    if (index === steps.length - 1) {
+                        setTimeout(() => {
+                            callback();
+                            setTimeout(() => {
+                                document.getElementById('insertBtn').disabled = false;
+                                insertionInProgress = false;
+                            }, 1000);
+                        }, 500);
+                    }
+                }, index * 800);
+            });
+        }
+
+        function resetInsertion() {
+            const canvas = document.getElementById('insertionCanvas');
+            canvas.innerHTML = `
+                <div class="node-container">
+                    <div class="node-visual">
+                        <div class="node-data">10</div>
+                        <div class="node-pointer">→</div>
+                    </div>
+                </div>
+                <div class="node-container">
+                    <div class="node-visual">
+                        <div class="node-data">20</div>
+                        <div class="node-pointer">→</div>
+                    </div>
+                </div>
+                <div class="node-container">
+                    <div class="node-visual">
+                        <div class="node-data">30</div>
+                        <div class="node-pointer">NULL</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('insertionSteps').style.display = 'none';
+            document.getElementById('insertBtn').disabled = false;
+            insertionInProgress = false;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Interactive Linked Lists Course loaded successfully!');
+        });
+    </script>
+</body>
+</html> 

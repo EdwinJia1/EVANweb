@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATH1081 - Final 专项测验 (30题)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [["$","$"],["\\(","\\)"]], displayMath: [["$$","$$"],["\\[","\\]"]] } };
+  </script>
+  <style>
+    body{font-family:'Inter','Helvetica Neue','Helvetica','Arial',sans-serif;background:#f8f7f2;color:#2c2c2c;line-height:1.6}
+    .quiz-container{background:#fff;border-radius:.5rem;padding:1.5rem;box-shadow:0 4px 6px -1px rgb(0 0 0 / .1),0 2px 4px -2px rgb(0 0 0 / .1);margin-bottom:1rem}
+    .question-card{background:#f8f7f2;border-radius:.5rem;padding:1rem;border:2px solid transparent;margin-bottom:1rem}
+    .option{width:100%;text-align:left;padding:.6rem .8rem;margin:.3rem 0;background:#fff;border:2px solid #e5e7eb;border-radius:.375rem;cursor:pointer;transition:all .2s}
+    .option:hover{border-color:#e07a5f;transform:translateX(4px)}
+    .option.correct{border-color:#22c55e;background:#dcfce7}
+    .option.incorrect{border-color:#ef4444;background:#fee2e2}
+    .badge{display:inline-block;padding:.15rem .5rem;border-radius:9999px;font-size:.7rem;font-weight:600;margin-bottom:.5rem}
+    .easy{background:#dcfce7;color:#166534}
+    .medium{background:#fed7aa;color:#9a3412}
+    .hard{background:#fecaca;color:#991b1b}
+    .home-btn{background:#e07a5f;color:#fff;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;display:inline-block;margin-bottom:1rem}
+    .home-btn:hover{opacity:.9}
+  </style>
+</head>
+<body class="antialiased">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <a class="home-btn" href="../math1081.html">← 返回MATH1081</a>
+
+    <div class="quiz-container">
+      <h1 class="text-3xl font-bold text-center text-[#e07a5f]">Final 专项测验</h1>
+      <p class="text-center text-gray-600">难度分布：17 简单 · 10 中等 · 3 困难</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+        <select id="difficultyFilter" class="border rounded p-2">
+          <option value="all">全部难度</option>
+          <option value="easy">简单</option>
+          <option value="medium">中等</option>
+          <option value="hard">困难</option>
+        </select>
+        <select id="orderMode" class="border rounded p-2">
+          <option value="seq">顺序</option>
+          <option value="rand">随机</option>
+        </select>
+        <button id="startBtn" class="bg-[#8b5cf6] text-white rounded p-2">开始作答</button>
+      </div>
+
+      <div class="mt-4">
+        <div class="h-2 bg-gray-200 rounded"><div id="progress" class="h-2 bg-green-500" style="width:0%"></div></div>
+        <p id="score" class="text-center text-sm text-gray-600 mt-1">已答 0 / 0，正确 0</p>
+      </div>
+    </div>
+
+    <div id="questionsRoot"></div>
+  </div>
+
+  <script>
+    const ALL_QUESTIONS = [
+      // ===== Easy 1-17：集合/函数计数、英文句式翻译的基础题 =====
+      {id:1,difficulty:'easy',tags:['sets'],section:'Sets',stem:'连续整数集合 $\{a,\dots,b\}$ 的基数为？',options:['$b-a$','$b-a+1$','$a-b$','$a+b$'],answer:'B',explanation:'端点差加一。',source:'Final-笔记/集合'},
+      {id:2,difficulty:'easy',tags:['sets'],section:'Sets',stem:'空集 $\varnothing$ 的基数是？',options:['0','1','-1','无法确定'],answer:'A',explanation:'空集无元素。',source:'Final-笔记/集合'},
+      {id:3,difficulty:'easy',tags:['sets'],section:'Sets',stem:'若 $A=\{S_1,\dots,S_{16}\}$，则 $|A|$ 等于？',options:['15','16','17','$2^{16}$'],answer:'B',explanation:'集合的集合，含 16 个元素。',source:'Final-笔记/集合'},
+      {id:4,difficulty:'easy',tags:['sets'],section:'Sets',stem:'对区间族的并集 $\bigcup S_n$，其结果区间端点的选择原则是？',options:['最大下界到最小上界','最小下界到最大上界','任意选择','与交集相同'],answer:'B',explanation:'并集取最小下界至最大上界。',source:'Final-笔记/集合'},
+      {id:5,difficulty:'easy',tags:['sets'],section:'Sets',stem:'交集 $\bigcap S_n$ 的区间端点选择是？',options:['最大下界到最小上界','最小下界到最大上界','与并集相同','不可确定'],answer:'A',explanation:'交集取最严格范围。',source:'Final-笔记/集合'},
+      {id:6,difficulty:'easy',tags:['functions'],section:'Functions',stem:'从大小为 m 的集合到大小为 n 的集合的所有函数个数？',options:['$n^m$','$m^n$','$P(n,m)$','$C(n,m)$'],answer:'A',explanation:'每个自变量 m 个位置各有 n 种像。',source:'Final-笔记/函数计数'},
+      {id:7,difficulty:'easy',tags:['functions'],section:'Functions',stem:'单射存在的充要条件？',options:['m >= n','m <= n','m = n','与 m,n 无关'],answer:'B',explanation:'鸽巢避免碰撞需 m <= n。',source:'Final-笔记/函数计数'},
+      {id:8,difficulty:'easy',tags:['functions'],section:'Functions',stem:'单射数量的公式是？',options:['$n^m$','$P(n,m)$','$C(n,m)$','$S(m,n)$'],answer:'B',explanation:'从 n 中有序选 m：$P(n,m)$。',source:'Final-笔记/函数计数'},
+      {id:9,difficulty:'easy',tags:['functions'],section:'Functions',stem:'当 m < n 时，从 m 到 n 的满射个数为？',options:['$n^m$','$P(n,m)$','$0$','无法确定'],answer:'C',explanation:'满射要求 m >= n。',source:'Final-笔记/函数计数'},
+      {id:10,difficulty:'easy',tags:['logic'],section:'Logic',stem:'“P only if Q” 转换为逻辑表达式：',options:['$P\\to Q$','$Q\\to P$','$P\\lor Q$','$P\\land\\neg Q$'],answer:'A',explanation:'only if 表 $P\to Q$。',source:'Final-笔记/句式→逻辑'},
+      {id:11,difficulty:'easy',tags:['logic'],section:'Logic',stem:'“Q if P” 转换为逻辑表达式：',options:['$P\\to Q$','$Q\\to P$','$\\neg Q\\to P$','$P\\lor Q$'],answer:'A',explanation:'if 前为条件。',source:'Final-笔记/句式→逻辑'},
+      {id:12,difficulty:'easy',tags:['logic'],section:'Logic',stem:'“P or not Q” 与哪个命题等价？',options:['$P\\to Q$','$Q\\to P$','$P\\lor Q$','$P\\land\\neg Q$'],answer:'B',explanation:'$Q\\to P\\equiv\\neg Q\\lor P$。',source:'Final-笔记/句式→逻辑'},
+      {id:13,difficulty:'easy',tags:['logic'],section:'Logic',stem:'“if not Q then P” 等价于：',options:['$P\\lor Q$','$P\\land Q$','$P\\lor\\neg Q$','$\\neg P\\lor Q$'],answer:'A',explanation:'$\\neg Q\\to P\\equiv Q\\lor P$。',source:'Final-笔记/句式→逻辑'},
+      {id:14,difficulty:'easy',tags:['logic'],section:'Logic',stem:'蕴含等价的核心桥梁是：$A\\to B\\equiv$？',options:['$A\\lor B$','$\\neg A\\lor B$','$A\\land B$','$\\neg A\\land B$'],answer:'B',explanation:'if-then ↔ or 的关键。',source:'Final-笔记/核心规则'},
+      {id:15,difficulty:'easy',tags:['symdiff'],section:'SymDiff',stem:'对称差定义 $A\\oplus B$ 等于：',options:['$(A\\cup B)\\cap(A\\cap B)$','$(A\\cup B)\\setminus(A\\cap B)$','$A\\cap B$','$A\\cup B$'],answer:'B',explanation:'只在 A 或 B 但不同时在。',source:'Final-笔记/对称差'},
+      {id:16,difficulty:'easy',tags:['symdiff'],section:'SymDiff',stem:'若 $X=A\\cap B,\ Y=A\\cup C$，必然成立的是：',options:['$Y\\subseteq X$','$X\\subseteq Y$','$X=Y$','$X\\cup Y=\varnothing$'],answer:'B',explanation:'$X\subseteq A\subseteq A\cup C=Y$。',source:'Final-笔记/对称差'},
+      {id:17,difficulty:'easy',tags:['strategy'],section:'Strategy',stem:'遇到长英文陈述优先做什么？',options:['反证法','变量替换为 P/Q','画图','枚举'],answer:'B',explanation:'先简化为命题变量。',source:'Final-笔记/策略'},
+
+      // ===== Medium 18-27：计算与等价的进阶题 =====
+      {id:18,difficulty:'medium',tags:['functions'],section:'Functions',stem:'从 357 到 413 的单射数量是：',options:['$413^{357}$','$P(413,357)$','$C(413,357)$','0'],answer:'B',explanation:'单射计数 $P(n,m)$。',source:'Final-笔记/函数计数'},
+      {id:19,difficulty:'medium',tags:['functions'],section:'Functions',stem:'从 357 到 413 的满射数量是：',options:['0','$P(413,357)$','$413^{357}$','无法确定'],answer:'A',explanation:'$m<n$ 不可能满射。',source:'Final-笔记/函数计数'},
+      {id:20,difficulty:'medium',tags:['sets'],section:'Sets',stem:'已知 $X=\bigcap S_n$，若最大下界大于最小上界，则 $X$ 为：',options:['全集','$\varnothing$','并集','$A$'],answer:'B',explanation:'区间交超过即空。',source:'Final-笔记/集合'},
+      {id:21,difficulty:'medium',tags:['logic'],section:'Logic',stem:'下列等价正确的是：',options:['$P\\to Q\\equiv P\\land Q$','$P\\to Q\\equiv\\neg P\\lor Q$','$Q\\to P\\equiv P\\lor Q$','$\\neg Q\\to P\\equiv P$'],answer:'B',explanation:'核心规则。',source:'Final-笔记/句式→逻辑'},
+      {id:22,difficulty:'medium',tags:['logic'],section:'Logic',stem:'与 “P or not Q” 等价的是：',options:['$P$','$\\neg Q$','$Q\\to P$','$P\\to Q$'],answer:'C',explanation:'$Q\\to P$。',source:'Final-笔记/句式→逻辑'},
+      {id:23,difficulty:'medium',tags:['symdiff'],section:'SymDiff',stem:'已知 $X=A\\cap B,\ Z=A\\oplus B$，则 $X\\cap Z$ 为：',options:['$X$','$Z$','$\varnothing$','$A$'],answer:'C',explanation:'公共与非公共互斥。',source:'Final-笔记/对称差'},
+      {id:24,difficulty:'medium',tags:['symdiff'],section:'SymDiff',stem:'命题 “$Y\\subseteq X\\cup Z$” 是否恒真？',options:['是','否','仅当 $A=B$','仅当 $C=\varnothing$'],answer:'B',explanation:'反例：$A=\{1\},B=\{2\},C=\{3\}$。',source:'Final-笔记/对称差'},
+      {id:25,difficulty:'medium',tags:['strategy'],section:'Strategy',stem:'验证命题是否恒真最可靠的方法是：',options:['举例法','反例法/形式证明','数值代入','直觉'],answer:'B',explanation:'形式证明或构造反例。',source:'Final-笔记/策略'},
+      {id:26,difficulty:'medium',tags:['sets'],section:'Sets',stem:'若 $C=\{X\mid X\subseteq A\}$，下列正确的是：',options:['$C=A$','$C=\mathcal{P}(A)$','$C=\varnothing$','$|C|=|A|^2$'],answer:'B',explanation:'应为幂集 $\mathcal{P}(A)$，题干笔记里的结论指向示例等价情形。',source:'Final-笔记/集合'},
+      {id:27,difficulty:'medium',tags:['logic'],section:'Logic',stem:'与 “not (P → Q)” 等价的是：',options:['$P\\land\\neg Q$','$\\neg P\\lor Q$','$P\\lor Q$','$\\neg P\\land Q$'],answer:'A',explanation:'三连招：消箭头→德摩根→双重否定。',source:'Final-笔记/核心规则'},
+
+      // ===== Hard 28-30：综合推理 =====
+      {id:28,difficulty:'hard',tags:['symdiff'],section:'SymDiff',stem:'设 $A,B,C$ 非空且两两相交，判断恒真命题：I) $X\\subseteq Y$；II) $X\\cap Z=\varnothing$；III) $Y\\subseteq X\\cup Z$。',options:['仅 I','仅 II','I 和 II','I 和 III'],answer:'C',explanation:'I,II 恒真；III 非恒真（见反例）。',source:'Final-笔记/对称差'},
+      {id:29,difficulty:'hard',tags:['functions'],section:'Functions',stem:'设 $m<n$，从大小为 m 到大小为 n 的函数，问“至少缺失一个像”的函数个数为？',options:['$n^m$','$P(n,m)$','$n^m - 0$','$n^m$（因必缺失）'],answer:'D',explanation:'$m<n$ 不可能覆盖全部像，所有 $n^m$ 个函数均缺失至少一个像。',source:'Final-笔记/函数计数'},
+      {id:30,difficulty:'hard',tags:['logic'],section:'Logic',stem:'给定 8 条英文句式，将其分组到 { $P\\to Q$ }, { $Q\\to P$ }, { $P\\lor Q$ }, { $P\\land\\neg Q$ }，哪一项是独立组？',options:['$P\\to Q$','$Q\\to P$','$P\\lor Q$','$P\\land\\neg Q$'],answer:'D',explanation:'它是 $P\\to Q$ 的否定且只有这一种表述。',source:'Final-笔记/句式→逻辑'}
+    ];
+
+    function shuffleArray(arr){
+      const a = arr.slice();
+      for (let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    function buildQuestionCard(q){
+      const diffClass = q.difficulty==='easy'?'easy':q.difficulty==='medium'?'medium':'hard';
+      const letters = ['A','B','C','D'];
+      const originalCorrectIdx = letters.indexOf(q.answer);
+      const opts = q.options.map((text,i)=>({text, isCorrect: i===originalCorrectIdx}));
+      const shuffled = shuffleArray(opts);
+      const correctIdx = shuffled.findIndex(o=>o.isCorrect);
+      const correctLetter = letters[correctIdx];
+
+      const card = document.createElement('div');
+      card.className='quiz-container question-card';
+      card.innerHTML = `
+        <div class="badge ${diffClass}">${q.difficulty==='easy'?'简单':q.difficulty==='medium'?'中等':'困难'}</div>
+        <h3 class="text-lg font-semibold mb-2">${q.id}. ${q.stem}</h3>
+        <div class="mt-2">
+          ${shuffled.map((opt,i)=>`<button class='option' data-correct='${opt.isCorrect}' aria-label='option ${letters[i]}'>${letters[i]}. ${opt.text}</button>`).join('')}
+        </div>
+        <div class="mt-2 hidden text-sm bg-blue-50 border-l-4 border-blue-400 p-2" id="exp-${q.id}"><strong>正确答案：${correctLetter}</strong><br>${q.explanation}<div class='text-gray-500 mt-1'>来源：${q.source}</div></div>
+      `;
+      card.querySelectorAll('.option').forEach(btn=>{
+        btn.addEventListener('click',()=>handleAnswer(q,btn,card));
+      });
+      return card;
+    }
+
+    let current = {list:[], answered:0, correct:0};
+
+    function startQuiz(){
+      const diff = document.getElementById('difficultyFilter').value;
+      const order = document.getElementById('orderMode').value;
+      let list = ALL_QUESTIONS.filter(q=> diff==='all' ? true : q.difficulty===diff);
+      if(order==='rand') list = list.sort(()=>Math.random()-0.5);
+      current = {list, answered:0, correct:0};
+      const root = document.getElementById('questionsRoot');
+      root.innerHTML='';
+      list.forEach(q=> root.appendChild(buildQuestionCard(q)) );
+      updateScore();
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      } else if (window.MathJax && window.MathJax.typeset) {
+        window.MathJax.typeset();
+      }
+    }
+
+    function handleAnswer(q,btn,card){
+      const isCorrect = btn.dataset.correct==='true';
+      card.querySelectorAll('.option').forEach(b=>{b.disabled=true; if(b.dataset.correct==='true'){b.classList.add('correct')} else if(b===btn && !isCorrect){b.classList.add('incorrect')}});
+      document.getElementById(`exp-${q.id}`).classList.remove('hidden');
+      current.answered++; if(isCorrect) current.correct++;
+      updateScore();
+    }
+
+    function updateScore(){
+      const total = current.list.length;
+      const pct = total? (current.answered/total*100):0;
+      document.getElementById('progress').style.width = pct+'%';
+      document.getElementById('score').textContent = `已答 ${current.answered} / ${total}，正确 ${current.correct}`;
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startQuiz);
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4 - Logic and Truth Tables | Discrete Mathematics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .math {
+            font-family: "Cambria Math", "Times New Roman", serif;
+            font-size: 1.1em;
+            display: inline-block;
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+        .notion-link {
+            background-color: #2c2c2c;
+            color: #f8f7f2;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .notion-link:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-1px);
+        }
+        .logic-table {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        .logic-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .logic-table th,
+        .logic-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border: 1px solid #d1d5db;
+        }
+        .logic-table th {
+            background-color: #e07a5f;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .logic-table td {
+            background-color: #ffffff;
+        }
+        .logic-example {
+            background-color: #fff7ed;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <a href="../index.html" class="home-button">← Back to Home</a>
+            <h1 class="chapter-title">Chapter 4 - Logic and Truth Tables</h1>
+            <div class="w-24"></div> <!-- Spacer for centering -->
+        </header>
+
+        <!-- Chapter Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">Chapter Summary</h2>
+            <p class="text-lg leading-relaxed">
+                This chapter covers <strong>Logic and Truth Tables</strong>, fundamental concepts in discrete mathematics 
+                and computer science. We explore propositional logic, logical operators, truth tables, and logical 
+                equivalences that form the foundation of mathematical reasoning and computer programming.
+            </p>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <strong>Key Concepts:</strong>
+                    <ul class="mt-1">
+                        <li>• Propositional Logic</li>
+                        <li>• Logical Operators</li>
+                        <li>• Truth Tables</li>
+                        <li>• Logical Equivalences</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Learning Goals:</strong>
+                    <ul class="mt-1">
+                        <li>• Construct truth tables</li>
+                        <li>• Apply logical operators</li>
+                        <li>• Prove logical equivalences</li>
+                        <li>• Analyze logical arguments</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Prerequisites:</strong>
+                    <ul class="mt-1">
+                        <li>• Basic set theory</li>
+                        <li>• Mathematical reasoning</li>
+                        <li>• Chapter 1 concepts</li>
+                        <li>• Boolean operations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Notice -->
+        <div class="concept-card text-center">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">最新内容</h3>
+            <p class="text-gray-600 mb-4">
+                第四章内容正在持续更新中。要获取最新、最完整的内容，
+                请访问下方的Notion页面，那里有实时更新的笔记和最新材料。
+            </p>
+            <a href="https://fishy-cloche-56b.notion.site/Chapter-4-Logic-and-Truth-Tables-22298e94886480fda6e8cce570f8800d?pvs=73" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="notion-link">
+                查看Notion中的第四章最新内容 ↗
+            </a>
+        </div>
+
+        <!-- Basic Logic Concepts -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">基础逻辑概念</h3>
+            <p class="text-gray-600 mb-4">
+                命题逻辑是离散数学的基础，它研究命题（可以判断真假的陈述）之间的逻辑关系。
+            </p>
+            
+            <div class="logic-example">
+                <h4 class="font-bold text-[#f4a261] mb-2">什么是命题？</h4>
+                <p class="mb-2">命题是一个可以明确判断为真（T）或假（F）的陈述。</p>
+                <p class="text-sm text-gray-600">
+                    <strong>命题示例：</strong> "今天是星期一"（可以是真或假）<br>
+                    <strong>非命题示例：</strong> "今天天气好吗？"（疑问句，无法判断真假）
+                </p>
+            </div>
+        </div>
+
+        <!-- Logical Operators -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">逻辑运算符</h3>
+            <p class="text-gray-600 mb-4">
+                逻辑运算符用于组合简单命题形成复合命题。以下是主要的逻辑运算符：
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="logic-example">
+                    <h4 class="font-bold text-[#f4a261] mb-2">否定 (NOT) - ¬</h4>
+                    <p class="text-sm">如果 p 为真，则 ¬p 为假；如果 p 为假，则 ¬p 为真。</p>
+                </div>
+                
+                <div class="logic-example">
+                    <h4 class="font-bold text-[#f4a261] mb-2">合取 (AND) - ∧</h4>
+                    <p class="text-sm">只有当 p 和 q 都为真时，p ∧ q 才为真。</p>
+                </div>
+                
+                <div class="logic-example">
+                    <h4 class="font-bold text-[#f4a261] mb-2">析取 (OR) - ∨</h4>
+                    <p class="text-sm">当 p 或 q 中至少有一个为真时，p ∨ q 为真。</p>
+                </div>
+                
+                <div class="logic-example">
+                    <h4 class="font-bold text-[#f4a261] mb-2">蕴含 (IMPLIES) - →</h4>
+                    <p class="text-sm">只有当 p 为真且 q 为假时，p → q 才为假。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Truth Table Example -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-3">真值表示例</h3>
+            <p class="text-gray-600 mb-4">
+                真值表显示了逻辑表达式在所有可能的输入组合下的真值：
+            </p>
+            
+            <div class="logic-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>p</th>
+                            <th>q</th>
+                            <th>¬p</th>
+                            <th>p ∧ q</th>
+                            <th>p ∨ q</th>
+                            <th>p → q</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td>T</td>
+                            <td>F</td>
+                            <td>T</td>
+                            <td>T</td>
+                            <td>T</td>
+                        </tr>
+                        <tr>
+                            <td>T</td>
+                            <td>F</td>
+                            <td>F</td>
+                            <td>F</td>
+                            <td>T</td>
+                            <td>F</td>
+                        </tr>
+                        <tr>
+                            <td>F</td>
+                            <td>T</td>
+                            <td>T</td>
+                            <td>F</td>
+                            <td>T</td>
+                            <td>T</td>
+                        </tr>
+                        <tr>
+                            <td>F</td>
+                            <td>F</td>
+                            <td>T</td>
+                            <td>F</td>
+                            <td>F</td>
+                            <td>T</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Interactive Truth Table Generator -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-4">互动式真值表生成器</h3>
+            <p class="text-gray-600 mb-6">
+                输入任意逻辑表达式，立即生成完整的真值表。支持分步解析，帮助您理解复杂逻辑表达式的计算过程。
+            </p>
+            
+            <!-- Input Section -->
+            <div class="mb-6">
+                <label for="logic-expression" class="block text-sm font-medium text-gray-700 mb-2">
+                    逻辑表达式输入：
+                </label>
+                <div class="flex gap-3">
+                    <input 
+                        type="text" 
+                        id="logic-expression" 
+                        placeholder="输入逻辑表达式，如 p -> (q && !r)" 
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#e07a5f] focus:border-[#e07a5f] outline-none transition-all"
+                        style="font-family: 'Inter', sans-serif;"
+                    />
+                    <button 
+                        id="generate-btn" 
+                        class="px-6 py-3 bg-[#e07a5f] text-white font-medium rounded-lg hover:bg-[#d06850] active:bg-[#c55a45] transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#e07a5f] focus:ring-offset-2"
+                    >
+                        生成真值表
+                    </button>
+                </div>
+                
+                <!-- Supported Operators Guide -->
+                <div class="mt-4 p-4 bg-[#f8f7f2] rounded-lg border border-gray-200">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2">支持的操作符：</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs text-gray-600">
+                        <div><strong>非：</strong> !, ¬, NOT</div>
+                        <div><strong>与：</strong> &&, ∧, AND</div>
+                        <div><strong>或：</strong> ||, ∨, OR</div>
+                        <div><strong>蕴含：</strong> ->, →, =></div>
+                        <div><strong>等价：</strong> <->, ↔, <=></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message Area -->
+            <div id="error-message" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="flex items-center">
+                    <span class="text-red-600 font-medium">⚠️ 语法错误：</span>
+                    <span id="error-text" class="ml-2 text-red-700"></span>
+                </div>
+            </div>
+
+            <!-- Generated Truth Table Area -->
+            <div id="truth-table-container" class="hidden">
+                <h4 class="text-lg font-semibold text-[#e07a5f] mb-4">生成的真值表：</h4>
+                <div id="truth-table-content" class="logic-table"></div>
+                
+                <!-- Analysis Section -->
+                <div id="table-analysis" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h5 class="font-semibold text-blue-800 mb-2">📊 表达式分析：</h5>
+                    <div id="analysis-content" class="text-blue-700 text-sm"></div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            /* Additional styles for the truth table generator */
+            #truth-table-container {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .truth-cell-true {
+                background-color: #dcfce7 !important;
+                color: #166534;
+                font-weight: 600;
+            }
+            
+            .truth-cell-false {
+                background-color: #fef2f2 !important;
+                color: #dc2626;
+                font-weight: 600;
+            }
+            
+            .sub-expression-header {
+                background-color: #f3f4f6 !important;
+                color: #374151;
+                font-size: 0.9em;
+                font-style: italic;
+            }
+        </style>
+
+        <script>
+            class TruthTableGenerator {
+                constructor() {
+                    this.variables = [];
+                    this.subExpressions = [];
+                    this.operators = {
+                        '!': (a) => !a,
+                        '¬': (a) => !a,
+                        'NOT': (a) => !a,
+                        '&&': (a, b) => a && b,
+                        '∧': (a, b) => a && b,
+                        'AND': (a, b) => a && b,
+                        '||': (a, b) => a || b,
+                        '∨': (a, b) => a || b,
+                        'OR': (a, b) => a || b,
+                        '->': (a, b) => !a || b,
+                        '→': (a, b) => !a || b,
+                        '=>': (a, b) => !a || b,
+                        '<->': (a, b) => a === b,
+                        '↔': (a, b) => a === b,
+                        '<=>': (a, b) => a === b
+                    };
+                }
+
+                normalizeExpression(expr) {
+                    // Convert various operator formats to standard ones
+                    return expr
+                        .replace(/¬/g, '!')
+                        .replace(/∧/g, '&&')
+                        .replace(/∨/g, '||')
+                        .replace(/→/g, '->')
+                        .replace(/↔/g, '<->')
+                        .replace(/\bNOT\b/gi, '!')
+                        .replace(/\bAND\b/gi, '&&')
+                        .replace(/\bOR\b/gi, '||')
+                        .replace(/=>/g, '->')
+                        .replace(/<=>/g, '<->')
+                        .replace(/\s+/g, '');
+                }
+
+                extractVariables(expr) {
+                    const normalized = this.normalizeExpression(expr);
+                    const matches = normalized.match(/[a-zA-Z]+/g) || [];
+                    const variables = [...new Set(matches.filter(match => 
+                        !['NOT', 'AND', 'OR'].includes(match.toUpperCase())
+                    ))];
+                    return variables.sort();
+                }
+
+                validateExpression(expr) {
+                    const normalized = this.normalizeExpression(expr);
+                    
+                    // Check for balanced parentheses
+                    let parenCount = 0;
+                    for (let char of normalized) {
+                        if (char === '(') parenCount++;
+                        if (char === ')') parenCount--;
+                        if (parenCount < 0) return "括号未配对";
+                    }
+                    if (parenCount !== 0) return "括号未配对";
+                    
+                    // Check for valid characters
+                    const validChars = /^[a-zA-Z()!&|<>\-=\s]+$/;
+                    if (!validChars.test(normalized)) return "包含无效字符";
+                    
+                    return null;
+                }
+
+                findSubExpressions(expr) {
+                    const normalized = this.normalizeExpression(expr);
+                    const subExprs = new Set();
+                    
+                    // Find all parenthesized expressions
+                    let parenStack = [];
+                    let current = '';
+                    
+                    for (let i = 0; i < normalized.length; i++) {
+                        const char = normalized[i];
+                        if (char === '(') {
+                            if (parenStack.length > 0) current += char;
+                            parenStack.push(i);
+                        } else if (char === ')') {
+                            if (parenStack.length > 1) current += char;
+                            parenStack.pop();
+                            if (parenStack.length === 0 && current) {
+                                subExprs.add(current);
+                                current = '';
+                            }
+                        } else if (parenStack.length > 0) {
+                            current += char;
+                        }
+                    }
+                    
+                    // Find binary operations
+                    const binaryOps = ['&&', '||', '->', '<->'];
+                    for (let op of binaryOps) {
+                        let index = normalized.indexOf(op);
+                        while (index !== -1) {
+                            // Find the operands
+                            let left = '', right = '';
+                            let leftEnd = index - 1;
+                            let rightStart = index + op.length;
+                            
+                            // Extract left operand
+                            if (normalized[leftEnd] === ')') {
+                                let parenCount = 1;
+                                leftEnd--;
+                                while (leftEnd >= 0 && parenCount > 0) {
+                                    if (normalized[leftEnd] === ')') parenCount++;
+                                    if (normalized[leftEnd] === '(') parenCount--;
+                                    leftEnd--;
+                                }
+                                left = normalized.substring(leftEnd + 1, index);
+                            } else {
+                                while (leftEnd >= 0 && /[a-zA-Z!]/.test(normalized[leftEnd])) {
+                                    leftEnd--;
+                                }
+                                left = normalized.substring(leftEnd + 1, index);
+                            }
+                            
+                            // Extract right operand
+                            if (normalized[rightStart] === '(') {
+                                let parenCount = 1;
+                                let rightEnd = rightStart + 1;
+                                while (rightEnd < normalized.length && parenCount > 0) {
+                                    if (normalized[rightEnd] === '(') parenCount++;
+                                    if (normalized[rightEnd] === ')') parenCount--;
+                                    rightEnd++;
+                                }
+                                right = normalized.substring(rightStart, rightEnd);
+                            } else {
+                                let rightEnd = rightStart;
+                                while (rightEnd < normalized.length && /[a-zA-Z!]/.test(normalized[rightEnd])) {
+                                    rightEnd++;
+                                }
+                                right = normalized.substring(rightStart, rightEnd);
+                            }
+                            
+                            if (left && right) {
+                                subExprs.add(`${left}${op}${right}`);
+                            }
+                            
+                            index = normalized.indexOf(op, index + 1);
+                        }
+                    }
+                    
+                    return Array.from(subExprs).filter(expr => expr.length > 1);
+                }
+
+                evaluateExpression(expr, assignment) {
+                    let normalized = this.normalizeExpression(expr);
+                    
+                    // Replace variables with their values
+                    for (let variable of this.variables) {
+                        const regex = new RegExp(`\\b${variable}\\b`, 'g');
+                        normalized = normalized.replace(regex, assignment[variable] ? 'true' : 'false');
+                    }
+                    
+                    try {
+                        // Replace logical operators with JavaScript equivalents
+                        normalized = normalized
+                            .replace(/->/g, '||!')
+                            .replace(/<->/g, '===');
+                        
+                        // Handle implication manually
+                        normalized = normalized.replace(/true\|\|!false/g, 'true');
+                        normalized = normalized.replace(/true\|\|!true/g, 'true');
+                        normalized = normalized.replace(/false\|\|!false/g, 'true');
+                        normalized = normalized.replace(/false\|\|!true/g, 'false');
+                        
+                        return eval(normalized);
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+                generateTruthTable(expression) {
+                    const error = this.validateExpression(expression);
+                    if (error) {
+                        throw new Error(error);
+                    }
+
+                    this.variables = this.extractVariables(expression);
+                    this.subExpressions = this.findSubExpressions(expression);
+                    
+                    const numRows = Math.pow(2, this.variables.length);
+                    const table = [];
+                    
+                    for (let i = 0; i < numRows; i++) {
+                        const assignment = {};
+                        const row = {};
+                        
+                        // Generate truth assignment
+                        for (let j = 0; j < this.variables.length; j++) {
+                            const value = Boolean(i & (1 << (this.variables.length - 1 - j)));
+                            assignment[this.variables[j]] = value;
+                            row[this.variables[j]] = value;
+                        }
+                        
+                        // Evaluate sub-expressions
+                        for (let subExpr of this.subExpressions) {
+                            row[subExpr] = this.evaluateExpression(subExpr, assignment);
+                        }
+                        
+                        // Evaluate main expression
+                        row[expression] = this.evaluateExpression(expression, assignment);
+                        
+                        table.push(row);
+                    }
+                    
+                    return table;
+                }
+
+                renderTable(table, expression) {
+                    const container = document.getElementById('truth-table-content');
+                    
+                    // Create table
+                    let html = '<table><thead><tr>';
+                    
+                    // Variable headers
+                    for (let variable of this.variables) {
+                        html += `<th>${variable}</th>`;
+                    }
+                    
+                    // Sub-expression headers
+                    for (let subExpr of this.subExpressions) {
+                        html += `<th class="sub-expression-header">${subExpr}</th>`;
+                    }
+                    
+                    // Main expression header
+                    html += `<th style="background-color: #e07a5f !important; color: white !important;">${expression}</th>`;
+                    html += '</tr></thead><tbody>';
+                    
+                    // Table rows
+                    for (let row of table) {
+                        html += '<tr>';
+                        
+                        // Variable values
+                        for (let variable of this.variables) {
+                            const value = row[variable];
+                            const cellClass = value ? 'truth-cell-true' : 'truth-cell-false';
+                            html += `<td class="${cellClass}">${value ? 'T' : 'F'}</td>`;
+                        }
+                        
+                        // Sub-expression values
+                        for (let subExpr of this.subExpressions) {
+                            const value = row[subExpr];
+                            const cellClass = value ? 'truth-cell-true' : 'truth-cell-false';
+                            html += `<td class="${cellClass}">${value ? 'T' : 'F'}</td>`;
+                        }
+                        
+                        // Main expression value
+                        const mainValue = row[expression];
+                        const mainCellClass = mainValue ? 'truth-cell-true' : 'truth-cell-false';
+                        html += `<td class="${mainCellClass}" style="font-weight: bold;">${mainValue ? 'T' : 'F'}</td>`;
+                        
+                        html += '</tr>';
+                    }
+                    
+                    html += '</tbody></table>';
+                    container.innerHTML = html;
+                    
+                    // Generate analysis
+                    this.generateAnalysis(table, expression);
+                }
+
+                generateAnalysis(table, expression) {
+                    const analysisContent = document.getElementById('analysis-content');
+                    const trueCount = table.filter(row => row[expression]).length;
+                    const totalCount = table.length;
+                    const falseCount = totalCount - trueCount;
+                    
+                    let analysis = `<strong>变量数量：</strong> ${this.variables.length} (${this.variables.join(', ')})<br>`;
+                    analysis += `<strong>总行数：</strong> ${totalCount}<br>`;
+                    analysis += `<strong>结果统计：</strong> ${trueCount} 个真值，${falseCount} 个假值<br>`;
+                    
+                    if (trueCount === totalCount) {
+                        analysis += `<strong>类型：</strong> <span style="color: #059669;">重言式 (Tautology)</span> - 表达式在所有情况下都为真`;
+                    } else if (falseCount === totalCount) {
+                        analysis += `<strong>类型：</strong> <span style="color: #dc2626;">矛盾式 (Contradiction)</span> - 表达式在所有情况下都为假`;
+                    } else {
+                        analysis += `<strong>类型：</strong> <span style="color: #7c3aed;">可满足式 (Contingency)</span> - 表达式的真假取决于变量的值`;
+                    }
+                    
+                    if (this.subExpressions.length > 0) {
+                        analysis += `<br><strong>包含子表达式：</strong> ${this.subExpressions.length} 个`;
+                    }
+                    
+                    analysisContent.innerHTML = analysis;
+                }
+            }
+
+            // Initialize the generator
+            document.addEventListener('DOMContentLoaded', function() {
+                const generator = new TruthTableGenerator();
+                const input = document.getElementById('logic-expression');
+                const button = document.getElementById('generate-btn');
+                const errorDiv = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+                const tableContainer = document.getElementById('truth-table-container');
+
+                function showError(message) {
+                    errorText.textContent = message;
+                    errorDiv.classList.remove('hidden');
+                    tableContainer.classList.add('hidden');
+                }
+
+                function hideError() {
+                    errorDiv.classList.add('hidden');
+                }
+
+                function generateTable() {
+                    const expression = input.value.trim();
+                    if (!expression) {
+                        showError('请输入逻辑表达式');
+                        return;
+                    }
+
+                    try {
+                        hideError();
+                        const table = generator.generateTruthTable(expression);
+                        generator.renderTable(table, expression);
+                        tableContainer.classList.remove('hidden');
+                    } catch (error) {
+                        showError(error.message);
+                    }
+                }
+
+                button.addEventListener('click', generateTable);
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        generateTable();
+                    }
+                });
+
+                // Example expressions for demonstration
+                const examples = [
+                    'p && q',
+                    'p || !q',
+                    'p -> q',
+                    '(p && q) -> r',
+                    '!(p || q) <-> (!p && !q)'
+                ];
+                
+                // Add a subtle hint about examples
+                input.addEventListener('focus', function() {
+                    if (!this.value) {
+                        const randomExample = examples[Math.floor(Math.random() * examples.length)];
+                        this.placeholder = `试试输入：${randomExample}`;
+                    }
+                });
+            });
+        </script>
+
+        <!-- Coming Soon Section -->
+        <div class="concept-card">
+            <h3 class="text-xl font-bold text-[#f4a261] mb-3">即将推出</h3>
+            <p class="text-gray-600 mb-4">第四章的本地内容将包括：</p>
+            <ul class="list-disc list-inside space-y-2 ml-4 text-gray-600">
+                <li>互动式真值表生成器</li>
+                <li>逻辑等价证明的分步示例</li>
+                <li>实际编程中的逻辑应用</li>
+                <li>逻辑推理练习题库</li>
+                <li>德摩根定律的可视化演示</li>
+            </ul>
+            <p class="text-sm text-gray-500 mt-4 italic">
+                请定期查看更新，或访问Notion页面获取实时内容。
+            </p>
+        </div>
+    </div>
+</body>
+</html> 

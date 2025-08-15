@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATH1081 - Final Practice Problems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [["$","$"],["\\(","\\)"]], displayMath: [["$$","$$"],["\\[","\\]"]] } };
+  </script>
+  <style>
+    body{font-family:'Inter','Helvetica Neue','Helvetica','Arial',sans-serif;background:#f8f7f2;color:#2c2c2c}
+    .card{background:#fff;border-radius:.5rem;padding:1.5rem;box-shadow:0 4px 6px -1px rgb(0 0 0 / .1),0 2px 4px -2px rgb(0 0 0 / .1)}
+    .pill{display:inline-block;background:#8b8589;color:#fff;border-radius:9999px;padding:.15rem .6rem;font-size:.7rem;margin-right:.25rem}
+    .home-button{background-color:#e07a5f;color:#f8f7f2;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;font-weight:500;transition:all .2s ease-in-out;display:inline-block;margin-bottom:1rem}
+    .home-button:hover{background-color:#d06850;transform:translateY(-1px)}
+  </style>
+</head>
+<body class="antialiased">
+  <div class="container mx-auto px-4 py-8 max-w-6xl">
+    <a href="../math1081.html" class="home-button">← 返回MATH1081</a>
+    <div class="card mb-6 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold text-[#e07a5f]">Final Practice Problems</h1>
+      <p class="text-gray-600 mt-2">从 Final 复习内容抽取/改编的练习。按主题分组，便于快速刷题。</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">逻辑与等价</h2>
+        <p class="text-sm text-gray-600 mb-3">命题等价、真值表、否定/逆否/逆命题</p>
+        <div class="space-y-3 text-sm">
+          <div>
+            <div class="mb-1"><span class="pill">Easy</span> 蕴含消箭头：将 $\neg(p\to q) \;$ 改写为不含 $\to$ 的式子。</div>
+            <div class="text-gray-700">答案：$p\land\neg q$</div>
+          </div>
+          <div>
+            <div class="mb-1"><span class="pill">Medium</span> 证明 $(p\to q)\land(\neg p\to q) \equiv q$。</div>
+            <div class="text-gray-700">提示：化为析取范式再吸收。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">计数原理</h2>
+        <p class="text-sm text-gray-600 mb-3">排列组合、捆绑/插空、圆排列</p>
+        <div class="space-y-3 text-sm">
+          <div>
+            <div class="mb-1"><span class="pill">Easy</span> 5个不同奇数组成互异 5 位数有多少个？</div>
+            <div class="text-gray-700">答案：$5!$</div>
+          </div>
+          <div>
+            <div class="mb-1"><span class="pill">Medium</span> 7人排成一排，其中 A 与 B 相邻，方法数？</div>
+            <div class="text-gray-700">答案：$2\cdot 6!$（捆绑法）</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">鸽巢原理</h2>
+        <div class="space-y-3 text-sm">
+          <div>
+            <div class="mb-1"><span class="pill">Easy</span> 50人12个月，至少同月出生的人数？</div>
+            <div class="text-gray-700">答案：$\lceil 50/12 \rceil = 5$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">整数方程与容斥</h2>
+        <div class="space-y-3 text-sm">
+          <div>
+            <div class="mb-1"><span class="pill">Easy</span> $x_1+x_2+x_3=10,\ x_i\ge1$ 的解数？</div>
+            <div class="text-gray-700">答案：$C(9,2)$（平移后 $C(7+3-1,3-1)$）。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold text-[#e07a5f] mb-3">递推关系</h2>
+        <div class="space-y-3 text-sm">
+          <div>
+            <div class="mb-1"><span class="pill">Medium</span> $a_n-5a_{n-1}+6a_{n-2}=2\cdot3^n$ 的特解形式？</div>
+            <div class="text-gray-700">答案：$Dn\cdot3^n$（与齐次 $3^n$ 撞车 ×n）。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="./final_quiz.html" class="inline-block bg-[#8b5cf6] text-white px-4 py-2 rounded-md hover:opacity-90">转到 Final 30题测验</a>
+    </div>
+  </div>
+</body>
+</html>
+
+

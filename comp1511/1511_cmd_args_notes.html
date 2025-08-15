@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Line Arguments - Core Notes | COMP1511</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+        .code-block {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #e07a5f;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .diagram {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            border: 2px dashed #e07a5f;
+        }
+        .highlight {
+            background-color: #fff7ed;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .arg-visual {
+            display: inline-flex;
+            border: 2px solid #e07a5f;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin: 0.5rem;
+            background-color: #ffffff;
+        }
+        .arg-index {
+            padding: 0.5rem 1rem;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 2px solid #8b8589;
+            font-family: 'Courier New', monospace;
+        }
+        .arg-value {
+            padding: 0.5rem 1rem;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            min-width: 6rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .terminal-visual {
+            background-color: #2c2c2c;
+            color: #00ff00;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .terminal-prompt {
+            color: #ffffff;
+        }
+        .terminal-input {
+            color: #ffff00;
+        }
+        .warning {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .tip {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .success {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Back to COMP1511 Button -->
+        <a href="../comp1511.html" class="back-button">
+            <span>←</span>
+            <span>Back to COMP1511</span>
+        </a>
+
+        <!-- Chapter Header -->
+        <header class="text-center mb-8">
+            <h1 class="chapter-title">命令行参数</h1>
+            <p class="text-xl text-gray-600">Command Line Arguments</p>
+        </header>
+
+        <!-- Course Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">课程概述 | Course Overview</h2>
+            <p class="text-lg mb-4">
+                命令行参数让C程序能够接收外部输入，使程序更加灵活和实用。掌握命令行参数处理是编写专业级C程序的基础技能：
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>理解 argc 和 argv 的含义和用法</li>
+                <li>学会解析和验证命令行输入</li>
+                <li>掌握常见的参数模式和约定</li>
+                <li>实现robust的错误处理</li>
+                <li>构建可配置的命令行工具</li>
+            </ul>
+        </div>
+
+        <!-- Chapter 1: What are Command Line Arguments? -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">1. 什么是命令行参数？</h3>
+            
+            <p class="text-lg mb-4">
+                <strong>命令行参数</strong>是程序启动时从命令行传递给程序的数据。它们让用户可以在不修改源代码的情况下改变程序的行为。
+            </p>
+
+            <div class="terminal-visual">
+                <div class="terminal-prompt">$ <span class="terminal-input">./my_program file.txt -n 10 --verbose</span></div>
+                <div class="mt-2">↑ 这个命令包含了多个参数</div>
+            </div>
+
+            <div class="highlight">
+                <h4 class="font-bold text-lg mb-2">参数分解：</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>./my_program</strong>：程序名（argv[0]）</li>
+                    <li><strong>file.txt</strong>：第一个参数（argv[1]）</li>
+                    <li><strong>-n</strong>：选项标志（argv[2]）</li>
+                    <li><strong>10</strong>：选项值（argv[3]）</li>
+                    <li><strong>--verbose</strong>：长选项（argv[4]）</li>
+                </ul>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">main函数的完整形式：</h4>
+            <div class="code-block">
+<pre>int main(int argc, char *argv[]) {
+    // argc: argument count（参数个数）
+    // argv: argument vector（参数向量/数组）
+    
+    printf("程序接收到 %d 个参数\n", argc);
+    
+    for (int i = 0; i < argc; i++) {
+        printf("argv[%d] = \"%s\"\n", i, argv[i]);
+    }
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 2: Understanding argc and argv -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">2. 深入理解 argc 和 argv</h3>
+            
+            <h4 class="font-bold text-lg mb-2">2.1 argc（Argument Count）</h4>
+            <p class="text-lg mb-4">
+                <strong>argc</strong> 是一个整数，表示传递给程序的参数总数，<strong>包括程序名本身</strong>。
+            </p>
+
+            <div class="code-block">
+<pre>// 示例：./program hello world
+// argc = 3（程序名 + 2个参数）
+
+int main(int argc, char *argv[]) {
+    printf("参数总数: %d\n", argc);  // 输出: 参数总数: 3
+    
+    if (argc < 2) {
+        printf("用法: %s <参数1> [参数2] ...\n", argv[0]);
+        return 1;  // 错误退出
+    }
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">2.2 argv（Argument Vector）</h4>
+            <p class="text-lg mb-4">
+                <strong>argv</strong> 是一个字符串数组，每个元素都是一个指向C字符串的指针。
+            </p>
+
+            <div class="diagram">
+                <p class="mb-4">命令：./calculator 15 + 25</p>
+                <div class="flex flex-wrap justify-center items-center">
+                    <div class="arg-visual">
+                        <div class="arg-index">argv[0]</div>
+                        <div class="arg-value">"./calculator"</div>
+                    </div>
+                    <div class="arg-visual">
+                        <div class="arg-index">argv[1]</div>
+                        <div class="arg-value">"15"</div>
+                    </div>
+                    <div class="arg-visual">
+                        <div class="arg-index">argv[2]</div>
+                        <div class="arg-value">"+"</div>
+                    </div>
+                    <div class="arg-visual">
+                        <div class="arg-index">argv[3]</div>
+                        <div class="arg-value">"25"</div>
+                    </div>
+                </div>
+                <p class="mt-4">argc = 4</p>
+            </div>
+
+            <div class="tip">
+                <h4 class="font-bold">💡 重要提示：</h4>
+                <p>所有命令行参数都是字符串！即使输入数字，也需要使用 <code>atoi()</code>、<code>atof()</code> 等函数转换为数值类型。</p>
+            </div>
+        </div>
+
+        <!-- Chapter 3: Parsing Arguments -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">3. 参数解析与处理</h3>
+            
+            <h4 class="font-bold text-lg mb-2">3.1 基本参数遍历</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char *argv[]) {
+    printf("程序名: %s\n", argv[0]);
+    printf("参数个数: %d\n", argc - 1);  // 减去程序名
+    
+    // 遍历所有参数（跳过程序名）
+    for (int i = 1; i < argc; i++) {
+        printf("参数 %d: %s\n", i, argv[i]);
+    }
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">3.2 字符串到数字的转换</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        printf("用法: %s &lt;数字1&gt; &lt;数字2&gt;\n", argv[0]);
+        return 1;
+    }
+    
+    // 转换字符串为整数
+    int num1 = atoi(argv[1]);
+    int num2 = atoi(argv[2]);
+    
+    printf("%d + %d = %d\n", num1, num2, num1 + num2);
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">3.3 参数验证</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+
+// 检查字符串是否为有效数字
+int is_valid_number(const char *str) {
+    if (str == NULL || *str == '\0') {
+        return 0;  // 空字符串
+    }
+    
+    // 允许负号
+    if (*str == '-') {
+        str++;
+    }
+    
+    // 检查每个字符是否为数字
+    while (*str) {
+        if (!isdigit(*str)) {
+            return 0;
+        }
+        str++;
+    }
+    
+    return 1;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("用法: %s &lt;数字&gt;\n", argv[0]);
+        return 1;
+    }
+    
+    if (!is_valid_number(argv[1])) {
+        printf("错误: '%s' 不是有效数字\n", argv[1]);
+        return 1;
+    }
+    
+    int number = atoi(argv[1]);
+    printf("您输入的数字是: %d\n", number);
+    printf("它的平方是: %d\n", number * number);
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 4: Common Patterns -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">4. 常见参数模式</h3>
+            
+            <h4 class="font-bold text-lg mb-2">4.1 选项标志处理</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char *argv[]) {
+    int verbose = 0;    // 详细输出标志
+    int help = 0;       // 帮助标志
+    char *filename = NULL;
+    
+    // 解析选项
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
+            verbose = 1;
+        } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+            help = 1;
+        } else if (argv[i][0] != '-') {
+            // 不以 '-' 开头的参数视为文件名
+            filename = argv[i];
+        } else {
+            printf("未知选项: %s\n", argv[i]);
+            return 1;
+        }
+    }
+    
+    if (help) {
+        printf("用法: %s [选项] &lt;文件名&gt;\n", argv[0]);
+        printf("选项:\n");
+        printf("  -v, --verbose  详细输出\n");
+        printf("  -h, --help     显示帮助\n");
+        return 0;
+    }
+    
+    if (filename == NULL) {
+        printf("错误: 请指定文件名\n");
+        return 1;
+    }
+    
+    if (verbose) {
+        printf("处理文件: %s\n", filename);
+    }
+    
+    // 处理文件的代码...
+    printf("文件 '%s' 处理完成\n", filename);
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">4.2 带值的选项</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char *argv[]) {
+    int count = 1;      // 默认计数
+    char *output = NULL; // 输出文件
+    
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-n") == 0) {
+            // 下一个参数应该是数字
+            if (i + 1 < argc) {
+                count = atoi(argv[i + 1]);
+                i++;  // 跳过已处理的参数
+            } else {
+                printf("错误: -n 选项需要一个数值\n");
+                return 1;
+            }
+        } else if (strcmp(argv[i], "-o") == 0) {
+            // 下一个参数应该是输出文件名
+            if (i + 1 < argc) {
+                output = argv[i + 1];
+                i++;  // 跳过已处理的参数
+            } else {
+                printf("错误: -o 选项需要一个文件名\n");
+                return 1;
+            }
+        }
+    }
+    
+    printf("重复次数: %d\n", count);
+    if (output) {
+        printf("输出文件: %s\n", output);
+    } else {
+        printf("输出到标准输出\n");
+    }
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 5: Practical Examples -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">5. 实际应用示例</h3>
+            
+            <h4 class="font-bold text-lg mb-2">5.1 简单计算器</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        printf("用法: %s &lt;数字1&gt; &lt;操作符&gt; &lt;数字2&gt;\n", argv[0]);
+        printf("操作符: +, -, *, /\n");
+        return 1;
+    }
+    
+    double num1 = atof(argv[1]);
+    char *operator = argv[2];
+    double num2 = atof(argv[3]);
+    double result;
+    
+    if (strcmp(operator, "+") == 0) {
+        result = num1 + num2;
+    } else if (strcmp(operator, "-") == 0) {
+        result = num1 - num2;
+    } else if (strcmp(operator, "*") == 0) {
+        result = num1 * num2;
+    } else if (strcmp(operator, "/") == 0) {
+        if (num2 == 0) {
+            printf("错误: 除数不能为零\n");
+            return 1;
+        }
+        result = num1 / num2;
+    } else {
+        printf("错误: 不支持的操作符 '%s'\n", operator);
+        return 1;
+    }
+    
+    printf("%.2f %s %.2f = %.2f\n", num1, operator, num2, result);
+    
+    return 0;
+}
+
+// 使用示例:
+// $ ./calculator 15.5 + 8.3
+// 15.50 + 8.30 = 23.80</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">5.2 文件处理工具</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("用法: %s [选项] &lt;文件名1&gt; [文件名2] ...\n", argv[0]);
+        printf("选项:\n");
+        printf("  -c  统计字符数\n");
+        printf("  -l  统计行数\n");
+        printf("  -w  统计单词数\n");
+        return 1;
+    }
+    
+    int count_chars = 0, count_lines = 0, count_words = 0;
+    int file_start = 1;  // 文件名开始的索引
+    
+    // 解析选项
+    for (int i = 1; i < argc && argv[i][0] == '-'; i++) {
+        if (strcmp(argv[i], "-c") == 0) {
+            count_chars = 1;
+        } else if (strcmp(argv[i], "-l") == 0) {
+            count_lines = 1;
+        } else if (strcmp(argv[i], "-w") == 0) {
+            count_words = 1;
+        } else {
+            printf("未知选项: %s\n", argv[i]);
+            return 1;
+        }
+        file_start++;
+    }
+    
+    // 如果没有指定选项，默认统计所有
+    if (!count_chars && !count_lines && !count_words) {
+        count_chars = count_lines = count_words = 1;
+    }
+    
+    // 处理每个文件
+    for (int i = file_start; i < argc; i++) {
+        FILE *file = fopen(argv[i], "r");
+        if (file == NULL) {
+            printf("错误: 无法打开文件 '%s'\n", argv[i]);
+            continue;
+        }
+        
+        int chars = 0, lines = 0, words = 0;
+        int in_word = 0;
+        int c;
+        
+        while ((c = fgetc(file)) != EOF) {
+            chars++;
+            
+            if (c == '\n') {
+                lines++;
+            }
+            
+            if (c == ' ' || c == '\t' || c == '\n') {
+                in_word = 0;
+            } else if (!in_word) {
+                words++;
+                in_word = 1;
+            }
+        }
+        
+        fclose(file);
+        
+        printf("%s: ", argv[i]);
+        if (count_lines) printf("%d 行 ", lines);
+        if (count_words) printf("%d 单词 ", words);
+        if (count_chars) printf("%d 字符", chars);
+        printf("\n");
+    }
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 6: Best Practices -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">6. 最佳实践与常见错误</h3>
+            
+            <div class="success">
+                <h4 class="font-bold text-lg mb-2">✅ 最佳实践：</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>始终检查 argc 的值，确保有足够的参数</li>
+                    <li>提供清晰的用法信息和错误消息</li>
+                    <li>验证输入参数的有效性</li>
+                    <li>支持常见的选项约定（-h 帮助，-v 详细）</li>
+                    <li>处理边界情况（如除零、文件不存在等）</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <h4 class="font-bold text-lg mb-2">⚠️ 常见错误：</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>忘记检查 argc，导致访问不存在的 argv 元素</li>
+                    <li>直接使用 atoi() 而不验证输入是否为数字</li>
+                    <li>没有处理文件打开失败的情况</li>
+                    <li>选项解析时没有检查是否有足够的参数</li>
+                    <li>错误信息不够清晰，用户不知道如何修正</li>
+                </ul>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">错误处理模板：</h4>
+            <div class="code-block">
+<pre>int main(int argc, char *argv[]) {
+    // 1. 检查参数个数
+    if (argc < 2) {
+        fprintf(stderr, "用法: %s &lt;参数&gt;\n", argv[0]);
+        return 1;
+    }
+    
+    // 2. 验证参数有效性
+    if (!is_valid_input(argv[1])) {
+        fprintf(stderr, "错误: 无效输入 '%s'\n", argv[1]);
+        return 1;
+    }
+    
+    // 3. 进行实际处理，捕获错误
+    if (process_input(argv[1]) != 0) {
+        fprintf(stderr, "错误: 处理失败\n");
+        return 1;
+    }
+    
+    return 0;  // 成功
+}</pre>
+            </div>
+        </div>
+
+        <!-- Chapter 7: Advanced Topics -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">7. 高级主题</h3>
+            
+            <h4 class="font-bold text-lg mb-2">7.1 使用 getopt() 解析选项</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;  // for getopt
+
+int main(int argc, char *argv[]) {
+    int opt;
+    int verbose = 0;
+    char *output_file = NULL;
+    int count = 1;
+    
+    // 解析选项：v 无参数，o: 需要参数，n: 需要参数
+    while ((opt = getopt(argc, argv, "vo:n:h")) != -1) {
+        switch (opt) {
+            case 'v':
+                verbose = 1;
+                break;
+            case 'o':
+                output_file = optarg;  // optarg 包含选项的参数
+                break;
+            case 'n':
+                count = atoi(optarg);
+                break;
+            case 'h':
+                printf("用法: %s [-v] [-o 输出文件] [-n 计数] 文件名\n", argv[0]);
+                return 0;
+            case '?':
+                // getopt 会自动打印错误信息
+                return 1;
+        }
+    }
+    
+    // 处理非选项参数
+    for (int i = optind; i < argc; i++) {
+        printf("处理文件: %s\n", argv[i]);
+    }
+    
+    return 0;
+}</pre>
+            </div>
+
+            <h4 class="font-bold text-lg mb-2 mt-4">7.2 环境变量结合</h4>
+            <div class="code-block">
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char *argv[]) {
+    // 从环境变量获取默认值
+    char *default_editor = getenv("EDITOR");
+    if (default_editor == NULL) {
+        default_editor = "vi";  // 默认编辑器
+    }
+    
+    char *editor = default_editor;
+    
+    // 命令行参数可以覆盖环境变量
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-e") == 0 && i + 1 < argc) {
+            editor = argv[i + 1];
+            i++;
+        }
+    }
+    
+    printf("使用编辑器: %s\n", editor);
+    
+    return 0;
+}</pre>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">总结 | Summary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-3">核心概念：</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>argc 和 argv 的含义</li>
+                        <li>参数解析和验证</li>
+                        <li>字符串到数字转换</li>
+                        <li>选项和标志处理</li>
+                        <li>错误处理和用户友好性</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-3">实用技能：</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>构建命令行工具</li>
+                        <li>实现帮助系统</li>
+                        <li>处理多种输入格式</li>
+                        <li>使用标准库函数</li>
+                        <li>遵循UNIX约定</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-lg mt-4">
+                命令行参数是C程序与外界交互的重要接口。掌握了这些技能，你就能编写出真正实用的命令行工具和应用程序。
+            </p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="concept-card text-center">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-4">继续学习</h3>
+            <div class="space-y-4">
+                <a href="./1511_cmd_args_interactive.html" class="back-button inline-flex">
+                    <span>🚀</span>
+                    <span>进入命令行参数互动课程</span>
+                </a>
+                <br>
+                <a href="./1511_pointers_notes.html" class="back-button inline-flex">
+                    <span>📖</span>
+                    <span>回到指针笔记</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

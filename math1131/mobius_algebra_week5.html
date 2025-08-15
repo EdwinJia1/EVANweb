@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5 - Algebra (矩阵代数) | MATH1131 Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .back-button, .language-toggle {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            margin-right: 1rem;
+        }
+        .back-button:hover, .language-toggle:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .language-toggle {
+            background-color: #e07a5f;
+            color: #ffffff;
+        }
+        .language-toggle:hover {
+            background-color: #d06850;
+        }
+        .notes-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .chapter-header {
+            color: #e07a5f;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+        }
+        .section-header {
+            color: #2c2c2c;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .subsection-header {
+            color: #8b8589;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .knowledge-box {
+            background-color: #f8f7f2;
+            border-left: 4px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .method-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .example-box {
+            background-color: #fef3e2;
+            border-left: 4px solid #f4a261;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .conclusion-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .warning-box {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .visual-arrow {
+            display: inline-block;
+            font-size: 1.2em;
+            color: #e07a5f;
+            margin: 0 0.5rem;
+        }
+        .step-indicator {
+            background-color: #e07a5f;
+            color: white;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .formula-highlight {
+            background-color: #fef3e2;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+        .matrix-display {
+            display: inline-block;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .language-content {
+            display: none;
+        }
+        .language-content.active {
+            display: block;
+        }
+        .toc {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc-link {
+            color: #e07a5f;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .toc-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Navigation Buttons -->
+        <div class="flex flex-wrap mb-4">
+            <a href="../math1131.html" class="back-button">
+                <span>←</span>
+                <span id="back-text">返回课程</span>
+            </a>
+            <button class="language-toggle" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="language-btn-text">切换到英文</span>
+            </button>
+        </div>
+
+        <!-- Chinese Content -->
+        <div id="chinese-content" class="language-content active">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Week 5 - Algebra 代数</h1>
+                <p class="text-xl text-gray-600 mt-2">MATH1131 - 矩阵基础与线性方程组</p>
+                <p class="text-sm text-gray-500 mt-1">矩阵运算、行列式、逆矩阵与线性系统求解</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <div class="notes-container">
+                <h2 class="chapter-header" style="margin-top: 0;">目录</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <p><strong>第一部分：</strong> <a href="#part1-cn" class="toc-link">矩阵基础与运算</a></p>
+                    <p><strong>第二部分：</strong> <a href="#part2-cn" class="toc-link">行列式与逆矩阵</a></p>
+                    <p><strong>第三部分：</strong> <a href="#part3-cn" class="toc-link">线性方程组的矩阵解法</a></p>
+                    <p><strong>第四部分：</strong> <a href="#part4-cn" class="toc-link">应用与特殊矩阵</a></p>
+                </div>
+            </div>
+
+            <!-- Part 1: Matrix Basics -->
+            <div class="notes-container" id="part1-cn">
+                <h2 class="chapter-header" style="margin-top: 0;">第一部分：矩阵基础与运算</h2>
+
+                <h3 class="section-header">1.1 矩阵的定义与表示</h3>
+                
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 核心概念</h4>
+                    <ul>
+                        <li><strong>矩阵定义：</strong> 矩阵是一个矩形数字阵列，用大写字母表示（如 A, B, C）</li>
+                        <li><strong>矩阵维度：</strong> m×n 矩阵有 m 行和 n 列</li>
+                        <li><strong>元素表示：</strong> $a_{ij}$ 表示第 i 行第 j 列的元素</li>
+                        <li><strong>矩阵记法：</strong> $A = [a_{ij}]_{m×n}$</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 例子</h4>
+                    <p>一个 3×2 矩阵：</p>
+                    $$A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \\ 5 & 6 \end{bmatrix}$$
+                    <p>其中 $a_{11} = 1$, $a_{12} = 2$, $a_{21} = 3$, 等等。</p>
+                </div>
+
+                <h3 class="section-header">1.2 矩阵加法与标量乘法</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 运算规则</h4>
+                    <ul>
+                        <li><strong>矩阵加法：</strong> 相同维度的矩阵对应元素相加</li>
+                        <li><strong>标量乘法：</strong> 标量与矩阵每个元素相乘</li>
+                        <li><strong>零矩阵：</strong> 所有元素为0的矩阵，记作 $O$ 或 $0$</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 运算步骤</h4>
+                    <p><strong>矩阵加法：</strong> $(A + B)_{ij} = a_{ij} + b_{ij}$</p>
+                    <p><strong>标量乘法：</strong> $(kA)_{ij} = k \cdot a_{ij}$</p>
+                </div>
+
+                <h3 class="section-header">1.3 矩阵乘法</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 乘法条件</h4>
+                    <ul>
+                        <li><strong>可乘条件：</strong> A 的列数必须等于 B 的行数</li>
+                        <li><strong>结果维度：</strong> 若 A 是 m×n，B 是 n×p，则 AB 是 m×p</li>
+                        <li><strong>非交换性：</strong> 一般情况下，AB ≠ BA</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 计算方法</h4>
+                    <p><strong>乘积元素公式：</strong></p>
+                    $$(AB)_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}$$
+                    <p>即：第 i 行与第 j 列的点积</p>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 矩阵乘法例子</h4>
+                    <p>给定：</p>
+                    $$A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}, \quad B = \begin{bmatrix} 5 & 6 \\ 7 & 8 \end{bmatrix}$$
+                    <p>计算 AB：</p>
+                    $$AB = \begin{bmatrix} 1×5+2×7 & 1×6+2×8 \\ 3×5+4×7 & 3×6+4×8 \end{bmatrix} = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}$$
+                </div>
+
+                <div class="warning-box">
+                    <h4 class="subsection-header">⚠️ 注意事项</h4>
+                    <ul>
+                        <li>矩阵乘法不满足交换律：AB ≠ BA</li>
+                        <li>即使 AB 和 BA 都有定义，它们的维度也可能不同</li>
+                        <li>矩阵乘法满足结合律：(AB)C = A(BC)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Part 2: Determinants and Inverse -->
+            <div class="notes-container" id="part2-cn">
+                <h2 class="chapter-header">第二部分：行列式与逆矩阵</h2>
+
+                <h3 class="section-header">2.1 行列式</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 行列式概念</h4>
+                    <ul>
+                        <li><strong>定义：</strong> 方阵的行列式是一个标量值，记作 det(A) 或 |A|</li>
+                        <li><strong>几何意义：</strong> 2×2 矩阵的行列式表示平行四边形的面积</li>
+                        <li><strong>奇异性：</strong> det(A) = 0 当且仅当 A 是奇异矩阵（不可逆）</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 计算方法</h4>
+                    <p><strong>2×2 行列式：</strong></p>
+                    $$\begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc$$
+                    
+                    <p><strong>3×3 行列式（按第一行展开）：</strong></p>
+                    $$\begin{vmatrix} a & b & c \\ d & e & f \\ g & h & i \end{vmatrix} = a\begin{vmatrix} e & f \\ h & i \end{vmatrix} - b\begin{vmatrix} d & f \\ g & i \end{vmatrix} + c\begin{vmatrix} d & e \\ g & h \end{vmatrix}$$
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 3×3 行列式计算例子</h4>
+                    <p>计算：</p>
+                    $$\begin{vmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{vmatrix}$$
+                    <p>解：按第一行展开</p>
+                    $$= 1\begin{vmatrix} 1 & 4 \\ 6 & 0 \end{vmatrix} - 2\begin{vmatrix} 0 & 4 \\ 5 & 0 \end{vmatrix} + 3\begin{vmatrix} 0 & 1 \\ 5 & 6 \end{vmatrix}$$
+                    $$= 1(0-24) - 2(0-20) + 3(0-5)$$
+                    $$= -24 + 40 - 15 = 1$$
+                </div>
+
+                <h3 class="section-header">2.2 逆矩阵</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 逆矩阵定义</h4>
+                    <ul>
+                        <li><strong>定义：</strong> 若 $AA^{-1} = A^{-1}A = I$，则 $A^{-1}$ 是 A 的逆矩阵</li>
+                        <li><strong>存在条件：</strong> A 可逆当且仅当 det(A) ≠ 0</li>
+                        <li><strong>唯一性：</strong> 若存在，逆矩阵是唯一的</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 2×2 逆矩阵公式</h4>
+                    <p>对于矩阵 $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$：</p>
+                    $$A^{-1} = \frac{1}{ad-bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}$$
+                    <p>前提：det(A) = ad - bc ≠ 0</p>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 逆矩阵计算例子</h4>
+                    <p>求矩阵的逆：$A = \begin{bmatrix} 3 & 1 \\ 2 & 4 \end{bmatrix}$</p>
+                    <p>步骤：</p>
+                    <ol>
+                        <li>计算行列式：det(A) = 3×4 - 1×2 = 10</li>
+                        <li>应用公式：$A^{-1} = \frac{1}{10}\begin{bmatrix} 4 & -1 \\ -2 & 3 \end{bmatrix} = \begin{bmatrix} 0.4 & -0.1 \\ -0.2 & 0.3 \end{bmatrix}$</li>
+                    </ol>
+                </div>
+
+                <h3 class="section-header">2.3 逆矩阵的性质</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 重要性质</h4>
+                    <ul>
+                        <li>$(A^{-1})^{-1} = A$</li>
+                        <li>$(AB)^{-1} = B^{-1}A^{-1}$ （注意顺序）</li>
+                        <li>$(A^T)^{-1} = (A^{-1})^T$</li>
+                        <li>$\det(A^{-1}) = \frac{1}{\det(A)}$</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Part 3: Linear Systems -->
+            <div class="notes-container" id="part3-cn">
+                <h2 class="chapter-header">第三部分：线性方程组的矩阵解法</h2>
+
+                <h3 class="section-header">3.1 线性方程组的矩阵形式</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 矩阵表示</h4>
+                    <p>线性方程组可以写成：<span class="formula-highlight">Ax = b</span></p>
+                    <ul>
+                        <li>A：系数矩阵</li>
+                        <li>x：未知数向量</li>
+                        <li>b：常数向量</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 方程组转矩阵形式</h4>
+                    <p>方程组：</p>
+                    $$\begin{cases}
+                    2x + 3y = 7 \\
+                    x - y = 1
+                    \end{cases}$$
+                    <p>矩阵形式：</p>
+                    $$\begin{bmatrix} 2 & 3 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 7 \\ 1 \end{bmatrix}$$
+                </div>
+
+                <h3 class="section-header">3.2 使用逆矩阵求解</h3>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 求解步骤</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>写出矩阵方程：</strong> Ax = b
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>检查可逆性：</strong> 计算 det(A)，确保 ≠ 0
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>求逆矩阵：</strong> 计算 $A^{-1}$
+                        </li>
+                        <li>
+                            <span class="step-indicator">4</span>
+                            <strong>求解：</strong> $x = A^{-1}b$
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 完整求解例子</h4>
+                    <p>解方程组：</p>
+                    $$\begin{cases}
+                    3x + y = 11 \\
+                    2x + 4y = 18
+                    \end{cases}$$
+                    <p><strong>步骤：</strong></p>
+                    <ol>
+                        <li>矩阵形式：$\begin{bmatrix} 3 & 1 \\ 2 & 4 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 11 \\ 18 \end{bmatrix}$</li>
+                        <li>det(A) = 3×4 - 1×2 = 10 ≠ 0，可逆</li>
+                        <li>$A^{-1} = \frac{1}{10}\begin{bmatrix} 4 & -1 \\ -2 & 3 \end{bmatrix}$</li>
+                        <li>$\begin{bmatrix} x \\ y \end{bmatrix} = \frac{1}{10}\begin{bmatrix} 4 & -1 \\ -2 & 3 \end{bmatrix}\begin{bmatrix} 11 \\ 18 \end{bmatrix} = \frac{1}{10}\begin{bmatrix} 26 \\ 32 \end{bmatrix} = \begin{bmatrix} 2.6 \\ 3.2 \end{bmatrix}$</li>
+                    </ol>
+                    <p><strong>答案：</strong> x = 2.6, y = 3.2</p>
+                </div>
+
+                <h3 class="section-header">3.3 高斯消元法</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 增广矩阵方法</h4>
+                    <ul>
+                        <li><strong>增广矩阵：</strong> [A|b] 将系数矩阵和常数向量合并</li>
+                        <li><strong>行简化：</strong> 使用行运算将矩阵化为行阶梯形</li>
+                        <li><strong>回代：</strong> 从最后一行开始求解</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 行运算规则</h4>
+                    <ol>
+                        <li>交换两行</li>
+                        <li>某行乘以非零常数</li>
+                        <li>某行加上另一行的倍数</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Part 4: Applications -->
+            <div class="notes-container" id="part4-cn">
+                <h2 class="chapter-header">第四部分：应用与特殊矩阵</h2>
+
+                <h3 class="section-header">4.1 特殊矩阵类型</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 重要矩阵类型</h4>
+                    <ul>
+                        <li><strong>单位矩阵 (I)：</strong> 主对角线为1，其余为0</li>
+                        <li><strong>对角矩阵：</strong> 只有主对角线有非零元素</li>
+                        <li><strong>对称矩阵：</strong> $A^T = A$</li>
+                        <li><strong>正交矩阵：</strong> $A^T A = AA^T = I$</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">4.2 矩阵的应用</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 几何变换</h4>
+                    <ul>
+                        <li><strong>旋转矩阵：</strong> $R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$</li>
+                        <li><strong>缩放矩阵：</strong> $S(k) = \begin{bmatrix} k & 0 \\ 0 & k \end{bmatrix}$</li>
+                        <li><strong>反射矩阵：</strong> 关于x轴反射：$\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="subsection-header">📚 变换组合例子</h4>
+                    <p>先旋转45°，再放大2倍：</p>
+                    $$T = S(2) \cdot R(45°) = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}\begin{bmatrix} \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} \\ \frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2} \end{bmatrix}$$
+                    $$= \begin{bmatrix} \sqrt{2} & -\sqrt{2} \\ \sqrt{2} & \sqrt{2} \end{bmatrix}$$
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 核心要点总结</h4>
+                    <ul>
+                        <li><strong>矩阵运算：</strong> 加法满足交换律，乘法一般不满足</li>
+                        <li><strong>行列式：</strong> 判断矩阵可逆性的关键指标</li>
+                        <li><strong>逆矩阵：</strong> 求解线性方程组的强大工具</li>
+                        <li><strong>几何意义：</strong> 矩阵表示线性变换，行列式表示体积缩放</li>
+                        <li><strong>实际应用：</strong> 计算机图形学、经济学、工程学等领域</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div id="english-content" class="language-content">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">Week 5 - Algebra</h1>
+                <p class="text-xl text-gray-600 mt-2">MATH1131 - Matrix Fundamentals and Linear Systems</p>
+                <p class="text-sm text-gray-500 mt-1">Matrix Operations, Determinants, Inverse Matrices and Linear System Solutions</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <div class="notes-container">
+                <h2 class="chapter-header" style="margin-top: 0;">Table of Contents</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <p><strong>Part 1:</strong> <a href="#part1-en" class="toc-link">Matrix Basics and Operations</a></p>
+                    <p><strong>Part 2:</strong> <a href="#part2-en" class="toc-link">Determinants and Inverse Matrices</a></p>
+                    <p><strong>Part 3:</strong> <a href="#part3-en" class="toc-link">Matrix Solutions to Linear Systems</a></p>
+                    <p><strong>Part 4:</strong> <a href="#part4-en" class="toc-link">Applications and Special Matrices</a></p>
+                </div>
+            </div>
+
+            <!-- Part 1: Matrix Basics (English) -->
+            <div class="notes-container" id="part1-en">
+                <h2 class="chapter-header" style="margin-top: 0;">Part 1: Matrix Basics and Operations</h2>
+
+                <h3 class="section-header">1.1 Matrix Definition and Notation</h3>
+                
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Core Concepts</h4>
+                    <ul>
+                        <li><strong>Matrix Definition:</strong> A matrix is a rectangular array of numbers, denoted by capital letters (A, B, C)</li>
+                        <li><strong>Matrix Dimensions:</strong> An m×n matrix has m rows and n columns</li>
+                        <li><strong>Element Notation:</strong> $a_{ij}$ represents the element in row i, column j</li>
+                        <li><strong>Matrix Notation:</strong> $A = [a_{ij}]_{m×n}$</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">1.2 Matrix Addition and Scalar Multiplication</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Operation Rules</h4>
+                    <ul>
+                        <li><strong>Matrix Addition:</strong> Add corresponding elements of same-sized matrices</li>
+                        <li><strong>Scalar Multiplication:</strong> Multiply each element by the scalar</li>
+                        <li><strong>Zero Matrix:</strong> Matrix with all elements equal to 0, denoted as O or 0</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">1.3 Matrix Multiplication</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Multiplication Conditions</h4>
+                    <ul>
+                        <li><strong>Compatibility:</strong> Number of columns in A must equal number of rows in B</li>
+                        <li><strong>Result Dimensions:</strong> If A is m×n and B is n×p, then AB is m×p</li>
+                        <li><strong>Non-commutativity:</strong> Generally, AB ≠ BA</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 Calculation Method</h4>
+                    <p><strong>Product Element Formula:</strong></p>
+                    $$(AB)_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}$$
+                    <p>i.e., dot product of row i and column j</p>
+                </div>
+            </div>
+
+            <!-- Part 2: Determinants and Inverse (English) -->
+            <div class="notes-container" id="part2-en">
+                <h2 class="chapter-header">Part 2: Determinants and Inverse Matrices</h2>
+
+                <h3 class="section-header">2.1 Determinants</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Determinant Concepts</h4>
+                    <ul>
+                        <li><strong>Definition:</strong> The determinant of a square matrix is a scalar value, denoted as det(A) or |A|</li>
+                        <li><strong>Geometric Meaning:</strong> For 2×2 matrices, determinant represents area of parallelogram</li>
+                        <li><strong>Singularity:</strong> det(A) = 0 if and only if A is singular (non-invertible)</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">2.2 Inverse Matrices</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Inverse Matrix Definition</h4>
+                    <ul>
+                        <li><strong>Definition:</strong> If $AA^{-1} = A^{-1}A = I$, then $A^{-1}$ is the inverse of A</li>
+                        <li><strong>Existence Condition:</strong> A is invertible if and only if det(A) ≠ 0</li>
+                        <li><strong>Uniqueness:</strong> If it exists, the inverse is unique</li>
+                    </ul>
+                </div>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 2×2 Inverse Formula</h4>
+                    <p>For matrix $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$:</p>
+                    $$A^{-1} = \frac{1}{ad-bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}$$
+                    <p>Provided: det(A) = ad - bc ≠ 0</p>
+                </div>
+            </div>
+
+            <!-- Part 3: Linear Systems (English) -->
+            <div class="notes-container" id="part3-en">
+                <h2 class="chapter-header">Part 3: Matrix Solutions to Linear Systems</h2>
+
+                <h3 class="section-header">3.1 Matrix Form of Linear Systems</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Matrix Representation</h4>
+                    <p>Linear systems can be written as: <span class="formula-highlight">Ax = b</span></p>
+                    <ul>
+                        <li>A: Coefficient matrix</li>
+                        <li>x: Variable vector</li>
+                        <li>b: Constant vector</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">3.2 Solution Using Inverse Matrix</h3>
+
+                <div class="method-box">
+                    <h4 class="subsection-header">📋 Solution Steps</h4>
+                    <ol>
+                        <li>
+                            <span class="step-indicator">1</span>
+                            <strong>Write matrix equation:</strong> Ax = b
+                        </li>
+                        <li>
+                            <span class="step-indicator">2</span>
+                            <strong>Check invertibility:</strong> Calculate det(A), ensure ≠ 0
+                        </li>
+                        <li>
+                            <span class="step-indicator">3</span>
+                            <strong>Find inverse:</strong> Calculate $A^{-1}$
+                        </li>
+                        <li>
+                            <span class="step-indicator">4</span>
+                            <strong>Solve:</strong> $x = A^{-1}b$
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Part 4: Applications (English) -->
+            <div class="notes-container" id="part4-en">
+                <h2 class="chapter-header">Part 4: Applications and Special Matrices</h2>
+
+                <h3 class="section-header">4.1 Special Matrix Types</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Important Matrix Types</h4>
+                    <ul>
+                        <li><strong>Identity Matrix (I):</strong> 1s on main diagonal, 0s elsewhere</li>
+                        <li><strong>Diagonal Matrix:</strong> Non-zero elements only on main diagonal</li>
+                        <li><strong>Symmetric Matrix:</strong> $A^T = A$</li>
+                        <li><strong>Orthogonal Matrix:</strong> $A^T A = AA^T = I$</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-header">4.2 Matrix Applications</h3>
+
+                <div class="knowledge-box">
+                    <h4 class="subsection-header">🎯 Geometric Transformations</h4>
+                    <ul>
+                        <li><strong>Rotation Matrix:</strong> $R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$</li>
+                        <li><strong>Scaling Matrix:</strong> $S(k) = \begin{bmatrix} k & 0 \\ 0 & k \end{bmatrix}$</li>
+                        <li><strong>Reflection Matrix:</strong> Reflection about x-axis: $\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion-box">
+                    <h4 class="subsection-header">💡 Key Points Summary</h4>
+                    <ul>
+                        <li><strong>Matrix Operations:</strong> Addition is commutative, multiplication generally is not</li>
+                        <li><strong>Determinants:</strong> Key indicator for matrix invertibility</li>
+                        <li><strong>Inverse Matrices:</strong> Powerful tool for solving linear systems</li>
+                        <li><strong>Geometric Meaning:</strong> Matrices represent linear transformations, determinants represent volume scaling</li>
+                        <li><strong>Practical Applications:</strong> Computer graphics, economics, engineering, and more</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'chinese';
+
+        function toggleLanguage() {
+            const chineseContent = document.getElementById('chinese-content');
+            const englishContent = document.getElementById('english-content');
+            const languageBtnText = document.getElementById('language-btn-text');
+            const backText = document.getElementById('back-text');
+
+            if (currentLanguage === 'chinese') {
+                chineseContent.classList.remove('active');
+                englishContent.classList.add('active');
+                languageBtnText.textContent = 'Switch to Chinese';
+                backText.textContent = 'Back to Course';
+                currentLanguage = 'english';
+            } else {
+                englishContent.classList.remove('active');
+                chineseContent.classList.add('active');
+                languageBtnText.textContent = '切换到英文';
+                backText.textContent = '返回课程';
+                currentLanguage = 'chinese';
+            }
+        }
+
+        // Smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Command Line Arguments Course | COMP1511</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+        .interactive-button {
+            background-color: #e07a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0.5rem;
+        }
+        .interactive-button:hover {
+            background-color: #d06850;
+            transform: translateY(-2px);
+        }
+        .interactive-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .interactive-button.secondary {
+            background-color: #f4a261;
+        }
+        .interactive-button.secondary:hover {
+            background-color: #e3941f;
+        }
+        .terminal-container {
+            background-color: #2c2c2c;
+            border-radius: 0.375rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            color: #ffffff;
+        }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
+        .terminal-prompt {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        .arg-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: #ffffff;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .arg-table th {
+            background-color: #e07a5f;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        .arg-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-family: 'Courier New', monospace;
+        }
+        .arg-table tr:last-child td {
+            border-bottom: none;
+        }
+        .arg-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .code-display {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .code-highlight {
+            background-color: #f4a261;
+            color: #2c2c2c;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .input-field {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            flex: 1;
+            min-width: 200px;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #e07a5f;
+        }
+        .status-message {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .error-message {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .canvas-container {
+            background-color: #f8f7f2;
+            border-radius: 0.375rem;
+            padding: 2rem;
+            margin: 1rem 0;
+            min-height: 200px;
+            border: 2px dashed #e07a5f;
+        }
+        .example-button {
+            background-color: #8b8589;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0.25rem;
+        }
+        .example-button:hover {
+            background-color: #6b7280;
+        }
+        .execution-step {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+            display: none;
+        }
+        .execution-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .step-counter {
+            display: inline-block;
+            background-color: #22c55e;
+            color: #ffffff;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            text-align: center;
+            line-height: 1.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
+        
+        <!-- Back to COMP1511 Button -->
+        <a href="../comp1511.html" class="back-button">
+            <span>←</span>
+            <span>Back to COMP1511</span>
+        </a>
+
+        <!-- Chapter Header -->
+        <header class="text-center mb-8">
+            <h1 class="chapter-title">命令行参数互动课程</h1>
+            <p class="text-xl text-gray-600">Interactive Command Line Arguments Course</p>
+        </header>
+
+        <!-- Course Introduction -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">课程目标</h2>
+            <p class="text-lg mb-4">
+                通过交互式演示，深入理解命令行参数的解析过程。本课程包含两个核心模块：
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <h3 class="text-lg font-bold mb-2">📝 模块一：参数解析器</h3>
+                    <p>输入命令，实时查看 argc 和 argv 的解析结果</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <h3 class="text-lg font-bold mb-2">🔍 模块二：代码模拟器</h3>
+                    <p>可视化C代码执行流程，理解参数处理逻辑</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 1: Command Parser -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">模块一：命令行参数解析器</h3>
+            
+            <p class="text-lg mb-4">
+                在下面的模拟终端中输入命令，看看它如何被解析为 argc 和 argv 数组。
+            </p>
+
+            <!-- Terminal Interface -->
+            <div class="terminal-container">
+                <div class="mb-4">
+                    <span class="terminal-prompt">user@computer:~$ </span>
+                    <input type="text" 
+                           id="commandInput" 
+                           class="terminal-input" 
+                           placeholder="输入命令，例如: ./calculator 15 + 25"
+                           onkeypress="handleEnterKey(event)">
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="parseCommand()" class="interactive-button">解析命令</button>
+                    <button onclick="clearCommand()" class="interactive-button secondary">清空</button>
+                </div>
+            </div>
+
+            <!-- Quick Examples -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-bold text-lg mb-3">快速示例：</h4>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="loadExample('./program')" class="example-button">简单程序</button>
+                    <button onclick="loadExample('./calculator 15 + 25')" class="example-button">计算器</button>
+                    <button onclick="loadExample('./copy -v source.txt dest.txt')" class="example-button">文件复制</button>
+                    <button onclick="loadExample('./grep -n hello file.txt')" class="example-button">文本搜索</button>
+                    <button onclick="loadExample('./program -h --verbose -o output.txt input1.txt input2.txt')" class="example-button">复杂命令</button>
+                </div>
+            </div>
+
+            <!-- Results Display -->
+            <div id="parseResults" class="canvas-container hidden">
+                <div id="argcDisplay" class="mb-4"></div>
+                <div id="argvTable"></div>
+            </div>
+
+            <!-- Status Messages -->
+            <div id="parseStatus" class="hidden"></div>
+        </div>
+
+        <!-- Module 2: Code Simulator -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">模块二：C代码执行模拟器</h3>
+            
+            <p class="text-lg mb-4">
+                选择一个示例程序，看看它如何处理命令行参数。代码执行过程将逐步高亮显示。
+            </p>
+
+            <!-- Program Selection -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-bold text-lg mb-3">选择示例程序：</h4>
+                <div class="input-group">
+                    <select id="programSelect" class="input-field" style="flex: none; width: 200px;">
+                        <option value="">选择程序</option>
+                        <option value="basic">基本参数遍历</option>
+                        <option value="calculator">简单计算器</option>
+                        <option value="filetools">文件工具</option>
+                    </select>
+                    <button onclick="loadProgram()" class="interactive-button">加载程序</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="font-medium">测试命令：</label>
+                    <input type="text" id="testCommand" class="input-field" placeholder="输入测试命令">
+                    <button onclick="runSimulation()" class="interactive-button secondary" id="runBtn" disabled>运行模拟</button>
+                </div>
+            </div>
+
+            <!-- Code Display -->
+            <div id="codeDisplay" class="code-display hidden">
+                <!-- Code will be inserted here -->
+            </div>
+
+            <!-- Execution Steps -->
+            <div id="executionSteps" class="hidden">
+                <h4 class="font-bold text-lg mb-3">执行步骤：</h4>
+                <div id="stepContainer">
+                    <!-- Steps will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Exercises -->
+        <div class="concept-card">
+            <h3 class="text-2xl font-bold text-[#e07a5f] mb-4">实践练习</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold text-lg mb-2">练习 1：基础解析</h4>
+                    <p class="text-sm mb-3 text-gray-600">尝试解析以下命令，观察参数分布：</p>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li>• <code>./hello world</code></li>
+                        <li>• <code>ls -la /home</code></li>
+                        <li>• <code>gcc -o program main.c</code></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-2">练习 2：选项处理</h4>
+                    <p class="text-sm mb-3 text-gray-600">观察带选项的命令如何被解析：</p>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li>• <code>./program -v --help</code></li>
+                        <li>• <code>./copy -n 10 file.txt</code></li>
+                        <li>• <code>./search -i -r pattern dir/</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                <h4 class="font-bold text-blue-800 mb-2">💡 学习要点：</h4>
+                <ul class="text-sm space-y-1 text-blue-700">
+                    <li>• 程序名总是 argv[0]，参数从 argv[1] 开始</li>
+                    <li>• 空格分隔参数，引号可以保持空格</li>
+                    <li>• 选项通常以 '-' 开头，长选项以 '--' 开头</li>
+                    <li>• argc 包含程序名在内的总参数个数</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="concept-card text-center">
+            <h3 class="text-xl font-bold text-[#e07a5f] mb-4">继续学习</h3>
+            <div class="space-y-4">
+                <a href="./1511_cmd_args_notes.html" class="back-button inline-flex">
+                    <span>📖</span>
+                    <span>回到命令行参数笔记</span>
+                </a>
+                <br>
+                <a href="./1511_pointers_interactive.html" class="back-button inline-flex">
+                    <span>🚀</span>
+                    <span>指针互动课程</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Module 1: Command Parser
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                parseCommand();
+            }
+        }
+
+        function parseCommand() {
+            const input = document.getElementById('commandInput').value.trim();
+            
+            if (!input) {
+                showParseMessage('请输入一个命令', 'error');
+                return;
+            }
+
+            // Parse command into arguments (simple space splitting, no quote handling for now)
+            const args = input.split(/\s+/).filter(arg => arg.length > 0);
+            const argc = args.length;
+
+            displayResults(argc, args);
+            showParseMessage(`成功解析命令，共 ${argc} 个参数`, 'success');
+        }
+
+        function displayResults(argc, argv) {
+            const resultsDiv = document.getElementById('parseResults');
+            const argcDiv = document.getElementById('argcDisplay');
+            const argvTableDiv = document.getElementById('argvTable');
+
+            // Display argc
+            argcDiv.innerHTML = `
+                <div class="text-center p-4 bg-blue-100 rounded-lg">
+                    <h4 class="text-xl font-bold text-blue-800">argc = ${argc}</h4>
+                    <p class="text-blue-600">参数总数（包括程序名）</p>
+                </div>
+            `;
+
+            // Create argv table
+            let tableHTML = `
+                <table class="arg-table">
+                    <thead>
+                        <tr>
+                            <th>索引</th>
+                            <th>变量</th>
+                            <th>值</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            for (let i = 0; i < argv.length; i++) {
+                const description = i === 0 ? '程序名' : `第${i}个参数`;
+                tableHTML += `
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">${i}</td>
+                        <td>argv[${i}]</td>
+                        <td>"${argv[i]}"</td>
+                        <td>${description}</td>
+                    </tr>
+                `;
+            }
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            argvTableDiv.innerHTML = tableHTML;
+            resultsDiv.classList.remove('hidden');
+        }
+
+        function clearCommand() {
+            document.getElementById('commandInput').value = '';
+            document.getElementById('parseResults').classList.add('hidden');
+            document.getElementById('parseStatus').classList.add('hidden');
+        }
+
+        function loadExample(command) {
+            document.getElementById('commandInput').value = command;
+            parseCommand();
+        }
+
+        function showParseMessage(message, type) {
+            const statusDiv = document.getElementById('parseStatus');
+            statusDiv.className = type === 'error' ? 'error-message' : 'status-message';
+            statusDiv.innerHTML = `<p><strong>${type === 'error' ? '错误' : '信息'}:</strong> ${message}</p>`;
+            statusDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Module 2: Code Simulator
+        const programs = {
+            basic: {
+                name: '基本参数遍历',
+                code: `#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    printf("程序名: %s\\n", argv[0]);
+    printf("参数个数: %d\\n", argc - 1);
+    
+    for (int i = 1; i < argc; i++) {
+        printf("参数 %d: %s\\n", i, argv[i]);
+    }
+    
+    return 0;
+}`,
+                steps: [
+                    '检查 argc 的值',
+                    '打印程序名 argv[0]',
+                    '计算参数个数 (argc - 1)',
+                    '使用循环遍历所有参数',
+                    '打印每个参数的索引和值'
+                ]
+            },
+            calculator: {
+                name: '简单计算器',
+                code: `#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        printf("用法: %s <数字1> <操作符> <数字2>\\n", argv[0]);
+        return 1;
+    }
+    
+    double num1 = atof(argv[1]);
+    char *operator = argv[2];
+    double num2 = atof(argv[3]);
+    double result;
+    
+    if (strcmp(operator, "+") == 0) {
+        result = num1 + num2;
+    } else if (strcmp(operator, "-") == 0) {
+        result = num1 - num2;
+    } else if (strcmp(operator, "*") == 0) {
+        result = num1 * num2;
+    } else if (strcmp(operator, "/") == 0) {
+        if (num2 == 0) {
+            printf("错误: 除数不能为零\\n");
+            return 1;
+        }
+        result = num1 / num2;
+    } else {
+        printf("错误: 不支持的操作符\\n");
+        return 1;
+    }
+    
+    printf("%.2f %s %.2f = %.2f\\n", num1, operator, num2, result);
+    return 0;
+}`,
+                steps: [
+                    '检查参数个数是否为4',
+                    '转换 argv[1] 为第一个数字',
+                    '获取 argv[2] 作为操作符',
+                    '转换 argv[3] 为第二个数字',
+                    '根据操作符进行计算',
+                    '输出计算结果'
+                ]
+            },
+            filetools: {
+                name: '文件工具',
+                code: `#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+    int verbose = 0;
+    char *filename = NULL;
+    
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-v") == 0) {
+            verbose = 1;
+        } else if (argv[i][0] != '-') {
+            filename = argv[i];
+        } else {
+            printf("未知选项: %s\\n", argv[i]);
+            return 1;
+        }
+    }
+    
+    if (filename == NULL) {
+        printf("错误: 请指定文件名\\n");
+        return 1;
+    }
+    
+    if (verbose) {
+        printf("处理文件: %s\\n", filename);
+    }
+    
+    printf("文件处理完成\\n");
+    return 0;
+}`,
+                steps: [
+                    '初始化选项变量',
+                    '循环遍历所有参数',
+                    '检查是否为 -v 选项',
+                    '检查是否为文件名参数',
+                    '验证是否提供了文件名',
+                    '根据选项执行相应操作'
+                ]
+            }
+        };
+
+        let currentProgram = null;
+        let currentArgs = [];
+
+        function loadProgram() {
+            const programKey = document.getElementById('programSelect').value;
+            
+            if (!programKey) {
+                alert('请选择一个程序');
+                return;
+            }
+
+            currentProgram = programs[programKey];
+            const codeDisplay = document.getElementById('codeDisplay');
+            
+            codeDisplay.innerHTML = `<pre>${escapeHtml(currentProgram.code)}</pre>`;
+            codeDisplay.classList.remove('hidden');
+            
+            document.getElementById('runBtn').disabled = false;
+            
+            // Set example command
+            const exampleCommands = {
+                basic: './program hello world',
+                calculator: './calculator 15 + 25',
+                filetools: './filetools -v data.txt'
+            };
+            
+            document.getElementById('testCommand').value = exampleCommands[programKey] || '';
+        }
+
+        function runSimulation() {
+            const command = document.getElementById('testCommand').value.trim();
+            
+            if (!command) {
+                alert('请输入测试命令');
+                return;
+            }
+
+            if (!currentProgram) {
+                alert('请先选择一个程序');
+                return;
+            }
+
+            currentArgs = command.split(/\s+/).filter(arg => arg.length > 0);
+            showExecutionSteps();
+        }
+
+        function showExecutionSteps() {
+            const stepsDiv = document.getElementById('executionSteps');
+            const container = document.getElementById('stepContainer');
+            
+            // Clear previous steps
+            container.innerHTML = '';
+            
+            // Create step elements
+            currentProgram.steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'execution-step';
+                stepDiv.id = `step-${index}`;
+                
+                const simulatedOutput = getSimulatedOutput(index);
+                
+                stepDiv.innerHTML = `
+                    <div class="flex items-start">
+                        <span class="step-counter">${index + 1}</span>
+                        <div class="flex-1">
+                            <h5 class="font-bold text-green-800">${step}</h5>
+                            ${simulatedOutput ? `<div class="mt-2 p-2 bg-gray-100 rounded text-sm font-mono">${simulatedOutput}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(stepDiv);
+            });
+            
+            stepsDiv.classList.remove('hidden');
+            
+            // Animate steps
+            animateSteps();
+        }
+
+        function animateSteps() {
+            const steps = document.querySelectorAll('.execution-step');
+            
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.classList.add('active');
+                }, index * 800);
+            });
+        }
+
+        function getSimulatedOutput(stepIndex) {
+            if (!currentArgs.length) return null;
+            
+            const programKey = document.getElementById('programSelect').value;
+            const argc = currentArgs.length;
+            
+            switch (programKey) {
+                case 'basic':
+                    switch (stepIndex) {
+                        case 0: return `argc = ${argc}`;
+                        case 1: return `程序名: ${currentArgs[0]}`;
+                        case 2: return `参数个数: ${argc - 1}`;
+                        case 3: return `开始循环 (i = 1; i < ${argc})`;
+                        case 4: 
+                            let output = '';
+                            for (let i = 1; i < argc; i++) {
+                                output += `参数 ${i}: ${currentArgs[i]}\n`;
+                            }
+                            return output.trim();
+                    }
+                    break;
+                    
+                case 'calculator':
+                    switch (stepIndex) {
+                        case 0: return argc === 4 ? '参数个数正确' : `错误: 需要4个参数，实际${argc}个`;
+                        case 1: return argc > 1 ? `num1 = ${currentArgs[1]}` : '缺少第一个数字';
+                        case 2: return argc > 2 ? `operator = "${currentArgs[2]}"` : '缺少操作符';
+                        case 3: return argc > 3 ? `num2 = ${currentArgs[3]}` : '缺少第二个数字';
+                        case 4: 
+                            if (argc === 4) {
+                                const op = currentArgs[2];
+                                if (['+', '-', '*', '/'].includes(op)) {
+                                    return `执行 ${op} 运算`;
+                                } else {
+                                    return `错误: 不支持的操作符 "${op}"`;
+                                }
+                            }
+                            return '无法计算';
+                        case 5:
+                            if (argc === 4 && ['+', '-', '*', '/'].includes(currentArgs[2])) {
+                                return `输出计算结果`;
+                            }
+                            return '无输出';
+                    }
+                    break;
+                    
+                case 'filetools':
+                    switch (stepIndex) {
+                        case 0: return 'verbose = 0, filename = NULL';
+                        case 1: return `循环遍历 ${argc - 1} 个参数`;
+                        case 2: 
+                            const hasVerbose = currentArgs.includes('-v');
+                            return hasVerbose ? '发现 -v 选项，设置 verbose = 1' : '未发现 -v 选项';
+                        case 3:
+                            const filename = currentArgs.find(arg => !arg.startsWith('-') && arg !== currentArgs[0]);
+                            return filename ? `设置 filename = "${filename}"` : '未发现文件名参数';
+                        case 4:
+                            const hasFile = currentArgs.find(arg => !arg.startsWith('-') && arg !== currentArgs[0]);
+                            return hasFile ? '文件名验证通过' : '错误: 请指定文件名';
+                        case 5:
+                            return '执行文件处理操作';
+                    }
+                    break;
+            }
+            
+            return null;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set focus to command input
+            document.getElementById('commandInput').focus();
+        });
+    </script>
+</body>
+</html> 

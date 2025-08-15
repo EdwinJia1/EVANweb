@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1081 - Discrete Mathematics | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .course-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .course-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .notion-badge {
+            display: inline-block;
+            background-color: #f4a261;
+            color: #2c2c2c;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .local-badge {
+            display: inline-block;
+            background-color: #8b8589;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .external-link::after {
+            content: " ↗";
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Back to Home Button */
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Tab Navigation Styles */
+        .tab-nav {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+        .tab-button:hover {
+            border-color: #e07a5f;
+            transform: translateY(-2px);
+        }
+        .tab-button.active {
+            background-color: #e07a5f;
+            color: #ffffff;
+            border-color: #e07a5f;
+        }
+
+        /* Tab Content Styles */
+        .tab-content-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-content-panel {
+            display: none;
+        }
+        .tab-content-panel.active {
+            display: block;
+        }
+
+        /* Notes Options Styles */
+        .notes-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .notes-option-card {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            border: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            color: inherit;
+        }
+        .notes-option-card:hover {
+            border-color: #e07a5f;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px -2px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        
+        <!-- Back to Home Button -->
+        <a href="./index.html" class="back-button">
+            <span>←</span>
+            <span>Back to Home</span>
+        </a>
+
+        <!-- Course Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">MATH1081</h1>
+            <p class="text-xl text-gray-600 mt-2">Discrete Mathematics</p>
+            <p class="text-sm text-gray-500 mt-1">Comprehensive study materials for discrete mathematics</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-button active" onclick="switchTab('notes')">Notes</button>
+            <button class="tab-button" onclick="switchTab('interactive')">Interactive Course</button>
+            <button class="tab-button" onclick="switchTab('practice')">Practice & Review</button>
+        </nav>
+
+        <!-- Tab Content Container -->
+        <div class="tab-content-container">
+            
+            <!-- Notes Tab -->
+            <div class="tab-content-panel active" id="notes-panel">
+                <h2 class="text-2xl font-bold text-[#e07a5f] mb-4">Course Notes</h2>
+                <p class="text-gray-600 mb-6">Choose between our two note formats. Notion version is updated in real-time, while local version provides offline access.</p>
+                
+                <div class="notes-options">
+                    <!-- Notion Version Option -->
+                    <div class="notes-option-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-3">Notion Version</h3>
+                        <p class="text-gray-600 mb-4">Real-time updated notes with the latest content and improvements.</p>
+                        
+                        <!-- Chapter Links -->
+                        <div class="space-y-3">
+                            <a href="https://fishy-cloche-56b.notion.site/21a98e948864806faad1f706e830cc36" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 1 - Set Theory & Logic</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Sets, operations, logic, and proofs</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+                            
+                            <a href="https://fishy-cloche-56b.notion.site/chapter2-21e98e94886480cf8f62c28df1e6c5ed?pvs=73" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 2 - Relations & Functions</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Relations, functions, and mappings</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+                            
+                            <a href="https://fishy-cloche-56b.notion.site/chapter3-21e98e9488648098a676fc1d9a9fcb00?pvs=73" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 3 - Advanced Topics</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Complex mathematical concepts</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+                            
+                            <a href="https://fishy-cloche-56b.notion.site/Chapter-4-23098e94886480a1a4dde8956a1e5766?pvs=73" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 4 - Counting and Probability</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Combinatorics, pigeonhole principle, probability, and Bayes' theorem.</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+                            
+                            <a href="https://separated-balance-ff5.notion.site/chapter5-23e6f5960153809e8d55c116b72f3165" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 5.01 - Graph Theory Basics</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Basic graphs, trees, paths, circuits fundamentals.</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+                            
+                            <a href="https://separated-balance-ff5.notion.site/chapter5-02-5-03-23f6f596015380e8aa51ca0ee06b7ce7" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 5.02-5.03 - Graph Algorithms</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Vertex degrees, isomorphisms, paths, Euler & Hamilton walks.</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+
+                            <!-- Final - Comprehensive Review (Notion) -->
+                            <a href="https://separated-balance-ff5.notion.site/final-24a6f596015380ccb931ed1fed2ecd45" target="_blank" rel="noopener noreferrer" class="course-link external-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Final - Comprehensive Review</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Consolidated revision notes and exam prep materials.</p>
+                                    <div class="notion-badge">Live Updates</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Local Version Option -->
+                    <div class="notes-option-card">
+                        <h3 class="text-xl font-bold text-[#e07a5f] mb-3">Local Version</h3>
+                        <p class="text-gray-600 mb-4">Offline-accessible notes with comprehensive examples and practice problems.</p>
+                        
+                        <!-- Chapter Links -->
+                        <div class="space-y-3">
+                            <a href="./math1081/chapter_1notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 1 - Set Theory & Logic</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Detailed examples and exercises</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                            
+                            <a href="./math1081/chapter_2notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 2 - Relations & Functions</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Comprehensive examples included</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                            
+                            <a href="./math1081/chapter_3notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 3 - Advanced Topics</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Detailed explanations provided</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                            
+                            <a href="./math1081/chapter_4notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 4 - Counting and Probability</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Detailed explanations and examples provided.</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                            
+                            <a href="./math1081/math1081_chapter5.01_notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 5.01 - Graph Theory Basics</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Basic graph theory concepts and fundamentals.</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                            
+                            <a href="./math1081/math1081_chapter5.02-03_notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Chapter 5.02-5.03 - Graph Algorithms</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Vertex degrees, isomorphisms, paths, Euler & Hamilton walks.</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                            
+                            <a href="./math1081/math1081_lab_test_2_notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Lab Test 2 - Logic & Combinatorics</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Detailed notes on logical expressions, truth tables, and combinatorial mathematics.</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+
+                            <!-- Final - Local Notes -->
+                            <a href="./math1081/final_notes.html" class="course-link">
+                                <div class="course-card">
+                                    <h4 class="text-sm font-bold text-[#8b8589]">Final - Comprehensive Review (Local)</h4>
+                                    <p class="text-xs mt-1 text-gray-500">Offline version of Final revision notes with anchors and formulas.</p>
+                                    <div class="local-badge">Offline Access</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Course Tab -->
+            <div class="tab-content-panel" id="interactive-panel">
+                <h2 class="text-2xl font-bold text-[#e07a5f] mb-4">Interactive Course</h2>
+                <p class="text-gray-600 mb-6">Comprehensive interactive learning experience with visualizations, quizzes, and step-by-step explanations.</p>
+                
+                <a href="./math1081/1081chapter_1-4.html" class="course-link">
+                    <div class="course-card" style="margin-top: 0;">
+                        <h4 class="text-xl font-bold text-[#e07a5f]">Complete Interactive Course</h4>
+                        <p class="text-lg mt-2">Chapters 1-4 Complete</p>
+                        <p class="text-gray-500 mt-3">Interactive notes, quizzes, and visualizations covering:</p>
+                        <ul class="text-gray-500 mt-2 ml-4 list-disc">
+                            <li>Set Theory and Logic Operations</li>
+                            <li>Number Theory and Proofs</li>
+                            <li>Relations and Functions</li>
+                            <li>Advanced Discrete Mathematics Topics</li>
+                        </ul>
+                        <div class="notion-badge mt-4">Interactive Learning</div>
+                    </div>
+                </a>
+
+                <!-- Logic Learning Tools Section -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-[#e07a5f] mb-4">逻辑学习工具</h3>
+                    <p class="text-gray-600 mb-6">专门针对逻辑学的互动工具和可视化演示，帮助深入理解逻辑概念。</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- 互动式真值表生成器 -->
+                        <a href="./math1081/chapter_4notes.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">互动式真值表生成器</h4>
+                                <p class="text-gray-500 mt-3">输入逻辑表达式，立即生成详细的真值表，帮助理解复杂命题。</p>
+                                <div class="notion-badge mt-4" style="background-color: #2ecc71; color: #ffffff;">启动工具</div>
+                            </div>
+                        </a>
+
+                        <!-- 德摩根定律可视化 -->
+                        <a href="./logic_demorgan_visual.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">德摩根定律的可视化演示</h4>
+                                <p class="text-gray-500 mt-3">通过交互式图表和示例，直观地探索和理解德摩根定律。</p>
+                                <div class="notion-badge mt-4" style="background-color: #3498db; color: #ffffff;">开始探索</div>
+                            </div>
+                        </a>
+
+                        <!-- 逻辑应用指南 -->
+                        <a href="./logic_applications_guide.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">逻辑的应用：从证明到编程</h4>
+                                <p class="text-gray-500 mt-3">包含逻辑等价证明的分步示例，以及逻辑在实际编程中的应用案例。</p>
+                                <div class="notion-badge mt-4" style="background-color: #9b59b6; color: #ffffff;">阅读指南</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice & Review Tab -->
+            <div class="tab-content-panel" id="practice-panel">
+                <h2 class="text-2xl font-bold text-[#e07a5f] mb-4">Practice & Review</h2>
+                <p class="text-gray-600 mb-6">Additional practice materials, exercises, and review resources.</p>
+                
+                <!-- Logic Practice Section -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-[#e07a5f] mb-4">逻辑练习专区</h3>
+                    <p class="text-gray-600 mb-6">专门针对逻辑学的练习题库和评估工具。</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 逻辑推理练习题库 -->
+                        <a href="./math1081/math1081_chapter4_quiz.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">逻辑推理练习题库</h4>
+                                <p class="text-base mt-2">一系列精心设计的逻辑推理题，用于检验和提升你的推理能力。</p>
+                                <p class="text-gray-500 mt-3 text-sm">包含：命题逻辑、谓词逻辑、逻辑等价、推理规则等各类练习题。</p>
+                                <div class="notion-badge mt-4" style="background-color: #e74c3c; color: #ffffff;">开始练习</div>
+                            </div>
+                        </a>
+
+                        <!-- 图论测验 5.01 -->
+                        <a href="./math1081/math1081_chapter5.01_quiz.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">图论测验 5.01</h4>
+                                <p class="text-base mt-2">70道精心设计的图论基础题目。</p>
+                                <p class="text-gray-500 mt-3 text-sm">包含：基础定义、欧拉路径、哈密顿回路、树、平面图、算法等基础内容。</p>
+                                <div class="notion-badge mt-4" style="background-color: #2ecc71; color: #ffffff;">开始测验</div>
+                            </div>
+                        </a>
+
+                        <!-- 图论测验 5.02-5.03 -->
+                        <a href="./math1081/math1081_chapter5.02-03_quiz.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">图论测验 5.02-5.03</h4>
+                                <p class="text-base mt-2">70道图论算法专题题目，涵盖高级概念。</p>
+                                <p class="text-gray-500 mt-3 text-sm">包含：顶点度数、同构、路径遍历、欧拉与哈密顿算法等高级内容。</p>
+                                <div class="notion-badge mt-4" style="background-color: #f39c12; color: #ffffff;">开始测验</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- General Practice Section -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#e07a5f] mb-4">综合复习资料</h3>
+                    <p class="text-gray-600 mb-6">覆盖所有章节的复习材料和练习题。</p>
+                
+                <!-- Lab Test 2 笔记和测验 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="./math1081/math1081_lab_test_2_notes.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">Lab Test 2 详细笔记</h4>
+                                <p class="text-base mt-2">完整的理论知识、解题方法和详细示例。</p>
+                                <p class="text-gray-500 mt-3 text-sm">
+                                    <strong>内容包含：</strong> 逻辑表达式简化技巧、真值表分析方法、组合数学应用<br/>
+                                    <strong>特色：</strong> 公式工具箱、实战演练、记忆口诀
+                                </p>
+                                <div class="notion-badge mt-4" style="background-color: #3b82f6; color: #ffffff;">查看笔记</div>
+                            </div>
+                        </a>
+                        
+                        <a href="./math1081/math1081_lab_test_2_quiz.html" class="course-link">
+                            <div class="course-card" style="margin-top: 0;">
+                                <h4 class="text-lg font-bold text-[#e07a5f]">Lab Test 2 专项测验</h4>
+                                <p class="text-base mt-2">30道精心设计的测验题目，全面覆盖Lab Test核心概念。</p>
+                                <p class="text-gray-500 mt-3 text-sm">
+                                    <strong>难度分布：</strong> 10道简单题 + 5道中等题 + 10道难题 + 5道专家级难题<br/>
+                                    <strong>内容涵盖：</strong> 逻辑表达式简化、真值表分析、组合排列计算
+                                </p>
+                                <div class="notion-badge mt-4" style="background-color: #8b5cf6; color: #ffffff;">开始测验</div>
+                            </div>
+                        </a>
+
+                          <!-- Final - Practice Problems -->
+                          <a href="./math1081/final_practice.html" class="course-link">
+                              <div class="course-card" style="margin-top: 0;">
+                                  <h4 class="text-lg font-bold text-[#e07a5f]">Final Practice Problems</h4>
+                                  <p class="text-base mt-2">从 Final 复习内容抽取与改编的练习题集合，按主题/难度分组。</p>
+                                  <p class="text-gray-500 mt-3 text-sm">覆盖：逻辑等价、计数原理、鸽巢原理、整数方程、递推关系等。</p>
+                                  <div class="notion-badge mt-4" style="background-color: #e74c3c; color: #ffffff;">开始练习</div>
+                              </div>
+                          </a>
+
+                          <!-- Final - Review Materials -->
+                          <a href="./math1081/final_review.html" class="course-link">
+                              <div class="course-card" style="margin-top: 0;">
+                                  <h4 class="text-lg font-bold text-[#e07a5f]">Final Review Materials</h4>
+                                  <p class="text-base mt-2">提要、速记卡与复习清单，助力最后冲刺。</p>
+                                  <p class="text-gray-500 mt-3 text-sm">包含：高频考点、易错陷阱、公式速查表与刷题路径。</p>
+                                  <div class="notion-badge mt-4" style="background-color: #10b981; color: #ffffff;">查看资料</div>
+                              </div>
+                          </a>
+
+                          <!-- Final - 专项测验 30题 -->
+                          <a href="./math1081/final_quiz.html" class="course-link">
+                              <div class="course-card" style="margin-top: 0;">
+                                  <h4 class="text-lg font-bold text-[#e07a5f]">Final 专项测验</h4>
+                                  <p class="text-base mt-2">30题终章测验，全面覆盖 Final 复习大纲。</p>
+                                  <p class="text-gray-500 mt-3 text-sm"><strong>难度分布：</strong> 17 简单 · 10 中等 · 3 困难</p>
+                                  <div class="notion-badge mt-4" style="background-color: #f39c12; color: #ffffff;">开始测验</div>
+                              </div>
+                          </a>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="course-card opacity-60 cursor-not-allowed" style="margin-top: 0;">
+                        <h4 class="text-lg font-bold text-gray-400">Practice Problems</h4>
+                        <p class="text-base mt-2 text-gray-400">Coming Soon</p>
+                        <p class="text-gray-500 mt-3 text-sm">Additional practice exercises and problem sets will be added here.</p>
+                    </div>
+                    
+                    <div class="course-card opacity-60 cursor-not-allowed" style="margin-top: 0;">
+                        <h4 class="text-lg font-bold text-gray-400">Review Materials</h4>
+                        <p class="text-base mt-2 text-gray-400">Coming Soon</p>
+                        <p class="text-gray-500 mt-3 text-sm">Summary sheets, flashcards, and review guides will be available here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab content panels
+            const panels = document.querySelectorAll('.tab-content-panel');
+            panels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show the selected tab content panel
+            const targetPanel = document.getElementById(tabName + '-panel');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+            
+            // Add active class to the clicked tab button
+            const clickedButton = event.target;
+            clickedButton.classList.add('active');
+        }
+    </script>
+</body>
+</html> 

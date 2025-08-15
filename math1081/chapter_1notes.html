@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1 - Discrete Mathematics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .math {
+            font-family: "Cambria Math", "Times New Roman", serif;
+            font-size: 1.1em;
+            display: inline-block;
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c2c2c;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #e07a5f 0%, #f4a261 100%);
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <a href="../index.html" class="home-button">← Back to Home</a>
+            <h1 class="chapter-title">Chapter 1</h1>
+            <div class="w-24"></div> <!-- Spacer for centering -->
+        </header>
+
+        <!-- Chapter Summary -->
+        <div class="summary-card">
+            <h2 class="text-2xl font-bold mb-4">Chapter Summary</h2>
+            <p class="text-lg leading-relaxed">
+                This chapter introduces the fundamental concepts of <strong>Set Theory and Functions</strong>. 
+                We explore set notation, operations, relationships, and basic function concepts, laying the groundwork for more advanced 
+                discrete mathematics concepts. Key topics include set representations, Boolean algebra, Cartesian products, and function properties.
+            </p>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <strong>Key Concepts:</strong>
+                    <ul class="mt-1">
+                        <li>• Set Notation</li>
+                        <li>• Set Operations</li>
+                        <li>• Cartesian Products</li>
+                        <li>• Functions</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Learning Goals:</strong>
+                    <ul class="mt-1">
+                        <li>• Understand sets</li>
+                        <li>• Apply operations</li>
+                        <li>• Work with functions</li>
+                        <li>• Solve problems</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Prerequisites:</strong>
+                    <ul class="mt-1">
+                        <li>• Basic algebra</li>
+                        <li>• Logic concepts</li>
+                        <li>• Problem solving</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Content -->
+        <main>
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">1.1 Introduction to Sets</h3>
+                <p class="mb-4">A <strong>set</strong> is a well-defined collection of distinct objects, called elements or members of the set.</p>
+                
+                <h4 class="font-semibold text-lg mb-2">Basic Notation:</h4>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><span class="math">A = {1, 2, 3, 4}</span> - Roster notation</li>
+                    <li><span class="math">B = {x | x is an even integer}</span> - Set-builder notation</li>
+                    <li><span class="math">x ∈ A</span> - x is an element of set A</li>
+                    <li><span class="math">y ∉ A</span> - y is not an element of set A</li>
+                </ul>
+
+                <h4 class="font-semibold text-lg mb-2 mt-4">Important Number Sets:</h4>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                                <li>Natural Numbers: <span class="math">ℕ = {0, 1, 2, 3, ...}</span></li>
+                                <li>Integers: <span class="math">ℤ = {..., -2, -1, 0, 1, 2, ...}</span></li>
+                                <li>Positive Integers: <span class="math">ℤ⁺ = {1, 2, 3, ...}</span></li>
+                                <li>Rational Numbers: <span class="math">ℚ</span></li>
+                                <li>Real Numbers: <span class="math">ℝ</span></li>
+                                <li>Complex Numbers: <span class="math">ℂ</span></li>
+                            </ul>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">1.2 Subsets and Power Sets</h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold mb-2">Subset Relationships</h4>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>Subset:</strong> <span class="math">A ⊆ B</span> if every element of A is also in B</li>
+                            <li><strong>Proper Subset:</strong> <span class="math">A ⊂ B</span> if <span class="math">A ⊆ B</span> and <span class="math">A ≠ B</span></li>
+                            <li><strong>Set Equality:</strong> <span class="math">A = B</span> if <span class="math">A ⊆ B</span> and <span class="math">B ⊆ A</span></li>
+                    </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">Power Sets</h4>
+                        <p>The <strong>power set</strong> <span class="math">P(A)</span> is the set of all subsets of A.</p>
+                        <p class="mt-2">If <span class="math">|A| = n</span>, then <span class="math">|P(A)| = 2^n</span>.</p>
+                        <div class="bg-gray-50 p-3 rounded mt-3">
+                            <strong>Example:</strong> If <span class="math">A = {1, 2}</span>, then 
+                            <span class="math">P(A) = {∅, {1}, {2}, {1,2}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">1.3 Set Operations</h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold mb-2">Basic Operations</h4>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>Union:</strong> <span class="math">A ∪ B = {x | x ∈ A or x ∈ B}</span></li>
+                            <li><strong>Intersection:</strong> <span class="math">A ∩ B = {x | x ∈ A and x ∈ B}</span></li>
+                            <li><strong>Complement:</strong> <span class="math">A^c = {x ∈ U | x ∉ A}</span></li>
+                            <li><strong>Difference:</strong> <span class="math">A - B = {x | x ∈ A and x ∉ B}</span></li>
+                            <li><strong>Symmetric Difference:</strong> <span class="math">A ⊖ B = (A ∪ B) - (A ∩ B)</span></li>
+                    </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">Inclusion-Exclusion Principle</h4>
+                        <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li><span class="math">|A ∪ B| = |A| + |B| - |A ∩ B|</span></li>
+                            <li><span class="math">|A ∪ B ∪ C| = |A| + |B| + |C| - |A ∩ B| - |A ∩ C| - |B ∩ C| + |A ∩ B ∩ C|</span></li>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">1.4 Laws of Set Algebra</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold mb-2">Commutative Laws</h4>
+                        <p class="math">A ∪ B = B ∪ A</p>
+                        <p class="math">A ∩ B = B ∩ A</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">Associative Laws</h4>
+                        <p class="math">A ∪ (B ∪ C) = (A ∪ B) ∪ C</p>
+                        <p class="math">A ∩ (B ∩ C) = (A ∩ B) ∩ C</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">Distributive Laws</h4>
+                        <p class="math">A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)</p>
+                        <p class="math">A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">De Morgan's Laws</h4>
+                        <p class="math">(A ∪ B)^c = A^c ∩ B^c</p>
+                        <p class="math">(A ∩ B)^c = A^c ∪ B^c</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">1.5 Cartesian Products and Functions</h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold mb-2">Cartesian Product</h4>
+                        <p>The <strong>Cartesian product</strong> of sets A and B is:</p>
+                        <p class="math">A × B = {(a, b) | a ∈ A and b ∈ B}</p>
+                        <div class="bg-gray-50 p-3 rounded mt-3">
+                            <strong>Example:</strong> If <span class="math">A = {1, 2}</span> and <span class="math">B = {x, y}</span>, then 
+                            <span class="math">A × B = {(1,x), (1,y), (2,x), (2,y)}</span>
+                        </div>
+                        <p class="mt-2"><strong>Note:</strong> <span class="math">|A × B| = |A| × |B|</span></p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold mb-2">Functions</h4>
+                        <p>A <strong>function</strong> <span class="math">f: X → Y</span> is a rule that assigns to each element in X exactly one element in Y.</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4 mt-3">
+                            <li><strong>Domain:</strong> The set X (input set)</li>
+                            <li><strong>Codomain:</strong> The set Y (possible output set)</li>
+                            <li><strong>Range/Image:</strong> <span class="math">f(X) = {f(x) | x ∈ X}</span> (actual outputs)</li>
+            </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold mb-2">Function Properties</h4>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>Injective (One-to-one):</strong> If <span class="math">f(x₁) = f(x₂)</span>, then <span class="math">x₁ = x₂</span></li>
+                            <li><strong>Surjective (Onto):</strong> For every <span class="math">y ∈ Y</span>, there exists <span class="math">x ∈ X</span> such that <span class="math">f(x) = y</span></li>
+                            <li><strong>Bijective:</strong> Both injective and surjective</li>
+            </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-bold text-[#e07a5f] mb-3">Practice Problems</h3>
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-3">Problem 1: Set Operations</h4>
+                        <p class="mb-2">Given: <span class="math">A = {1, 2, 3, 4}</span> and <span class="math">B = {3, 4, 5, 6}</span></p>
+                        <p class="mb-2">Find: <span class="math">A ∪ B</span>, <span class="math">A ∩ B</span>, and <span class="math">A - B</span></p>
+                        
+                        <div class="mt-4 p-3 bg-white rounded border-l-4 border-[#e07a5f]">
+                            <strong>Solution:</strong>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><span class="math">A ∪ B = {1, 2, 3, 4, 5, 6}</span></li>
+                                <li><span class="math">A ∩ B = {3, 4}</span></li>
+                                <li><span class="math">A - B = {1, 2}</span></li>
+                    </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-3">Problem 2: Cartesian Product</h4>
+                        <p class="mb-2">Given: <span class="math">A = {a, b}</span> and <span class="math">B = {1, 2, 3}</span></p>
+                        <p class="mb-2">Find: <span class="math">A × B</span> and <span class="math">|A × B|</span></p>
+                        
+                        <div class="mt-4 p-3 bg-white rounded border-l-4 border-[#e07a5f]">
+                            <strong>Solution:</strong>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><span class="math">A × B = {(a,1), (a,2), (a,3), (b,1), (b,2), (b,3)}</span></li>
+                                <li><span class="math">|A × B| = |A| × |B| = 2 × 3 = 6</span></li>
+            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

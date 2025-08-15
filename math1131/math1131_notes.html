@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1131 Notes - Algebra & Vectors | UNSW Study Materials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+        .back-button {
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+            border: 2px solid #e07a5f;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .back-button:hover {
+            background-color: #e07a5f;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .notes-container {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        .week-header {
+            color: #e07a5f;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+        }
+        .section-header {
+            color: #2c2c2c;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .subsection-header {
+            color: #8b8589;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .definition-box {
+            background-color: #f8f7f2;
+            border-left: 4px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .formula-box {
+            background-color: #faf9f6;
+            border: 1px solid #e07a5f;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.25rem;
+            text-align: center;
+        }
+        .example-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.25rem;
+        }
+        .toc {
+            background-color: #f8f7f2;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc-link {
+            color: #e07a5f;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .toc-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+        
+        <!-- Back to Course Button -->
+        <a href="../math1131.html" class="back-button">
+            <span>←</span>
+            <span>Back to Course</span>
+        </a>
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#2c2c2c]">MATH1131 代数笔记</h1>
+            <p class="text-xl text-gray-600 mt-2">第一至四周 - Weeks 1-4</p>
+            <p class="text-sm text-gray-500 mt-1">Geometric Vectors, Dot Product, Cross Product & Complex Numbers</p>
+        </header>
+
+        <!-- Table of Contents -->
+        <div class="notes-container">
+            <h2 class="week-header" style="margin-top: 0;">目录 (Table of Contents)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p><strong>第一周：</strong> <a href="#week1" class="toc-link">几何向量 (Geometric Vectors)</a></p>
+                    <p><strong>第二周：</strong> <a href="#week2" class="toc-link">向量几何与点积 (Vector Geometry & Dot Product)</a></p>
+                </div>
+                <div>
+                    <p><strong>第三周：</strong> <a href="#week3" class="toc-link">正交性、投影与叉积 (Orthogonality, Projections & Cross Product)</a></p>
+                    <p><strong>第四周：</strong> <a href="#week4" class="toc-link">复数 (Complex Numbers)</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 1 Content -->
+        <div class="notes-container" id="week1">
+            <h2 class="week-header" style="margin-top: 0;">第一周：几何向量 (Geometric Vectors)</h2>
+            
+            <h3 class="section-header">1. 向量的基本概念</h3>
+            <div class="definition-box">
+                <strong>几何向量 (Geometric Vector)</strong>: 是一个同时具有<strong>大小 (magnitude/length/norm)</strong> 和<strong>方向 (direction)</strong> 的量。你可以把它想象成一个有长度和指向的箭头。
+            </div>
+            
+            <ul>
+                <li>向量的核心在于大小和方向，它的具体<strong>位置 (location)</strong> 并不重要。</li>
+                <li><strong>向量相等 (Equal Vectors)</strong>: 如果两个向量的大小和方向<strong>完全相同</strong>，那么它们就是相等的向量。</li>
+                <li><strong>标量 (Scalar)</strong>: 在线性代数中，一个标量就是一个实数，用来与向量进行区分。</li>
+            </ul>
+
+            <div class="definition-box">
+                <strong>向量的记法</strong>:
+                <ul>
+                    <li>印刷体中常用粗体字母表示，如 <strong>u</strong>。</li>
+                    <li>手写时，通常在字母上方加箭头（如 $\vec{u}$）或在下方加波浪线（如 $\tilde{u}$）。</li>
+                    <li>从点A到点B的向量记作 $\overrightarrow{AB}$，其中A是<strong>起点/尾部 (tail/initial point)</strong>，B是<strong>终点/头部 (head/terminal point)</strong>。</li>
+                    <li>向量的大小（或长度、模）记作 $|\mathbf{u}|$ 或 $|\overrightarrow{AB}|$。</li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">2. 向量的运算 (Vector Operations)</h3>
+            
+            <h4 class="subsection-header">2.1 向量加法 (Vector Addition)</h4>
+            <p>向量加法有两种等效的几何定义：</p>
+            
+            <ol>
+                <li><strong>三角形法则 (Triangle Law)</strong>: 将两个向量<strong>首尾相接 (tip to tail)</strong>。将向量 $\mathbf{b}$ 的尾部移动到向量 $\mathbf{a}$ 的头部，然后从 $\mathbf{a}$ 的尾部画一个向量到 $\mathbf{b}$ 的头部，这个新的向量就是它们的和 $\mathbf{a}+\mathbf{b}$。</li>
+                <li><strong>平行四边形法则 (Parallelogram Law)</strong>: 将两个向量的<strong>尾部放在同一点</strong>，以这两个向量为邻边构成一个平行四边形。从共同尾部出发的对角线所代表的向量就是它们的和。</li>
+            </ol>
+
+            <div class="formula-box">
+                <strong>加法性质</strong>:
+                <ul style="text-align: left; margin-top: 1rem;">
+                    <li><strong>交换律 (Commutative)</strong>: $\mathbf{a}+\mathbf{b}=\mathbf{b}+\mathbf{a}$</li>
+                    <li><strong>结合律 (Associative)</strong>: $(\mathbf{a}+\mathbf{b})+\mathbf{c}=\mathbf{a}+(\mathbf{b}+\mathbf{c})$</li>
+                    <li><strong>三角不等式 (Triangle Inequality)</strong>: $|\mathbf{a}+\mathbf{b}| \leq |\mathbf{a}|+|\mathbf{b}|$</li>
+                </ul>
+            </div>
+
+            <h4 class="subsection-header">2.2 零向量 (Zero Vector)</h4>
+            <div class="definition-box">
+                零向量记作 $\mathbf{0}$。它是一个长度为<strong>零</strong>的向量，并且<strong>没有定义方向</strong>。
+                <br>对于任何向量 $\mathbf{a}$，都有 $\mathbf{a}+\mathbf{0}=\mathbf{a}$。
+            </div>
+
+            <h4 class="subsection-header">2.3 负向量与向量减法 (Negative of a Vector and Subtraction)</h4>
+            <ul>
+                <li><strong>负向量</strong>: 对于任意向量 $\mathbf{a}$，其负向量记作 $-\mathbf{a}$。它的<strong>大小</strong>与 $\mathbf{a}$ 相同，但<strong>方向</strong>恰好相反。</li>
+            </ul>
+            
+            <div class="formula-box">
+                <strong>性质</strong>: $\mathbf{a}+(-\mathbf{a})=\mathbf{0}$
+                <br><strong>重要关系</strong>: $\overrightarrow{BA}=-\overrightarrow{AB}$
+                <br><strong>向量减法</strong>: $\mathbf{b}-\mathbf{a}=\mathbf{b}+(-\mathbf{a})$
+            </div>
+            
+            <p>几何上，$\mathbf{b}-\mathbf{a}$ 是从向量 $\mathbf{a}$ 的头部指向向量 $\mathbf{b}$ 的头部的向量。</p>
+
+            <h4 class="subsection-header">2.4 标量乘法 (Scalar Multiplication)</h4>
+            <p>将一个向量 $\mathbf{a}$ 乘以一个标量 $\lambda$，得到一个新的向量 $\lambda\mathbf{a}$。</p>
+            
+            <div class="formula-box">
+                <strong>大小</strong>: $|\lambda\mathbf{a}|=|\lambda||\mathbf{a}|$（向量的长度被缩放了 $|\lambda|$ 倍）
+                <br><strong>方向</strong>:
+                <ul style="text-align: left; margin-top: 0.5rem;">
+                    <li>如果 $\lambda>0$，方向与 $\mathbf{a}$ <strong>相同</strong></li>
+                    <li>如果 $\lambda<0$，方向与 $\mathbf{a}$ <strong>相反</strong></li>
+                    <li>如果 $\lambda=0$，结果是零向量 $\mathbf{0}$</li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">3. 平行向量与位置向量</h3>
+            <div class="definition-box">
+                <strong>平行向量 (Parallel Vectors)</strong>: 如果一个向量是另一个非零向量的标量倍数，那么这两个向量是平行的。即 $\mathbf{u}$ 和 $\mathbf{v}$ 平行当且仅当存在标量 $\lambda$ 使得 $\mathbf{u}=\lambda\mathbf{v}$。
+            </div>
+            
+            <div class="definition-box">
+                <strong>位置向量 (Position Vector)</strong>: 一个点的位置可以用从<strong>原点 (Origin) O</strong> 指向该点的向量来描述。点P的位置向量记作 $\overrightarrow{OP}$。
+            </div>
+            
+            <div class="formula-box">
+                <strong>两点间的向量</strong>: 连接点A和点B的向量可以用它们的位置向量表示：
+                $$\overrightarrow{AB}=\overrightarrow{OB}-\overrightarrow{OA}$$
+            </div>
+        </div>
+
+        <!-- Week 2 Content -->
+        <div class="notes-container" id="week2">
+            <h2 class="week-header" style="margin-top: 0;">第二周：向量几何与点积 (Vector Geometry & Dot Product)</h2>
+            
+            <h3 class="section-header">1. 线性组合与生成空间 (Linear Combinations and Span)</h3>
+            
+            <div class="definition-box">
+                <strong>线性组合 (Linear Combination)</strong>: 一个向量 $\mathbf{v}$ 如果可以被表示为一组向量 $\mathbf{v_1},\mathbf{v_2},...,\mathbf{v_k}$ 的标量倍数之和，那么 $\mathbf{v}$ 就是这组向量的一个线性组合。
+                $$\mathbf{v}=\lambda_1\mathbf{v_1}+\lambda_2\mathbf{v_2}+...+\lambda_k\mathbf{v_k}$$
+                其中 $\lambda_1,\lambda_2,...,\lambda_k$ 是标量。
+            </div>
+            
+            <div class="definition-box">
+                <strong>生成空间 (Span)</strong>: 一组向量的所有可能的线性组合构成的集合，称为这组向量的生成空间。
+                <ul>
+                    <li><code>span</code>($\{\mathbf{v_1}\}$) (单个非零向量) 构成一条穿过原点的<strong>直线</strong>。</li>
+                    <li><code>span</code>($\{\mathbf{v_1},\mathbf{v_2}\}$) (两个不平行的向量) 构成一张穿过原点的<strong>平面</strong>。</li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">2. 直线与平面的向量方程</h3>
+            
+            <h4 class="subsection-header">2.1 直线的向量方程 (Vector Equation of a Line)</h4>
+            
+            <div class="formula-box">
+                <strong>参数向量形式 (Parametric Vector Form)</strong>: 描述一条直线需要一个<strong>点的位置向量</strong> $\mathbf{a}$ 和一个<strong>方向向量</strong> $\mathbf{v}$。
+                $$\mathbf{x}=\mathbf{a}+\lambda\mathbf{v}, \quad \lambda \in \mathbb{R}$$
+                其中 $\mathbf{x}$ 是直线上任意一点的位置向量，$\lambda$ 是参数。
+            </div>
+            
+            <div class="definition-box">
+                <strong>笛卡尔方程 (Cartesian Equation)</strong>:
+                在 $\mathbb{R}^3$ 中，可以写成：$\frac{x-a_1}{v_1}=\frac{y-a_2}{v_2}=\frac{z-a_3}{v_3}$。这实际上是两个平面的交集。
+            </div>
+
+            <div class="example-box">
+                <strong>例</strong>: 将参数方程 $\begin{pmatrix} x \\ y \\ z \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \\ -5 \end{pmatrix} + \lambda \begin{pmatrix} 1 \\ 3 \\ -1 \end{pmatrix}$ 转换为笛卡尔方程。
+                <br><br>从参数方程我们得到：$x=1+\lambda, y=2+3\lambda, z=-5-\lambda$。
+                <br>将每个方程中的 $\lambda$ 解出来：$\lambda=x-1, \lambda=\frac{y-2}{3}, \lambda=-(z+5)$。
+                <br>令它们相等，得到笛卡尔方程：$x-1=\frac{y-2}{3}=-(z+5)$。
+            </div>
+
+            <h4 class="subsection-header">2.2 平面的向量方程 (Vector Equation of a Plane)</h4>
+            
+            <div class="formula-box">
+                <strong>参数向量形式 (Parametric Vector Form)</strong>: 描述一个平面需要一个<strong>点的位置向量</strong> $\mathbf{a}$ 和<strong>两个不平行的方向向量</strong> $\mathbf{v_1},\mathbf{v_2}$。
+                $$\mathbf{x}=\mathbf{a}+\lambda_1\mathbf{v_1}+\lambda_2\mathbf{v_2}, \quad \lambda_1,\lambda_2 \in \mathbb{R}$$
+            </div>
+            
+            <div class="definition-box">
+                <strong>笛卡尔方程 (Cartesian Equation)</strong>: 在 $\mathbb{R}^3$ 中，平面的方程通常写成 $ax+by+cz=d$ 的形式。
+            </div>
+
+            <h3 class="section-header">3. 标量积 / 点积 (Scalar / Dot Product)</h3>
+            
+            <p>点积是向量乘法的一种，其结果是一个<strong>标量</strong>。</p>
+            
+            <div class="formula-box">
+                <strong>定义式</strong>:
+                <ol style="text-align: left;">
+                    <li><strong>代数定义</strong>: 在 $\mathbb{R}^n$ 中，$\mathbf{a}=(a_1,...,a_n)$ 和 $\mathbf{b}=(b_1,...,b_n)$ 的点积是：
+                    $$\mathbf{a} \cdot \mathbf{b} = a_1b_1+a_2b_2+\cdots+a_nb_n$$</li>
+                    <li><strong>几何定义</strong>:
+                    $$\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}||\mathbf{b}|\cos\theta$$
+                    其中 $\theta$ 是两个向量之间的夹角 $(0 \leq \theta \leq \pi)$。</li>
+                </ol>
+            </div>
+
+            <div class="formula-box">
+                <strong>点积的性质</strong>:
+                <ul style="text-align: left;">
+                    <li>$\mathbf{a} \cdot \mathbf{a} = |\mathbf{a}|^2$</li>
+                    <li><strong>交换律 (Commutative)</strong>: $\mathbf{a} \cdot \mathbf{b} = \mathbf{b} \cdot \mathbf{a}$</li>
+                    <li><strong>分配律 (Distributive)</strong>: $\mathbf{a} \cdot (\mathbf{b}+\mathbf{c}) = \mathbf{a} \cdot \mathbf{b} + \mathbf{a} \cdot \mathbf{c}$</li>
+                    <li>与标量乘法结合: $(\lambda\mathbf{a}) \cdot \mathbf{b} = \lambda(\mathbf{a} \cdot \mathbf{b})$</li>
+                </ul>
+            </div>
+
+            <div class="definition-box">
+                <strong>应用</strong>:
+                <ul>
+                    <li><strong>计算向量夹角</strong>: $\cos\theta = \frac{\mathbf{a} \cdot \mathbf{b}}{|\mathbf{a}||\mathbf{b}|}$</li>
+                    <li><strong>判断向量是否正交</strong>: 见下一周内容。</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <strong>柯西-施瓦茨不等式 (Cauchy-Schwarz Inequality)</strong>:
+                $$|\mathbf{a} \cdot \mathbf{b}| \leq |\mathbf{a}||\mathbf{b}|$$
+            </div>
+        </div>
+
+        <!-- Week 3 Content -->
+        <div class="notes-container" id="week3">
+            <h2 class="week-header" style="margin-top: 0;">第三周：正交性、投影与叉积 (Orthogonality, Projections & Cross Product)</h2>
+            
+            <h3 class="section-header">1. 正交性 (Orthogonality)</h3>
+            
+            <div class="definition-box">
+                <strong>正交 (Orthogonal)</strong>: 如果两个向量的点积为零，则称它们是正交的。记作 $\mathbf{u} \perp \mathbf{v}$。
+                $$\mathbf{u} \cdot \mathbf{v} = 0$$
+            </div>
+            
+            <ul>
+                <li><strong>垂直 (Perpendicular)</strong>: 对于两个<strong>非零</strong>向量，正交意味着它们之间的夹角为 $90°$ (即 $\pi/2$)。</li>
+                <li><strong>正交集 (Orthogonal Set)</strong>: 一组向量中，任意两个不同的向量都相互正交。</li>
+                <li><strong>标准正交集 (Orthonormal Set)</strong>: 一个正交集，并且其中所有向量都是<strong>单位向量 (unit vectors)</strong> (长度为1)。</li>
+            </ul>
+            
+            <div class="formula-box">
+                <strong>优点</strong>: 如果 $\{\mathbf{v_1},\mathbf{v_2},...,\mathbf{v_k}\}$ 是一个标准正交集，且 $\mathbf{u}=c_1\mathbf{v_1}+...+c_k\mathbf{v_k}$，那么系数可以直接通过点积求出：
+                $$c_i = \mathbf{u} \cdot \mathbf{v_i}$$
+            </div>
+
+            <h3 class="section-header">2. 投影 (Projection)</h3>
+            
+            <div class="definition-box">
+                向量 $\mathbf{a}$ 在非零向量 $\mathbf{b}$ 上的<strong>投影</strong>是一个与 $\mathbf{b}$ 平行的向量，代表了 $\mathbf{a}$ 在 $\mathbf{b}$ 方向上的分量。记作 $\text{proj}_{\mathbf{b}}\mathbf{a}$。
+            </div>
+            
+            <div class="formula-box">
+                <strong>投影公式</strong>:
+                $$\text{proj}_{\mathbf{b}}\mathbf{a} = \left(\frac{\mathbf{a} \cdot \mathbf{b}}{|\mathbf{b}|^2}\right)\mathbf{b}$$
+                括号内的部分 $\frac{\mathbf{a} \cdot \mathbf{b}}{|\mathbf{b}|}$ 是投影的<strong>有符号长度</strong>。
+            </div>
+            
+            <div class="example-box">
+                <strong>应用</strong>: 求一个点到一条直线的<strong>最短距离</strong>。
+                <br><strong>例</strong>: 求点 B 到由点 A 和方向向量 $\mathbf{v}$ 定义的直线的距离。
+                <ol>
+                    <li>构造向量 $\overrightarrow{AB}$。</li>
+                    <li>计算 $\overrightarrow{AB}$ 在方向向量 $\mathbf{v}$ 上的投影 $\text{proj}_{\mathbf{v}}\overrightarrow{AB}$。</li>
+                    <li>求出垂直分量向量 $\mathbf{w} = \overrightarrow{AB} - \text{proj}_{\mathbf{v}}\overrightarrow{AB}$。</li>
+                    <li>最短距离就是垂直分量向量的长度 $|\mathbf{w}|$。</li>
+                </ol>
+            </div>
+
+            <h3 class="section-header">3. 向量积 / 叉积 (Vector / Cross Product)</h3>
+            
+            <p>叉积仅在 $\mathbb{R}^3$ 中有定义，其结果是一个<strong>向量</strong>。</p>
+            
+            <div class="formula-box">
+                <strong>定义</strong>: 设 $\mathbf{a}=(a_1,a_2,a_3)$ 和 $\mathbf{b}=(b_1,b_2,b_3)$。
+                $$\mathbf{a} \times \mathbf{b} = \begin{pmatrix} a_2b_3-a_3b_2 \\ a_3b_1-a_1b_3 \\ a_1b_2-a_2b_1 \end{pmatrix}$$
+            </div>
+            
+            <div class="definition-box">
+                <strong>助记法 (Determinant Mnemonic)</strong>:
+                $$\mathbf{a} \times \mathbf{b} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ a_1 & a_2 & a_3 \\ b_1 & b_2 & b_3 \end{vmatrix} = \mathbf{i}(a_2b_3-a_3b_2) - \mathbf{j}(a_1b_3-a_3b_1) + \mathbf{k}(a_1b_2-a_2b_1)$$
+            </div>
+
+            <div class="formula-box">
+                <strong>叉积的性质</strong>:
+                <ul style="text-align: left;">
+                    <li><strong>几何性质</strong>: $\mathbf{a} \times \mathbf{b}$ 是一个同时<strong>垂直于</strong> $\mathbf{a}$ 和 $\mathbf{b}$ 的向量。</li>
+                    <li><strong>方向</strong>: 其方向由<strong>右手定则 (Right-Hand Rule)</strong> 决定。</li>
+                    <li><strong>大小 (Magnitude)</strong>: $|\mathbf{a} \times \mathbf{b}| = |\mathbf{a}||\mathbf{b}|\sin\theta$。这个值等于由 $\mathbf{a}$ 和 $\mathbf{b}$ 作为邻边构成的<strong>平行四边形的面积</strong>。</li>
+                    <li><strong>代数性质</strong>:
+                        <ul>
+                            <li><strong>反交换律 (Anti-commutative)</strong>: $\mathbf{a} \times \mathbf{b} = -(\mathbf{b} \times \mathbf{a})$</li>
+                            <li><strong>非结合律 (Not Associative)</strong>: $(\mathbf{a} \times \mathbf{b}) \times \mathbf{c} \neq \mathbf{a} \times (\mathbf{b} \times \mathbf{c})$</li>
+                            <li>如果 $\mathbf{a}$ 与 $\mathbf{b}$ 平行，则 $\mathbf{a} \times \mathbf{b} = \mathbf{0}$。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">4. 标量三重积与平面方程</h3>
+            
+            <div class="definition-box">
+                <strong>标量三重积 (Scalar Triple Product)</strong>:
+                <ul>
+                    <li>表达式: $\mathbf{a} \cdot (\mathbf{b} \times \mathbf{c})$</li>
+                    <li>几何意义: 其<strong>绝对值</strong> $|\mathbf{a} \cdot (\mathbf{b} \times \mathbf{c})|$ 是由向量 $\mathbf{a},\mathbf{b},\mathbf{c}$ 作为三个邻边构成的<strong>平行六面体 (parallelepiped) 的体积</strong>。</li>
+                    <li><strong>共面 (Coplanar)</strong>: 如果三个向量的标量三重积为<strong>零</strong>，则这三个向量共面。</li>
+                </ul>
+            </div>
+            
+            <div class="formula-box">
+                <strong>计算</strong>: 可以通过计算一个 $3 \times 3$ 行列式得到：
+                $$\mathbf{a} \cdot (\mathbf{b} \times \mathbf{c}) = \begin{vmatrix} a_1 & a_2 & a_3 \\ b_1 & b_2 & b_3 \\ c_1 & c_2 & c_3 \end{vmatrix}$$
+            </div>
+            
+            <div class="definition-box">
+                <strong>平面的点法式方程 (Point-Normal Form of a Plane)</strong>:
+                一个平面可以由其上一个点 A (位置向量为 $\mathbf{a}$) 和一个垂直于该平面的<strong>法向量 (normal vector)</strong> $\mathbf{n}$ 唯一确定。
+                <br>方程为：$$\mathbf{n} \cdot (\mathbf{x} - \mathbf{a}) = 0$$
+                如果 $\mathbf{n}=(a,b,c)$，展开后即得到笛卡尔方程 $ax+by+cz=d$。这里的系数 $(a,b,c)$ 就是法向量的坐标。
+            </div>
+        </div>
+
+        <!-- Week 4 Content -->
+        <div class="notes-container" id="week4">
+            <h2 class="week-header" style="margin-top: 0;">第四周：复数 (Complex Numbers)</h2>
+            
+            <h3 class="section-header">1. 数系的拓展与复数</h3>
+            
+            <p>为了解更复杂的方程，人类不断拓展数的概念：</p>
+            <ul>
+                <li>$x+5=3 \Rightarrow$ 需要整数 $\mathbb{Z}$ (Integers)。</li>
+                <li>$3x=5 \Rightarrow$ 需要有理数 $\mathbb{Q}$ (Rational Numbers)。</li>
+                <li>$x^2=2 \Rightarrow$ 需要实数 $\mathbb{R}$ (Real Numbers)。</li>
+                <li>$x^2=-1 \Rightarrow$ 需要<strong>复数</strong> $\mathbb{C}$ <strong>(Complex Numbers)</strong>。</li>
+            </ul>
+            
+            <div class="definition-box">
+                <strong>域 (Field)</strong>: 一个集合，带有加法和乘法运算，并满足一系列公理（如交换律、结合律、分配律，存在0和1，存在加法逆元和乘法逆元）。$\mathbb{Q},\mathbb{R},\mathbb{C}$ 都是域。
+            </div>
+            
+            <div class="formula-box">
+                <strong>虚数单位 (Imaginary Unit)</strong>: 定义 $i$ 为一个数，使其满足：
+                $$i^2 = -1$$
+            </div>
+            
+            <div class="definition-box">
+                <strong>复数</strong>: 一个复数的形式为 $z = a + bi$，其中 $a,b$ 是实数。
+                <ul>
+                    <li>$a$ 称为<strong>实部 (real part)</strong>，记作 $\text{Re}(z)$。</li>
+                    <li>$b$ 称为<strong>虚部 (imaginary part)</strong>，记作 $\text{Im}(z)$。</li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">2. 复数的代数运算</h3>
+            
+            <p>复数运算时，可以把 $i$ 当作一个变量，但要随时记住 $i^2 = -1$。</p>
+            
+            <div class="formula-box">
+                <strong>加减法</strong>:
+                $$(a+bi) \pm (c+di) = (a \pm c) + (b \pm d)i$$
+                (实部与实部相加减，虚部与虚部相加减)
+            </div>
+            
+            <div class="formula-box">
+                <strong>乘法</strong>:
+                $$(a+bi)(c+di) = ac + adi + bci + bdi^2 = (ac-bd) + (ad+bc)i$$
+            </div>
+            
+            <div class="example-box">
+                <strong>例</strong>: $(3+2i)(5-4i) = 15-12i+10i-8i^2 = 15-2i-8(-1) = 23-2i$
+            </div>
+
+            <h3 class="section-header">3. 解二次方程</h3>
+            
+            <p>引入复数后，所有系数为实数的二次方程 $az^2+bz+c=0$ 都有解。</p>
+            
+            <div class="example-box">
+                <strong>例</strong>: 解方程 $z^2+2z+3=0$。
+                <br>使用求根公式 $z = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$。
+                <br>$z = \frac{-2 \pm \sqrt{2^2-4(1)(3)}}{2} = \frac{-2 \pm \sqrt{-8}}{2}$
+                <br>$\sqrt{-8} = \sqrt{8 \times (-1)} = \sqrt{8}i = 2\sqrt{2}i$
+                <br>$z = \frac{-2 \pm 2\sqrt{2}i}{2} = -1 \pm \sqrt{2}i$
+                <br>所以解为 $z_1 = -1 + \sqrt{2}i$ 和 $z_2 = -1 - \sqrt{2}i$。
+            </div>
+
+            <h3 class="section-header">4. 复平面、模与共轭</h3>
+            
+            <div class="definition-box">
+                <strong>复平面 (Complex Plane / Argand Diagram)</strong>: 用一个平面来表示复数。水平轴是<strong>实轴 (real axis)</strong>，代表实部；垂直轴是<strong>虚轴 (imaginary axis)</strong>，代表虚部。复数 $z=a+bi$ 对应于平面上的点 $(a,b)$。
+            </div>
+            
+            <div class="formula-box">
+                <strong>模 (Modulus)</strong>: 复数 $z=a+bi$ 的模记作 $|z|$，表示复数在复平面上对应的点到原点的距离。
+                $$|z| = \sqrt{a^2+b^2}$$
+            </div>
+            
+            <div class="definition-box">
+                <strong>共轭 (Conjugate)</strong>: 复数 $z=a+bi$ 的共轭记作 $\overline{z}$。
+                $$\overline{z} = a-bi$$
+                几何上，$\overline{z}$ 是 $z$ 关于实轴的对称点。
+            </div>
+            
+            <div class="formula-box">
+                <strong>复数除法 (Division)</strong>: 计算复数除法的技巧是，将分子 (numerator) 和分母 (denominator) 同时乘以分母的共轭复数，从而使分母变为实数。
+                $$\frac{a+bi}{c+di} = \frac{(a+bi)(c-di)}{(c+di)(c-di)} = \frac{(ac+bd)+(bc-ad)i}{c^2+d^2}$$
+            </div>
+            
+            <div class="example-box">
+                <strong>例</strong>: 计算 $\frac{1-2i}{3+2i}$。
+                <br>$\frac{1-2i}{3+2i} = \frac{(1-2i)(3-2i)}{(3+2i)(3-2i)} = \frac{3-2i-6i+4i^2}{9+4} = \frac{3-8i-4}{13} = \frac{-1-8i}{13} = -\frac{1}{13} - \frac{8}{13}i$
+            </div>
+
+            <h3 class="section-header">5. 模与共轭的性质</h3>
+            
+            <div class="formula-box">
+                对于复数 $z,w$:
+                <ul style="text-align: left;">
+                    <li>$z + \overline{z} = 2\text{Re}(z)$</li>
+                    <li>$z - \overline{z} = 2i\text{Im}(z)$</li>
+                    <li>$z\overline{z} = |z|^2$ (这是一个非常有用的性质)</li>
+                    <li>$\overline{z+w} = \overline{z} + \overline{w}$</li>
+                    <li>$\overline{zw} = \overline{z}\overline{w}$</li>
+                    <li>$|zw| = |z||w|$</li>
+                    <li>$\left|\frac{z}{w}\right| = \frac{|z|}{|w|}$</li>
+                    <li><strong>三角不等式 (Triangle Inequality)</strong>: $|z+w| \leq |z|+|w|$</li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">6. 复数的极坐标与指数形式</h3>
+            
+            <div class="definition-box">
+                <strong>极坐标形式 (Polar Form)</strong>: 一个非零复数 $z=a+bi$ 也可以用它的大小（模）$r$ 和它与正实轴的夹角 $\theta$ 来表示。
+                $$z = r(\cos\theta + i\sin\theta)$$
+                <ul>
+                    <li>$r = |z|$ 是模。</li>
+                    <li>$\theta$ 称为<strong>辐角 (argument)</strong>，记作 $\arg(z)$。辐角不是唯一的，可以相差 $2\pi$ 的整数倍。</li>
+                    <li><strong>主辐角 (Principal Argument)</strong>，记作 $\text{Arg}(z)$，是唯一的辐角，满足 $-\pi < \text{Arg}(z) \leq \pi$。</li>
+                </ul>
+            </div>
+            
+            <div class="example-box">
+                <strong>例</strong>: 将 $z = 1 + \sqrt{3}i$ 转换为极坐标形式。
+                <ol>
+                    <li>计算模: $r = |z| = \sqrt{1^2+(\sqrt{3})^2} = \sqrt{1+3} = 2$。</li>
+                    <li>计算辐角: $\cos\theta = \frac{a}{r} = \frac{1}{2}$ 且 $\sin\theta = \frac{b}{r} = \frac{\sqrt{3}}{2}$。满足条件的 $\theta$ 是 $\frac{\pi}{3}$。</li>
+                    <li>所以极坐标形式为: $z = 2\left(\cos\frac{\pi}{3} + i\sin\frac{\pi}{3}\right)$。</li>
+                </ol>
+            </div>
+            
+            <div class="formula-box">
+                <strong>欧拉公式 (Euler's Formula)</strong>: 这是连接复指数和三角函数的桥梁。
+                $$e^{i\theta} = \cos\theta + i\sin\theta$$
+            </div>
+            
+            <div class="formula-box">
+                <strong>指数形式 (Exponential Form)</strong>: 结合极坐标形式和欧拉公式，得到复数的指数形式。
+                $$z = re^{i\theta}$$
+                对于上面的例子，$z = 1 + \sqrt{3}i$ 的指数形式为 $z = 2e^{i\pi/3}$。
+            </div>
+            
+            <div class="formula-box">
+                <strong>乘法与除法的几何意义</strong>: 在指数形式下，复数的乘除法变得非常直观。
+                <ul style="text-align: left;">
+                    <li><strong>乘法</strong>: 模相乘，辐角相加。
+                    $$z_1z_2 = (r_1e^{i\theta_1})(r_2e^{i\theta_2}) = r_1r_2e^{i(\theta_1+\theta_2)}$$</li>
+                    <li><strong>除法</strong>: 模相除，辐角相减。
+                    $$\frac{z_1}{z_2} = \frac{r_1e^{i\theta_1}}{r_2e^{i\theta_2}} = \frac{r_1}{r_2}e^{i(\theta_1-\theta_2)}$$</li>
+                </ul>
+            </div>
+
+            <h3 class="section-header">7. 重点回顾</h3>
+            
+            <div class="formula-box">
+                <strong>核心公式回顾</strong>:
+                <ul style="text-align: left;">
+                    <li><strong>两点间向量</strong>: $\overrightarrow{AB} = \overrightarrow{OB} - \overrightarrow{OA}$</li>
+                    <li><strong>直线方程 (参数式)</strong>: $\mathbf{x} = \mathbf{a} + \lambda\mathbf{v}$</li>
+                    <li><strong>平面方程 (参数式)</strong>: $\mathbf{x} = \mathbf{a} + \lambda_1\mathbf{v_1} + \lambda_2\mathbf{v_2}$</li>
+                    <li><strong>点积</strong>: $\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}||\mathbf{b}|\cos\theta = a_1b_1 + a_2b_2 + \ldots$</li>
+                    <li><strong>投影</strong>: $\text{proj}_{\mathbf{b}}\mathbf{a} = \left(\frac{\mathbf{a} \cdot \mathbf{b}}{|\mathbf{b}|^2}\right)\mathbf{b}$</li>
+                    <li><strong>叉积 (仅</strong> $\mathbb{R}^3$<strong>)</strong>: $\mathbf{a} \times \mathbf{b} = (a_2b_3-a_3b_2, a_3b_1-a_1b_3, a_1b_2-a_2b_1)$</li>
+                    <li><strong>平行四边形面积</strong>: Area $= |\mathbf{a} \times \mathbf{b}|$</li>
+                    <li><strong>标量三重积 (体积)</strong>: Volume $= |\mathbf{a} \cdot (\mathbf{b} \times \mathbf{c})|$</li>
+                    <li><strong>平面方程 (点法式)</strong>: $\mathbf{n} \cdot (\mathbf{x} - \mathbf{a}) = 0$</li>
+                    <li><strong>复数共轭</strong>: $z = a + bi \Rightarrow \overline{z} = a - bi$</li>
+                    <li><strong>复数模</strong>: $|z| = \sqrt{a^2+b^2}$, $z\overline{z} = |z|^2$</li>
+                    <li><strong>欧拉公式</strong>: $e^{i\theta} = \cos\theta + i\sin\theta$</li>
+                    <li><strong>复数指数形式</strong>: $z = re^{i\theta}$</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

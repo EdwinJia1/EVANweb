@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH1081 第五章：图论 | Interactive Discrete Mathematics Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f8f7f2;
+            color: #2c2c2c;
+        }
+        .content-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e07a5f;
+            color: #2c2c2c;
+        }
+        .content-section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #2c2c2c;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+        }
+        .nav-link.active {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            border-left-color: #2c2c2c;
+        }
+        .nav-link:hover {
+            background-color: #f4a261;
+            color: #2c2c2c;
+        }
+        .home-button {
+            background-color: #e07a5f;
+            color: #f8f7f2;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background-color: #d06850;
+            transform: translateY(-1px);
+        }
+        .concept-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .math {
+            font-family: "Cambria Math", "Times New Roman", serif;
+            font-size: 1.1em;
+            display: inline-block;
+        }
+        .graph-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin: 2rem auto;
+            background-color: #fdfdfa;
+            border: 2px solid #d3d3d3;
+            border-radius: 0.5rem;
+        }
+        .graph-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #f4a261;
+            border: 2px solid #e07a5f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .graph-edge {
+            position: absolute;
+            background-color: #8b8589;
+            height: 2px;
+            transform-origin: top left;
+            z-index: 5;
+        }
+        .directed-edge {
+            position: absolute;
+            background-color: #8b8589;
+            height: 2px;
+            transform-origin: top left;
+            z-index: 5;
+        }
+        .directed-edge::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #8b8589;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        .graph-label {
+            position: absolute;
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: bold;
+        }
+        .algorithm-step {
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .theorem-box {
+            background-color: #f0fdf4;
+            border: 2px solid #22c55e;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        .example-box {
+            background-color: #fef7ed;
+            border: 2px solid #f97316;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        .definition-box {
+            background-color: #ede9fe;
+            border: 2px solid #8b5cf6;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        .interactive-module {
+            border: 2px solid #d3d3d3;
+            background-color: #fdfdfa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <aside id="sidebar" class="w-full md:w-64 lg:w-72 bg-[#8b8589] text-gray-100 p-4 space-y-2 flex-shrink-0">
+            <a href="../index.html" class="home-button">← Back to Home</a>
+            <h2 class="text-2xl font-bold text-center text-white pb-2 border-b-2 border-gray-400">MATH1081 第五章：图论</h2>
+            <nav id="nav-menu" class="space-y-1">
+                <a href="#intro" class="nav-link block p-2 text-sm rounded cursor-pointer">引言</a>
+                <a href="#basic-definitions" class="nav-link block p-2 text-sm rounded cursor-pointer">基本定义</a>
+                <a href="#graph-representations" class="nav-link block p-2 text-sm rounded cursor-pointer">图的表示</a>
+                <a href="#types-of-graphs" class="nav-link block p-2 text-sm rounded cursor-pointer">图的类型</a>
+                <a href="#graph-connectivity" class="nav-link block p-2 text-sm rounded cursor-pointer">图的连通性</a>
+                <a href="#paths-and-cycles" class="nav-link block p-2 text-sm rounded cursor-pointer">路径和回路</a>
+                <a href="#euler-paths" class="nav-link block p-2 text-sm rounded cursor-pointer">欧拉路径和回路</a>
+                <a href="#hamilton-paths" class="nav-link block p-2 text-sm rounded cursor-pointer">哈密顿路径和回路</a>
+                <a href="#trees" class="nav-link block p-2 text-sm rounded cursor-pointer">树</a>
+                <a href="#spanning-trees" class="nav-link block p-2 text-sm rounded cursor-pointer">生成树</a>
+                <a href="#planar-graphs" class="nav-link block p-2 text-sm rounded cursor-pointer">平面图</a>
+                <a href="#graph-coloring" class="nav-link block p-2 text-sm rounded cursor-pointer">图的着色</a>
+                <a href="#bipartite-graphs" class="nav-link block p-2 text-sm rounded cursor-pointer">二分图</a>
+                <a href="#algorithms" class="nav-link block p-2 text-sm rounded cursor-pointer">图的算法</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div id="content-area">
+                <section id="intro" class="content-section">
+                    <h3>引言：什么是图论？</h3>
+                    <div class="concept-card">
+                        <p><strong>图论（Graph Theory）</strong>是数学的一个分支，研究图（Graph）这种数学结构。图论由瑞士数学家欧拉在1735年创立，当时他解决了著名的<strong>柯尼斯堡七桥问题</strong>。</p>
+                        
+                        <div class="example-box mt-4">
+                            <h4>柯尼斯堡七桥问题</h4>
+                            <p>在18世纪的柯尼斯堡（现在的加里宁格勒），有一条河流经过城市，河中有两个小岛，总共有七座桥连接这些陆地。问题是：是否可能从某一块陆地出发，恰好经过每座桥一次，最后回到起点？</p>
+                            <p class="mt-2"><strong>欧拉的洞察：</strong>将每块陆地看作一个点（顶点），每座桥看作一条线（边），这样就将实际问题转化为数学问题。</p>
+                        </div>
+                        
+                        <p class="mt-4">图论现在广泛应用于：</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>计算机网络设计</li>
+                            <li>社交网络分析</li>
+                            <li>交通路线规划</li>
+                            <li>化学分子结构</li>
+                            <li>项目管理和任务调度</li>
+                            <li>数据库设计</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="basic-definitions" class="content-section">
+                    <h3>基本定义</h3>
+                    
+                    <div class="definition-box">
+                        <h4>图（Graph）</h4>
+                        <p>一个图 <span class="math">G = (V, E)</span> 由以下两部分组成：</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li><strong>顶点集合 V</strong>：有限非空的顶点（节点）集合</li>
+                            <li><strong>边集合 E</strong>：连接顶点的边的集合</li>
+                        </ul>
+                        <p class="mt-2">记号：<span class="math">|V| = n</span>（顶点数），<span class="math">|E| = m</span>（边数）</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>基本术语</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>顶点（Vertex/Node）</strong>：图中的基本单元，通常用圆圈表示</li>
+                            <li><strong>边（Edge）</strong>：连接两个顶点的线，表示顶点间的关系</li>
+                            <li><strong>相邻（Adjacent）</strong>：如果两个顶点之间有边连接，则称它们相邻</li>
+                            <li><strong>关联（Incident）</strong>：边与其端点之间的关系</li>
+                            <li><strong>度（Degree）</strong>：与一个顶点相连的边的数量，记作 <span class="math">deg(v)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="theorem-box">
+                        <h4>握手定理（Handshaking Lemma）</h4>
+                        <p>在任何图中，所有顶点的度数之和等于边数的两倍：</p>
+                        <p class="text-center text-lg mt-2"><span class="math">∑<sub>v∈V</sub> deg(v) = 2|E|</span></p>
+                        <p class="mt-2"><strong>推论：</strong>任何图中，度数为奇数的顶点个数必须是偶数。</p>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>示例：简单图</h4>
+                        <div class="graph-container">
+                            <div class="graph-node" style="top: 30%; left: 20%;">A</div>
+                            <div class="graph-node" style="top: 30%; left: 80%;">B</div>
+                            <div class="graph-node" style="top: 70%; left: 50%;">C</div>
+                            <div class="graph-edge" style="top: 30%; left: 20%; width: 240px; transform: translateY(-1px);"></div>
+                            <div class="graph-edge" style="top: 30%; left: 20%; width: 120px; height: 2px; transform: rotate(45deg) translateY(-1px);"></div>
+                            <div class="graph-edge" style="top: 30%; left: 80%; width: 120px; height: 2px; transform: rotate(135deg) translateY(-1px);"></div>
+                        </div>
+                        <p>图 <span class="math">G = (V, E)</span>，其中：</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><span class="math">V = {A, B, C}</span></li>
+                            <li><span class="math">E = {(A,B), (A,C), (B,C)}</span></li>
+                            <li><span class="math">deg(A) = deg(B) = deg(C) = 2</span></li>
+                            <li>验证握手定理：<span class="math">2 + 2 + 2 = 6 = 2 × 3</span></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="graph-representations" class="content-section">
+                    <h3>图的表示方法</h3>
+                    
+                    <div class="concept-card">
+                        <h4>1. 邻接矩阵（Adjacency Matrix）</h4>
+                        <p>对于有 n 个顶点的图，邻接矩阵是一个 <span class="math">n × n</span> 的矩阵 <span class="math">A</span>，其中：</p>
+                        <p class="text-center mt-2"><span class="math">A[i][j] = 1</span> 如果顶点 i 和 j 之间有边，否则为 0</p>
+                        
+                        <div class="example-box mt-4">
+                            <h4>示例</h4>
+                            <p>对于上面的三角形图，邻接矩阵为：</p>
+                            <div class="text-center mt-2">
+                                <table class="mx-auto border border-gray-400">
+                                    <tr><th class="border border-gray-400 px-2 py-1"></th><th class="border border-gray-400 px-2 py-1">A</th><th class="border border-gray-400 px-2 py-1">B</th><th class="border border-gray-400 px-2 py-1">C</th></tr>
+                                    <tr><th class="border border-gray-400 px-2 py-1">A</th><td class="border border-gray-400 px-2 py-1">0</td><td class="border border-gray-400 px-2 py-1">1</td><td class="border border-gray-400 px-2 py-1">1</td></tr>
+                                    <tr><th class="border border-gray-400 px-2 py-1">B</th><td class="border border-gray-400 px-2 py-1">1</td><td class="border border-gray-400 px-2 py-1">0</td><td class="border border-gray-400 px-2 py-1">1</td></tr>
+                                    <tr><th class="border border-gray-400 px-2 py-1">C</th><td class="border border-gray-400 px-2 py-1">1</td><td class="border border-gray-400 px-2 py-1">1</td><td class="border border-gray-400 px-2 py-1">0</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>2. 邻接表（Adjacency List）</h4>
+                        <p>为每个顶点维护一个列表，包含与该顶点相邻的所有顶点。</p>
+                        
+                        <div class="example-box mt-4">
+                            <h4>示例</h4>
+                            <ul class="list-disc list-inside">
+                                <li>A: [B, C]</li>
+                                <li>B: [A, C]</li>
+                                <li>C: [A, B]</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>3. 关联矩阵（Incidence Matrix）</h4>
+                        <p>对于有 n 个顶点和 m 条边的图，关联矩阵是 <span class="math">n × m</span> 矩阵，其中 <span class="math">M[i][j] = 1</span> 如果顶点 i 与边 j 关联。</p>
+                    </div>
+                </section>
+
+                <section id="types-of-graphs" class="content-section">
+                    <h3>图的类型</h3>
+                    
+                    <div class="definition-box">
+                        <h4>有向图与无向图</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>无向图（Undirected Graph）</strong>：边没有方向，表示对称关系</li>
+                            <li><strong>有向图（Directed Graph/Digraph）</strong>：边有方向，表示非对称关系</li>
+                        </ul>
+                        
+                        <div class="example-box mt-4">
+                            <h4>图解对比</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- 无向图 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">无向图</h5>
+                                    <div class="graph-container" style="height: 200px;">
+                                        <svg class="w-full h-full" viewBox="0 0 300 200">
+                                            <!-- 边 -->
+                                            <line x1="75" y1="50" x2="225" y2="50" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="75" y1="50" x2="150" y2="150" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="225" y1="50" x2="150" y2="150" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 节点 -->
+                                            <circle cx="75" cy="50" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="225" cy="50" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="150" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="75" y="50" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">A</text>
+                                            <text x="225" y="50" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">B</text>
+                                            <text x="150" y="150" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">C</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm mt-2">边没有方向，表示双向关系</p>
+                                </div>
+                                
+                                <!-- 有向图 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">有向图</h5>
+                                    <div class="graph-container" style="height: 200px;">
+                                        <svg class="w-full h-full" viewBox="0 0 300 200">
+                                            <!-- 边 (带箭头) -->
+                                            <defs>
+                                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                                    <polygon points="0 0, 10 3.5, 0 7" fill="#8b8589"/>
+                                                </marker>
+                                            </defs>
+                                            <line x1="95" y1="50" x2="205" y2="50" stroke="#8b8589" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                            <line x1="225" y1="70" x2="170" y2="130" stroke="#8b8589" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                            <line x1="130" y1="150" x2="75" y2="70" stroke="#8b8589" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                            <!-- 节点 -->
+                                            <circle cx="75" cy="50" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="225" cy="50" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="150" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="75" y="50" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">A</text>
+                                            <text x="225" y="50" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">B</text>
+                                            <text x="150" y="150" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">C</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm mt-2">边有方向，表示单向关系</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>简单图与多重图</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>简单图（Simple Graph）</strong>：
+                                <ul class="list-disc list-inside ml-6 space-y-1">
+                                    <li>任意两个顶点之间最多有一条边</li>
+                                    <li>没有自环（从顶点到自己的边）</li>
+                                </ul>
+                            </li>
+                            <li><strong>多重图（Multigraph）</strong>：允许多条边连接同一对顶点</li>
+                            <li><strong>伪图（Pseudograph）</strong>：既允许多重边，也允许自环</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>特殊图类型</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>完全图 K<sub>n</sub></strong>：n 个顶点，任意两个顶点都有边连接</li>
+                            <li><strong>空图 N<sub>n</sub></strong>：n 个顶点，没有任何边</li>
+                            <li><strong>路径图 P<sub>n</sub></strong>：n 个顶点排成一条路径</li>
+                            <li><strong>圈图 C<sub>n</sub></strong>：n 个顶点排成一个圈</li>
+                            <li><strong>轮图 W<sub>n</sub></strong>：圈图 C<sub>n</sub> 加上一个连接到所有顶点的中心顶点</li>
+                        </ul>
+                        
+                        <div class="example-box mt-4">
+                            <h4>特殊图类型可视化</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <!-- 完全图 K4 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">完全图 K₄</h5>
+                                    <div class="graph-container" style="height: 150px;">
+                                        <svg class="w-full h-full" viewBox="0 0 200 150">
+                                            <!-- 所有边 -->
+                                            <line x1="50" y1="40" x2="150" y2="40" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="40" x2="50" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="40" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="150" y1="40" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="150" y1="40" x2="50" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="110" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 节点 -->
+                                            <circle cx="50" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="50" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">1</text>
+                                            <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">2</text>
+                                            <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">3</text>
+                                            <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">4</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm">每个顶点都与其他顶点相连</p>
+                                </div>
+                                
+                                <!-- 路径图 P4 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">路径图 P₄</h5>
+                                    <div class="graph-container" style="height: 150px;">
+                                        <svg class="w-full h-full" viewBox="0 0 200 150">
+                                            <!-- 边 -->
+                                            <line x1="35" y1="75" x2="65" y2="75" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="65" y1="75" x2="135" y2="75" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="135" y1="75" x2="165" y2="75" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 节点 -->
+                                            <circle cx="20" cy="75" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="80" cy="75" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="120" cy="75" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="180" cy="75" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="20" y="75" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">1</text>
+                                            <text x="80" y="75" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">2</text>
+                                            <text x="120" y="75" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">3</text>
+                                            <text x="180" y="75" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">4</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm">顶点排成一条直线</p>
+                                </div>
+                                
+                                <!-- 圈图 C4 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">圈图 C₄</h5>
+                                    <div class="graph-container" style="height: 150px;">
+                                        <svg class="w-full h-full" viewBox="0 0 200 150">
+                                            <!-- 边 -->
+                                            <line x1="50" y1="40" x2="150" y2="40" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="150" y1="40" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="150" y1="110" x2="50" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="110" x2="50" y2="40" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 节点 -->
+                                            <circle cx="50" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="50" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">1</text>
+                                            <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">2</text>
+                                            <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">3</text>
+                                            <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">4</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm">顶点排成一个圈</p>
+                                </div>
+                                
+                                <!-- 轮图 W4 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">轮图 W₄</h5>
+                                    <div class="graph-container" style="height: 150px;">
+                                        <svg class="w-full h-full" viewBox="0 0 200 150">
+                                            <!-- 外圈边 -->
+                                            <line x1="50" y1="30" x2="150" y2="30" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="150" y1="30" x2="150" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="150" y1="100" x2="50" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="100" x2="50" y2="30" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 辐条边 -->
+                                            <line x1="100" y1="65" x2="50" y2="30" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="100" y1="65" x2="150" y2="30" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="100" y1="65" x2="150" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="100" y1="65" x2="50" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 节点 -->
+                                            <circle cx="50" cy="30" r="12" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="30" r="12" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="100" r="12" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="50" cy="100" r="12" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="100" cy="65" r="12" fill="#f4a261" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="50" y="30" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">1</text>
+                                            <text x="150" y="30" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">2</text>
+                                            <text x="150" y="100" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">3</text>
+                                            <text x="50" y="100" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">4</text>
+                                            <text x="100" y="65" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">5</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm">圈图加中心顶点</p>
+                                </div>
+                                
+                                <!-- 二分图 -->
+                                <div class="text-center">
+                                    <h5 class="font-bold mb-2">二分图 K₂,₃</h5>
+                                    <div class="graph-container" style="height: 150px;">
+                                        <svg class="w-full h-full" viewBox="0 0 200 150">
+                                            <!-- 连接边 -->
+                                            <line x1="50" y1="45" x2="150" y2="30" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="45" x2="150" y2="75" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="45" x2="150" y2="120" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="105" x2="150" y2="30" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="105" x2="150" y2="75" stroke="#8b8589" stroke-width="2"/>
+                                            <line x1="50" y1="105" x2="150" y2="120" stroke="#8b8589" stroke-width="2"/>
+                                            <!-- 左侧节点 (红色) -->
+                                            <circle cx="50" cy="45" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="50" cy="105" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                            <!-- 右侧节点 (青色) -->
+                                            <circle cx="150" cy="30" r="15" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="75" r="15" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                            <circle cx="150" cy="120" r="15" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                            <!-- 标签 -->
+                                            <text x="50" y="45" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                            <text x="50" y="105" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                            <text x="150" y="30" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">X</text>
+                                            <text x="150" y="75" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">Y</text>
+                                            <text x="150" y="120" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">Z</text>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm">两个独立集合间的连接</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>完全图的边数</h4>
+                        <p>完全图 K<sub>n</sub> 的边数为：</p>
+                        <p class="text-center text-lg mt-2"><span class="math">|E| = C(n,2) = n(n-1)/2</span></p>
+                        <p class="mt-2">例如：K<sub>4</sub> 有 6 条边，K<sub>5</sub> 有 10 条边。</p>
+                    </div>
+                </section>
+
+                <section id="graph-connectivity" class="content-section">
+                    <h3>图的连通性</h3>
+                    
+                    <div class="definition-box">
+                        <h4>连通性定义</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>连通图</strong>：任意两个顶点之间都存在路径</li>
+                            <li><strong>连通分量</strong>：最大的连通子图</li>
+                            <li><strong>强连通（有向图）</strong>：任意两个顶点之间都存在有向路径</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>连通度</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>点连通度 κ(G)</strong>：删除最少多少个顶点可以使图不连通</li>
+                            <li><strong>边连通度 λ(G)</strong>：删除最少多少条边可以使图不连通</li>
+                            <li><strong>关系</strong>：κ(G) ≤ λ(G) ≤ δ(G)，其中 δ(G) 是最小度数</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="paths-and-cycles" class="content-section">
+                    <h3>路径和回路</h3>
+                    
+                    <div class="definition-box">
+                        <h4>基本定义</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>步（Walk）</strong>：顶点和边的交替序列，可以重复</li>
+                            <li><strong>迹（Trail）</strong>：不重复边的步</li>
+                            <li><strong>路径（Path）</strong>：不重复顶点的步</li>
+                            <li><strong>回路（Circuit）</strong>：起点和终点相同的迹</li>
+                            <li><strong>圈（Cycle）</strong>：起点和终点相同的路径（除了起终点）</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>路径长度</h4>
+                        <p>路径的长度是路径中边的数量。两点间的<strong>距离</strong>是连接它们的最短路径的长度。</p>
+                        
+                        <div class="example-box mt-4">
+                            <h4>示例</h4>
+                            <p>在图中，从顶点 A 到顶点 C：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>直接路径：A → C，长度为 1</li>
+                                <li>间接路径：A → B → C，长度为 2</li>
+                                <li>距离 d(A,C) = 1</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="euler-paths" class="content-section">
+                    <h3>欧拉路径和回路</h3>
+                    
+                    <div class="definition-box">
+                        <h4>欧拉路径和回路</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>欧拉迹</strong>：经过图中每条边恰好一次的迹</li>
+                            <li><strong>欧拉回路</strong>：起点和终点相同的欧拉迹</li>
+                            <li><strong>欧拉图</strong>：存在欧拉回路的连通图</li>
+                        </ul>
+                    </div>
+
+                    <div class="theorem-box">
+                        <h4>欧拉定理</h4>
+                        <p><strong>连通图存在欧拉回路的充要条件：</strong>图中每个顶点的度数都是偶数。</p>
+                        <p class="mt-2"><strong>连通图存在欧拉路径的充要条件：</strong>图中恰好有 0 个或 2 个奇度顶点。</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>0 个奇度顶点：存在欧拉回路</li>
+                            <li>2 个奇度顶点：存在欧拉路径（从一个奇度顶点到另一个）</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>柯尼斯堡七桥问题的解答</h4>
+                        <p>将问题转化为图：4 个顶点（陆地），7 条边（桥）。</p>
+                        
+                        <div class="text-center my-4">
+                            <h5 class="font-bold mb-2">柯尼斯堡七桥图模型</h5>
+                            <div class="graph-container" style="height: 200px;">
+                                <svg class="w-full h-full" viewBox="0 0 300 200">
+                                    <!-- 7条边 -->
+                                    <!-- A-B 两条边 -->
+                                    <line x1="75" y1="60" x2="225" y2="60" stroke="#8b8589" stroke-width="2"/>
+                                    <line x1="75" y1="65" x2="225" y2="65" stroke="#8b8589" stroke-width="2"/>
+                                    <!-- A-C -->
+                                    <line x1="75" y1="60" x2="75" y2="140" stroke="#8b8589" stroke-width="2"/>
+                                    <!-- B-D -->
+                                    <line x1="225" y1="60" x2="225" y2="140" stroke="#8b8589" stroke-width="2"/>
+                                    <!-- C-D -->
+                                    <line x1="75" y1="140" x2="225" y2="140" stroke="#8b8589" stroke-width="2"/>
+                                    <!-- A-D -->
+                                    <line x1="75" y1="60" x2="225" y2="140" stroke="#8b8589" stroke-width="2"/>
+                                    <!-- B-C -->
+                                    <line x1="225" y1="60" x2="75" y2="140" stroke="#8b8589" stroke-width="2"/>
+                                    
+                                    <!-- 节点 -->
+                                    <circle cx="75" cy="60" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                    <circle cx="225" cy="60" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                    <circle cx="75" cy="140" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                    <circle cx="225" cy="140" r="20" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                    
+                                    <!-- 标签 -->
+                                    <text x="75" y="60" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">A</text>
+                                    <text x="225" y="60" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">B</text>
+                                    <text x="75" y="140" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">C</text>
+                                    <text x="225" y="140" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="14" font-weight="bold">D</text>
+                                    
+                                    <!-- 度数标注 -->
+                                    <text x="75" y="35" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">deg(A)=3</text>
+                                    <text x="225" y="35" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">deg(B)=3</text>
+                                    <text x="75" y="170" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">deg(C)=3</text>
+                                    <text x="225" y="170" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">deg(D)=5</text>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <p>每个顶点的度数为：</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>顶点 A：度数 3（奇数）</li>
+                            <li>顶点 B：度数 3（奇数）</li>
+                            <li>顶点 C：度数 3（奇数）</li>
+                            <li>顶点 D：度数 5（奇数）</li>
+                        </ul>
+                        <p class="mt-2"><strong>结论：</strong>有 4 个奇度顶点，根据欧拉定理，不存在欧拉路径，因此无法解决七桥问题。</p>
+                    </div>
+                </section>
+
+                <section id="hamilton-paths" class="content-section">
+                    <h3>哈密顿路径和回路</h3>
+                    
+                    <div class="definition-box">
+                        <h4>哈密顿路径和回路</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>哈密顿路径</strong>：经过图中每个顶点恰好一次的路径</li>
+                            <li><strong>哈密顿回路</strong>：经过每个顶点恰好一次并回到起点的路径</li>
+                            <li><strong>哈密顿图</strong>：存在哈密顿回路的图</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>哈密顿图的判定</h4>
+                        <p>与欧拉图不同，判定哈密顿图没有简单的充要条件，但有一些充分条件：</p>
+                        
+                        <div class="theorem-box mt-4">
+                            <h4>狄拉克定理（Dirac's Theorem）</h4>
+                            <p>设 G 是有 n ≥ 3 个顶点的简单图，如果每个顶点的度数都不小于 n/2，则 G 是哈密顿图。</p>
+                        </div>
+
+                        <div class="theorem-box">
+                            <h4>奥尔定理（Ore's Theorem）</h4>
+                            <p>设 G 是有 n ≥ 3 个顶点的简单图，如果对于任意两个不相邻的顶点 u 和 v，都有 deg(u) + deg(v) ≥ n，则 G 是哈密顿图。</p>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>旅行推销员问题（TSP）</h4>
+                        <p>给定 n 个城市和城市间的距离，找到访问所有城市恰好一次并回到起点的最短路径。这本质上是在加权完全图中寻找最短哈密顿回路。</p>
+                        <p class="mt-2"><strong>复杂度：</strong>这是一个 NP-完全问题，目前没有多项式时间算法。</p>
+                    </div>
+                </section>
+
+                <section id="trees" class="content-section">
+                    <h3>树</h3>
+                    
+                    <div class="definition-box">
+                        <h4>树的定义</h4>
+                        <p><strong>树</strong>是连通且无圈的图。以下命题等价：</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>G 是树</li>
+                            <li>G 连通且无圈</li>
+                            <li>G 连通且 |E| = |V| - 1</li>
+                            <li>G 无圈且 |E| = |V| - 1</li>
+                            <li>G 中任意两个顶点间恰有一条路径</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>树的性质</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>n 个顶点的树恰好有 n-1 条边</li>
+                            <li>树中至少有两个叶子节点（度数为1的顶点）</li>
+                            <li>删除任意一条边都会使树不连通</li>
+                            <li>添加任意一条边都会产生唯一的圈</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>根树（Rooted Tree）</h4>
+                        <p>指定一个顶点作为根的树。根树具有层次结构：</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li><strong>父节点</strong>：上一层的相邻顶点</li>
+                            <li><strong>子节点</strong>：下一层的相邻顶点</li>
+                            <li><strong>叶子节点</strong>：没有子节点的顶点</li>
+                            <li><strong>内部节点</strong>：有子节点的顶点</li>
+                            <li><strong>高度</strong>：从根到最远叶子的距离</li>
+                        </ul>
+                        
+                        <div class="example-box mt-4">
+                            <h4>根树示例</h4>
+                            <div class="text-center">
+                                <div class="graph-container" style="height: 250px;">
+                                    <!-- 根节点 -->
+                                    <div class="graph-node" style="top: 15%; left: 50%; background-color: #ff6b6b;">Root</div>
+                                    <!-- 第二层 -->
+                                    <div class="graph-node" style="top: 45%; left: 30%; background-color: #4ecdc4;">A</div>
+                                    <div class="graph-node" style="top: 45%; left: 70%; background-color: #4ecdc4;">B</div>
+                                    <!-- 第三层 -->
+                                    <div class="graph-node" style="top: 75%; left: 20%; background-color: #45b7d1;">C</div>
+                                    <div class="graph-node" style="top: 75%; left: 40%; background-color: #45b7d1;">D</div>
+                                    <div class="graph-node" style="top: 75%; left: 60%; background-color: #45b7d1;">E</div>
+                                    <div class="graph-node" style="top: 75%; left: 80%; background-color: #45b7d1;">F</div>
+                                    
+                                    <!-- 边 -->
+                                    <div class="graph-edge" style="top: 15%; left: 50%; width: 120px; height: 2px; transform: rotate(135deg) translateY(-1px);"></div>
+                                    <div class="graph-edge" style="top: 15%; left: 50%; width: 120px; height: 2px; transform: rotate(45deg) translateY(-1px);"></div>
+                                    <div class="graph-edge" style="top: 45%; left: 30%; width: 85px; height: 2px; transform: rotate(135deg) translateY(-1px);"></div>
+                                    <div class="graph-edge" style="top: 45%; left: 30%; width: 85px; height: 2px; transform: rotate(45deg) translateY(-1px);"></div>
+                                    <div class="graph-edge" style="top: 45%; left: 70%; width: 85px; height: 2px; transform: rotate(135deg) translateY(-1px);"></div>
+                                    <div class="graph-edge" style="top: 45%; left: 70%; width: 85px; height: 2px; transform: rotate(45deg) translateY(-1px);"></div>
+                                    
+                                    <!-- 标签 -->
+                                    <div class="graph-label" style="top: 5%; left: 45%;">根节点</div>
+                                    <div class="graph-label" style="top: 35%; left: 5%;">内部节点</div>
+                                    <div class="graph-label" style="top: 35%; left: 75%;">内部节点</div>
+                                    <div class="graph-label" style="top: 90%; left: 35%;">叶子节点</div>
+                                </div>
+                            </div>
+                            <p class="text-center text-sm mt-2">
+                                红色：根节点 | 青色：内部节点 | 蓝色：叶子节点<br>
+                                高度 = 2（从根到叶子的最大距离）
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>二叉树</h4>
+                        <p>每个顶点最多有两个子节点的根树。二叉树广泛应用于：</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>数据结构（二叉搜索树、堆）</li>
+                            <li>表达式解析</li>
+                            <li>决策树</li>
+                            <li>霍夫曼编码</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="spanning-trees" class="content-section">
+                    <h3>生成树</h3>
+                    
+                    <div class="definition-box">
+                        <h4>生成树</h4>
+                        <p>连通图 G 的<strong>生成树</strong>是包含 G 所有顶点的树形子图。</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>包含所有 n 个顶点</li>
+                            <li>恰好有 n-1 条边</li>
+                            <li>连通且无圈</li>
+                        </ul>
+                    </div>
+
+                    <div class="theorem-box">
+                        <h4>生成树的数量</h4>
+                        <p><strong>凯莱公式</strong>：完全图 K<sub>n</sub> 的生成树数量为 n<sup>n-2</sup>。</p>
+                        <p class="mt-2">例如：K<sub>4</sub> 有 4<sup>2</sup> = 16 棵生成树。</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>最小生成树算法</h4>
+                        <p>对于加权图，寻找总权重最小的生成树：</p>
+                        
+                        <div class="algorithm-step">
+                            <h4>Kruskal 算法</h4>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>将所有边按权重从小到大排序</li>
+                                <li>初始化森林（每个顶点为一棵树）</li>
+                                <li>依次选择最小权重的边，如果不形成圈则加入</li>
+                                <li>重复直到有 n-1 条边</li>
+                            </ol>
+                            
+                            <div class="example-box mt-4">
+                                <h5 class="font-bold mb-2">Kruskal算法演示</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <!-- 原图 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">原图（带权重）</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 边 -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="50" y1="110" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                                <!-- 权重标签 -->
+                                                <text x="100" y="30" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">1</text>
+                                                <text x="35" y="75" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">2</text>
+                                                <text x="165" y="75" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">3</text>
+                                                <text x="100" y="130" fill="#666" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">4</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">排序：1→2→3→4</p>
+                                    </div>
+                                    
+                                    <!-- 执行过程 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">选择过程</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 选中的边 -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#22c55e" stroke-width="3"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#22c55e" stroke-width="3"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#22c55e" stroke-width="3"/>
+                                                <!-- 跳过的边 -->
+                                                <line x1="50" y1="110" x2="150" y2="110" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5,5"/>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                                <!-- 步骤标记 -->
+                                                <text x="100" y="25" fill="#22c55e" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold">①选择</text>
+                                                <text x="30" y="75" fill="#22c55e" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold">②选择</text>
+                                                <text x="170" y="75" fill="#22c55e" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold">③选择</text>
+                                                <text x="100" y="135" fill="#ff6b6b" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold">④跳过</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">绿色：选中 | 红色：跳过（形成圈）</p>
+                                    </div>
+                                    
+                                    <!-- 最终结果 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">最小生成树</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 最终边 -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#22c55e" stroke-width="4"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#22c55e" stroke-width="4"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#22c55e" stroke-width="4"/>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">总权重：1+2+3=6</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                                    <p class="text-sm"><strong>算法步骤：</strong></p>
+                                    <ol class="text-sm list-decimal list-inside mt-1">
+                                        <li>按权重排序：1, 2, 3, 4</li>
+                                        <li>选择边(A,B)权重1 ✓</li>
+                                        <li>选择边(A,C)权重2 ✓</li>
+                                        <li>选择边(B,D)权重3 ✓</li>
+                                        <li>跳过边(C,D)权重4（会形成圈）</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <h4>Prim 算法</h4>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>从任意顶点开始</li>
+                                <li>重复选择连接已选顶点和未选顶点的最小权重边</li>
+                                <li>将新顶点加入生成树</li>
+                                <li>直到包含所有顶点</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="planar-graphs" class="content-section">
+                    <h3>平面图</h3>
+                    
+                    <div class="definition-box">
+                        <h4>平面图</h4>
+                        <p><strong>平面图</strong>是可以在平面上绘制且边不相交（除了在顶点处）的图。</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li><strong>平面嵌入</strong>：图在平面上的具体绘制</li>
+                            <li><strong>面</strong>：由边围成的区域，包括外部无限面</li>
+                        </ul>
+                    </div>
+
+                    <div class="theorem-box">
+                        <h4>欧拉公式</h4>
+                        <p>对于连通平面图：<span class="math">V - E + F = 2</span></p>
+                        <p>其中 V 是顶点数，E 是边数，F 是面数。</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>平面图的判定</h4>
+                        
+                        <div class="theorem-box mt-4">
+                            <h4>库拉托夫斯基定理</h4>
+                            <p>图是平面图当且仅当它不包含与 K<sub>5</sub> 或 K<sub>3,3</sub> 同胚的子图。</p>
+                        </div>
+
+                        <div class="example-box mt-4">
+                            <h4>应用：三房三井问题</h4>
+                            <p>三栋房子需要连接到三个公用设施（水、电、气），能否做到连线不相交？</p>
+                            
+                            <div class="text-center my-4">
+                                <h5 class="font-bold mb-2">三房三井问题图解</h5>
+                                <div class="graph-container" style="height: 200px;">
+                                    <svg class="w-full h-full" viewBox="0 0 300 200">
+                                        <!-- 连接线 -->
+                                        <line x1="50" y1="50" x2="250" y2="50" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="50" x2="250" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="50" x2="250" y2="150" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="100" x2="250" y2="50" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="100" x2="250" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="100" x2="250" y2="150" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="150" x2="250" y2="50" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="150" x2="250" y2="100" stroke="#8b8589" stroke-width="2"/>
+                                        <line x1="50" y1="150" x2="250" y2="150" stroke="#8b8589" stroke-width="2"/>
+                                        
+                                        <!-- 房子（左侧，红色） -->
+                                        <circle cx="50" cy="50" r="18" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="50" cy="100" r="18" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="50" cy="150" r="18" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                        
+                                        <!-- 公用设施（右侧，青色） -->
+                                        <circle cx="250" cy="50" r="18" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="250" cy="100" r="18" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="250" cy="150" r="18" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                        
+                                        <!-- 标签 -->
+                                        <text x="50" y="50" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">房1</text>
+                                        <text x="50" y="100" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">房2</text>
+                                        <text x="50" y="150" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="10" font-weight="bold">房3</text>
+                                        <text x="250" y="50" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">水</text>
+                                        <text x="250" y="100" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">电</text>
+                                        <text x="250" y="150" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">气</text>
+                                        
+                                        <!-- 交叉标记 -->
+                                        <text x="130" y="85" fill="red" text-anchor="middle" font-family="Arial" font-size="20" font-weight="bold">✗</text>
+                                        <text x="170" y="115" fill="red" text-anchor="middle" font-family="Arial" font-size="20" font-weight="bold">✗</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <p class="mt-2"><strong>答案：</strong>不可能。这等价于判断完全二分图 K<sub>3,3</sub> 是否为平面图，根据库拉托夫斯基定理，K<sub>3,3</sub> 不是平面图。</p>
+                            <p class="text-sm text-gray-600 mt-2">红色：房子 | 青色：公用设施 | ✗：不可避免的交叉点</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="graph-coloring" class="content-section">
+                    <h3>图的着色</h3>
+                    
+                    <div class="definition-box">
+                        <h4>图着色</h4>
+                        <p><strong>图的着色</strong>是为图的顶点分配颜色，使得相邻顶点有不同颜色。</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li><strong>色数 χ(G)</strong>：给图 G 着色所需的最少颜色数</li>
+                            <li><strong>k-着色</strong>：使用最多 k 种颜色的着色</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>著色的性质</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>χ(K<sub>n</sub>) = n（完全图需要 n 种颜色）</li>
+                            <li>χ(C<sub>n</sub>) = 3（n ≥ 3 且 n 为奇数），χ(C<sub>n</sub>) = 2（n 为偶数）</li>
+                            <li>χ(G) ≤ Δ(G) + 1，其中 Δ(G) 是最大度数</li>
+                        </ul>
+                    </div>
+
+                    <div class="theorem-box">
+                        <h4>四色定理</h4>
+                        <p>任何平面图都可以用最多四种颜色进行顶点着色。</p>
+                        <p class="mt-2">这是第一个通过计算机辅助证明的重要数学定理（1976年）。</p>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>着色问题的应用</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>地图着色</strong>：为地图上的区域着色使相邻区域颜色不同</li>
+                            <li><strong>课程安排</strong>：为课程安排时间段，冲突课程不能同时</li>
+                            <li><strong>寄存器分配</strong>：编译器中的寄存器分配优化</li>
+                            <li><strong>频率分配</strong>：无线电频率分配避免干扰</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="bipartite-graphs" class="content-section">
+                    <h3>二分图</h3>
+                    
+                    <div class="definition-box">
+                        <h4>二分图</h4>
+                        <p><strong>二分图</strong>是顶点集可以分为两个不相交集合的图，使得每条边的两个端点分别在不同集合中。</p>
+                        <p class="mt-2">记作 G = (X ∪ Y, E)，其中 X ∩ Y = ∅，每条边连接 X 中的顶点和 Y 中的顶点。</p>
+                    </div>
+
+                    <div class="theorem-box">
+                        <h4>二分图的判定</h4>
+                        <p>图是二分图当且仅当它不包含奇长度的圈。</p>
+                        <p class="mt-2"><strong>算法：</strong>使用 BFS 或 DFS 进行 2-着色，如果成功则是二分图。</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>完全二分图</h4>
+                        <p><strong>完全二分图 K<sub>m,n</sub></strong>：一个集合有 m 个顶点，另一个集合有 n 个顶点，任意两个不同集合的顶点都有边连接。</p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>顶点数：m + n</li>
+                            <li>边数：m × n</li>
+                            <li>每个 X 中的顶点度数为 n</li>
+                            <li>每个 Y 中的顶点度数为 m</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>匹配理论</h4>
+                        <p><strong>匹配</strong>：边的集合，其中任意两条边都不共享顶点。</p>
+                        
+                        <div class="theorem-box mt-4">
+                            <h4>霍尔定理（Hall's Theorem）</h4>
+                            <p>二分图 G = (X ∪ Y, E) 存在饱和 X 的匹配当且仅当对于 X 的任意子集 S，都有 |N(S)| ≥ |S|，其中 N(S) 是 S 的邻域。</p>
+                        </div>
+
+                        <div class="example-box mt-4">
+                            <h4>应用：工作分配问题</h4>
+                            <p>有 n 个工人和 m 个工作，每个工人只能胜任某些工作。能否给每个工人分配一个工作？</p>
+                            <p class="mt-2">建模为二分图匹配问题，使用霍尔定理或匈牙利算法求解。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="algorithms" class="content-section">
+                    <h3>图的算法</h3>
+                    
+                    <div class="concept-card">
+                        <h4>图的遍历算法</h4>
+                        
+                        <div class="algorithm-step">
+                            <h4>深度优先搜索（DFS）</h4>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>从起始顶点开始</li>
+                                <li>尽可能深地访问邻接的未访问顶点</li>
+                                <li>当无法继续时，回溯到上一个顶点</li>
+                                <li>重复直到所有可达顶点都被访问</li>
+                            </ol>
+                            
+                            <div class="example-box mt-4">
+                                <h5 class="font-bold mb-2">DFS 执行步骤演示</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- 图结构 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">图结构</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 边 -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">连接关系：A-B, A-C, B-D</p>
+                                    </div>
+                                    
+                                    <!-- DFS访问过程 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">DFS访问过程</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 访问路径（加粗显示） -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#ff6b6b" stroke-width="4"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#ff6b6b" stroke-width="4"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#ff6b6b" stroke-width="4"/>
+                                                <!-- 访问顺序箭头 -->
+                                                <defs>
+                                                    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                                        <polygon points="0 0, 10 3.5, 0 7" fill="#ff6b6b"/>
+                                                    </marker>
+                                                </defs>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                                <!-- 访问顺序标记 -->
+                                                <text x="50" y="20" fill="#ff6b6b" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">①</text>
+                                                <text x="150" y="20" fill="#ff6b6b" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">②</text>
+                                                <text x="150" y="130" fill="#ff6b6b" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">③</text>
+                                                <text x="50" y="130" fill="#ff6b6b" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">④</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">访问序列：A→B→D→C（深度优先）</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded">
+                                    <p class="text-sm"><strong>DFS步骤：</strong></p>
+                                    <ol class="text-sm list-decimal list-inside mt-1">
+                                        <li>从A开始，标记A为已访问</li>
+                                        <li>访问A的邻居B，标记B为已访问</li>
+                                        <li>访问B的邻居D，标记D为已访问</li>
+                                        <li>D无未访问邻居，回溯到A，访问C</li>
+                                    </ol>
+                                    <p class="text-sm mt-2"><strong>特点：</strong>尽可能深地探索每个分支</p>
+                                </div>
+                            </div>
+                            
+                            <p class="mt-2"><strong>应用：</strong>连通性检测、拓扑排序、强连通分量</p>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <h4>广度优先搜索（BFS）</h4>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>从起始顶点开始，加入队列</li>
+                                <li>从队列中取出顶点，访问其所有未访问的邻居</li>
+                                <li>将新访问的顶点加入队列</li>
+                                <li>重复直到队列为空</li>
+                            </ol>
+                            
+                            <div class="example-box mt-4">
+                                <h5 class="font-bold mb-2">BFS 执行步骤演示</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- 图结构 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">图结构</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 边 -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#8b8589" stroke-width="2"/>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#e07a5f" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">连接关系：A-B, A-C, B-D</p>
+                                    </div>
+                                    
+                                    <!-- BFS访问过程 -->
+                                    <div class="text-center">
+                                        <h6 class="font-semibold mb-2">BFS访问过程</h6>
+                                        <div class="graph-container" style="height: 180px;">
+                                            <svg class="w-full h-full" viewBox="0 0 200 150">
+                                                <!-- 访问路径 -->
+                                                <line x1="50" y1="40" x2="150" y2="40" stroke="#4ecdc4" stroke-width="4"/>
+                                                <line x1="50" y1="40" x2="50" y2="110" stroke="#4ecdc4" stroke-width="4"/>
+                                                <line x1="150" y1="40" x2="150" y2="110" stroke="#4ecdc4" stroke-width="4"/>
+                                                <!-- 层级分组圆圈 -->
+                                                <circle cx="50" cy="40" r="25" fill="none" stroke="#4ecdc4" stroke-width="2" stroke-dasharray="3,3"/>
+                                                <circle cx="100" cy="75" r="30" fill="none" stroke="#90ee90" stroke-width="2" stroke-dasharray="3,3"/>
+                                                <circle cx="150" cy="110" r="25" fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="3,3"/>
+                                                <!-- 节点 -->
+                                                <circle cx="50" cy="40" r="15" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="40" r="15" fill="#90ee90" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="50" cy="110" r="15" fill="#90ee90" stroke="#fff" stroke-width="2"/>
+                                                <circle cx="150" cy="110" r="15" fill="#ffd700" stroke="#fff" stroke-width="2"/>
+                                                <!-- 标签 -->
+                                                <text x="50" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">A</text>
+                                                <text x="150" y="40" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">B</text>
+                                                <text x="50" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">C</text>
+                                                <text x="150" y="110" fill="white" text-anchor="middle" dominant-baseline="central" font-family="Arial" font-size="12" font-weight="bold">D</text>
+                                                <!-- 层级标记 -->
+                                                <text x="25" y="40" fill="#4ecdc4" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">层0</text>
+                                                <text x="70" y="75" fill="#90ee90" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">层1</text>
+                                                <text x="175" y="110" fill="#ffd700" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">层2</text>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm">访问序列：A→B,C→D（广度优先）</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                                    <p class="text-sm"><strong>BFS步骤：</strong></p>
+                                    <ol class="text-sm list-decimal list-inside mt-1">
+                                        <li>从A开始，将A加入队列：[A]</li>
+                                        <li>访问A，将其邻居B,C加入队列：[B,C]</li>
+                                        <li>访问B，将其邻居D加入队列：[C,D]</li>
+                                        <li>访问C，访问D，队列为空，结束</li>
+                                    </ol>
+                                    <p class="text-sm mt-2"><strong>特点：</strong>按层级逐步扩展，适合寻找最短路径</p>
+                                </div>
+                            </div>
+                            
+                            <p class="mt-2"><strong>应用：</strong>最短路径（无权图）、层次遍历</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>最短路径算法</h4>
+                        
+                        <div class="algorithm-step">
+                            <h4>Dijkstra 算法</h4>
+                            <p><strong>适用：</strong>非负权重的加权图，单源最短路径</p>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>初始化：起点距离为0，其他为∞</li>
+                                <li>选择距离最小的未访问顶点</li>
+                                <li>更新其邻居的距离</li>
+                                <li>重复直到所有顶点被访问</li>
+                            </ol>
+                            <p class="mt-2"><strong>时间复杂度：</strong>O((V + E) log V)（使用优先队列）</p>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <h4>Floyd-Warshall 算法</h4>
+                            <p><strong>适用：</strong>所有顶点对之间的最短路径</p>
+                            <p class="mt-2">使用动态规划，考虑是否经过中间顶点k能缩短路径：</p>
+                            <p class="text-center mt-2"><span class="math">dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])</span></p>
+                            <p class="mt-2"><strong>时间复杂度：</strong>O(V³)</p>
+                        </div>
+                    </div>
+
+                    <div class="interactive-module">
+                        <h4>图算法可视化</h4>
+                        <p>在实际应用中，图算法常用于：</p>
+                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <li class="concept-card">
+                                <strong>网络路由</strong><br>
+                                <small>使用最短路径算法优化数据传输</small>
+                            </li>
+                            <li class="concept-card">
+                                <strong>社交网络分析</strong><br>
+                                <small>找到影响力最大的用户、社区检测</small>
+                            </li>
+                            <li class="concept-card">
+                                <strong>地图导航</strong><br>
+                                <small>GPS导航中的最短路径规划</small>
+                            </li>
+                            <li class="concept-card">
+                                <strong>推荐系统</strong><br>
+                                <small>基于图的协同过滤算法</small>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <div class="concept-card mt-8">
+                    <h3>总结</h3>
+                    <p>图论是一个丰富而实用的数学分支，其核心概念包括：</p>
+                    <ul class="list-disc list-inside space-y-1 mt-2">
+                        <li><strong>基础概念：</strong>图、顶点、边、度数、连通性</li>
+                        <li><strong>特殊图类：</strong>树、二分图、平面图、完全图</li>
+                        <li><strong>路径理论：</strong>欧拉路径、哈密顿路径、最短路径</li>
+                        <li><strong>算法应用：</strong>图遍历、最小生成树、图着色、匹配</li>
+                    </ul>
+                    <p class="mt-4">掌握这些概念和算法，能够解决网络、调度、优化等众多实际问题。</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 导航功能
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                        
+                        // 更新活动链接
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // 滚动监听
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
